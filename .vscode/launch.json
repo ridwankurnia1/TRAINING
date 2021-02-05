@@ -1,0 +1,24 @@
+{
+    "configurations": [
+    {
+        "name": ".NET Core Launch (web)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/TRAINING.API/bin/Debug/net5.0/TRAINING.API.dll",
+        "args": [],
+        "cwd": "${workspaceFolder}/TRAINING.API",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+            "action": "openExternally",
+            "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "sourceFileMap": {
+            "/Views": "${workspaceFolder}/Views"
+        }
+    }
+    ]
+}
