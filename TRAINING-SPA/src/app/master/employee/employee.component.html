@@ -1,6 +1,23 @@
 <div class="container mt-3">
-  <h1>
-    employee works!
-  </h1>  
+  <table class="table table-sm table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">NIK</th>
+        <th scope="col">Nama</th>
+        <th scope="col">Department</th>
+        <th scope="col">Birth Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of listEmployee; let idx=index">
+        <th>{{idx + 1}}</th>
+        <td>{{item.nik}}</td>
+        <td>{{item.nama | titlecase}}</td>
+        <td>{{item.department}}</td>
+        <td>{{item.birthDate}}</td>
+      </tr>      
+    </tbody>
+  </table>
 </div>
 

@@ -6,7 +6,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExample07XL">
+        <div *ngIf="loggedIn()" class="collapse navbar-collapse" id="navbarsExample07XL">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item active">
                     <a class="nav-link" aria-current="page" [routerLink]="['/employee']" routerLinkActive="router-link-active" >Employee</a>

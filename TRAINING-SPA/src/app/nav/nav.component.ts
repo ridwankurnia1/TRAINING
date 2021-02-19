@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../_service/auth.service';
 
@@ -12,6 +13,7 @@ export class NavComponent implements OnInit {
   loading = false;
   constructor(
     private toastr: ToastrService,
+    private router: Router,
     public authService: AuthService
   ) { }
 
@@ -39,5 +41,6 @@ export class NavComponent implements OnInit {
     localStorage.removeItem('token');
     this.authService.decodedToken = null;
     this.toastr.info('Logged Out');
+    this.router.navigate(['/']);
   }
 }

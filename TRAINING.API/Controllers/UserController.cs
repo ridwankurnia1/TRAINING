@@ -29,6 +29,7 @@ namespace TRAINING.API.Controllers
         {
             var employee = await _repo.GetListEmmployee(prm);
             var result = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
+            
 
             return Ok(result);
         }
