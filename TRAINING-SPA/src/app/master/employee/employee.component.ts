@@ -10,7 +10,7 @@ import { EmployeeService } from 'src/app/_service/employee.service';
 })
 export class EmployeeComponent implements OnInit {
   param = {
-    name: 'ridwan'
+    name: 'bambang'
   };
   listEmployee: Employee[] = [];
   pagination: Pagination;
