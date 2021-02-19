@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -9,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
+import { EmployeeComponent } from './master/employee/employee.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -17,7 +19,8 @@ export function tokenGetter(): string {
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ export function tokenGetter(): string {
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    BsDropdownModule.forRoot(),
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right'}),
     JwtModule.forRoot({
       config: {

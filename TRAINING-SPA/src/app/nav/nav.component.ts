@@ -12,7 +12,7 @@ export class NavComponent implements OnInit {
   loading = false;
   constructor(
     private toastr: ToastrService,
-    private authService: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -24,6 +24,7 @@ export class NavComponent implements OnInit {
       () => {
         this.toastr.success('Welcome ' + this.model.username);
         this.loading = false;
+        this.model = {};
       }, (error) => {
         this.toastr.error('Unauthorized');
         this.loading = false;
@@ -32,5 +33,11 @@ export class NavComponent implements OnInit {
 
   loggedIn(): boolean {
     return this.authService.loggedIn();
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.authService.decodedToken = null;
+    this.toastr.info('Logged Out');
   }
 }
