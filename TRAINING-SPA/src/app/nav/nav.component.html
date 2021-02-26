@@ -37,7 +37,7 @@
                     <input type="password" class="form-control" name="password" required [(ngModel)]="model.password" placeholder="Password">
                 </div>
                 <div class="col-auto">
-                    <button [disabled]="loading" type="submit" class="btn btn-primary">
+                    <button [disabled]="loading" type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">
                         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
                         <i *ngIf="!loading" class="fa fa-lock"></i>
                         Login

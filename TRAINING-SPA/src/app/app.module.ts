@@ -4,10 +4,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -28,7 +29,9 @@ export function tokenGetter(): string {
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
+    ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right'}),
