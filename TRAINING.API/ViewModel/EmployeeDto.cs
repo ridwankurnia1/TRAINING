@@ -9,6 +9,6 @@ namespace TRAINING.API.ViewModel
         public string DepartmentId { get; set; }
         public string Department { get; set; }
         public string Grade { get; set; }
-        public DateTime? BrithDate { get; set; }
+        public DateTime? BirthDate { get; set; }
     }
 }

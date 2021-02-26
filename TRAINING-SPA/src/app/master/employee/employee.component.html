@@ -2,22 +2,50 @@
   <table class="table table-sm table-bordered table-striped">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th class="text-center" scope="col">Edit</th>
         <th scope="col">NIK</th>
         <th scope="col">Nama</th>
         <th scope="col">Department</th>
         <th scope="col">Birth Date</th>
+        <th scope="col">Delete</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of listEmployee; let idx=index">
-        <th>{{idx + 1}}</th>
+      <tr *ngFor="let item of listEmployee">
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-primary">
+            <i class="fa fa-pencil"></i>
+          </button>
+        </td>
         <td>{{item.nik}}</td>
         <td>{{item.nama | titlecase}}</td>
         <td>{{item.department}}</td>
-        <td>{{item.birthDate}}</td>
-      </tr>      
+        <td>{{item.birthDate | date:'dd MMMM yyyy'}}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-danger">
+            <i class="fa fa-times"></i>
+          </button>
+        </td>
+      </tr>
     </tbody>
+    <caption>
+      <div class="row ml-1">
+        <div class="col-2">
+          <select class="form-control" aria-label="Item Per Page" name="itemPerPage" [(ngModel)]="pageSize"
+            (change)="itemPerPageChange($event.target.value)">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <div class="col">
+          <pagination [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+            (pageChanged)="pageChanged($event)" [itemsPerPage]="pageSize" [maxSize]="10" [boundaryLinks]="true">
+          </pagination>
+        </div>
+      </div>
+    </caption>
   </table>
 </div>
-

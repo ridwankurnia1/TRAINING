@@ -10,22 +10,36 @@ import { EmployeeService } from 'src/app/_service/employee.service';
 })
 export class EmployeeComponent implements OnInit {
   param = {
-    name: 'bambang'
+    name: ''
   };
   listEmployee: Employee[] = [];
   pagination: Pagination;
+  pageSize = 10;
   constructor(private employeeService: EmployeeService) { }
 
   ngOnInit(): void {
-    this.loadData();
+    this.pagination = {
+      currentPage: 1,
+      itemPerPage: 10,
+      totalItems: 0,
+      totalPages: 0
+    };
+    this.loadData(this.pagination.currentPage, this.pagination.itemPerPage);
   }
 
-  loadData() {
-    this.employeeService.getEmployees(1, 10, this.param)
+  loadData(page?, itemPerPage?) {
+    // console.log(page, itemPerPage);
+    this.employeeService.getEmployees(page, itemPerPage, this.param)
       .subscribe((res: PaginatedResult<Employee[]>) => {
         this.listEmployee = res.result;
         this.pagination = res.pagination;
-        console.log(this.listEmployee);
+        console.log(this.pagination);
       });
+  }
+  pageChanged(event): void {
+    this.loadData(event.page, this.pageSize);
+  }
+  itemPerPageChange(event): void {
+    this.loadData(1, event);
   }
 }

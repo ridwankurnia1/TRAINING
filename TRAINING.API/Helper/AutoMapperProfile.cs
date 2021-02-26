@@ -13,7 +13,8 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.Nama, opt => opt.MapFrom(src => src.EMEMNA))
                 .ForMember(des => des.DepartmentId, opt => opt.MapFrom(src => src.EMDENO))
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.GOG1.GOOGNA))
-                .ForMember(des => des.Grade, opt => opt.MapFrom(src => src.EMEGNO));
+                .ForMember(des => des.Grade, opt => opt.MapFrom(src => src.EMEGNO))
+                .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.EMBTDT)));
         }
     }
 }

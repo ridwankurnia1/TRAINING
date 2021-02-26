@@ -29,7 +29,7 @@ namespace TRAINING.API.Controllers
         {
             var employee = await _repo.GetListEmmployee(prm);
             var result = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
-            
+            Response.AddPagination(employee.CurrentPage, employee.PageSize, employee.TotalCount, employee.TotalPages);
 
             return Ok(result);
         }
