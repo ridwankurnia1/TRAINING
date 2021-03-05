@@ -39,8 +39,34 @@ export class EmployeeService {
         })
       );
   }
+  editEmployee(data: Employee): Observable<any> {
+    return this.http.put(this.baseUrl + 'employee/' + data.nik, data);
+  }
+  addEmployee(data: Employee): Observable<any> {
+    return this.http.post(this.baseUrl + 'employee', data);
+  }
+  deleteEmployee(nik: string): Observable<any> {
+    return this.http.delete(this.baseUrl + 'employee/' + nik);
+  }
 
-  getEmployee(nama: string) {
+  getDropdown(prm?): Observable<any> {
+    let params = new HttpParams();
+
+    if (prm) {
+      if (prm.name) {
+        params = params.append('name', prm.name);
+      }
+    }
+
+    return this.http.get(this.baseUrl + 'dropdown', { observe: 'response', params})
+      .pipe(
+        map(reponse => {
+          return reponse.body;
+        })
+      );
+  }
+
+  getEmployee(nama: string): Observable<any> {
     return this.http.get('');
   }
 }

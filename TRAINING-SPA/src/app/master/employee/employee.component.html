@@ -1,4 +1,6 @@
 <div class="container mt-3">
+  <!-- <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog> -->
+
   <button type="button" class="btn btn-sm btn-primary mb-2" (click)="edit(null, popup)">
     <i class="fa fa-plus mr-2"></i> Add
   </button>
@@ -25,7 +27,7 @@
         <td>{{item.department}}</td>
         <td>{{item.birthDate | date:'dd MMMM yyyy'}}</td>
         <td class="text-center">
-          <button type="button" class="btn btn-sm btn-danger">
+          <button type="button" class="btn btn-sm btn-danger" (click)="delete(item)">
             <i class="fa fa-times"></i>
           </button>
         </td>
@@ -71,37 +73,55 @@
         </div>
         <div class="mb-3">
           <label for="nama" class="form-label">Nama</label>
-          <input type="text" class="form-control" formControlName="nama" placeholder="Nama"
+          <input type="text" class="form-control" formControlName="nama" placeholder="Nama"          
            [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
           <div class="invalid-feedback">
             Harap isi Nama
           </div>
         </div>
         <div class="mb-3">
+          <label for="birthDate" class="form-label">Birth Date</label>
+          <div class="input-group">
+            <input type="text" class="form-control" #dp1="bsDatepicker" formControlName="birthDate" placeholder="Birth Date"
+              [ngClass]="{'is-invalid': employeeForm.get('birthDate').errors && employeeForm.get('birthDate').touched}"
+              bsDatepicker [bsConfig]="bsConfig">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="dp1.toggle()"
+                [attr.aria-expanded]="dp1.isOpen">
+                <i class="fa fa-calendar"></i>
+              </button>
+            </div>
+          </div>          
+          <div class="invalid-feedback">
+            Harap isi Tanggal Lahir
+          </div>
+        </div>
+        <div class="mb-3">
           <label for="department" class="form-label">Department</label>
-          <input type="text" class="form-control" formControlName="departmentId" placeholder="Nama"
+          <select class="form-control" aria-label="select department" formControlName="departmentId"
             [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
+            <option *ngFor="let item of department" [value]="item.value" >{{item.label}}</option>            
+          </select>
+          <!-- <input type="text" class="form-control" formControlName="departmentId" placeholder="Nama"
+            [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}"> -->
           <div class="invalid-feedback">
             Harap pilih department
           </div>
         </div>
         <div class="mb-3">
           <label for="grade" class="form-label">Grade</label>
-          <input type="text" class="form-control" formControlName="grade" placeholder="Grade">
-        </div>
-        <div class="mb-3">
-          <label for="birthDate" class="form-label">Birth Date</label>
-          <input type="text" class="form-control" formControlName="birthDate" placeholder="Birth Date"
-           [ngClass]="{'is-invalid': employeeForm.get('birthDate').errors && employeeForm.get('birthDate').touched}">
-          <div class="invalid-feedback">
-            Harap isi NIK
-          </div>
+          <select class="form-control" aria-label="select grade" formControlName="grade"
+            [ngClass]="{'is-invalid': employeeForm.get('grade').errors && employeeForm.get('grade').touched}">
+            <option *ngFor="let item of grade" [value]="item.value" >{{item.label}}</option>            
+          </select>
+          <!-- <input type="text" class="form-control" formControlName="grade" placeholder="Grade"> -->
         </div>
         <div class="mb-3">
           <button type="button" class="btn btn-sm btn-danger mr-2" (click)="save()">
-            <i class="fa fa-save mr-2"></i> Save
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+            <i *ngIf="!loading" class="fa fa-save"></i>Save
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">            
             <i class="fa fa-undo mr-2"></i> Cancel
           </button>  
         </div>

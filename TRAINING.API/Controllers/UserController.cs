@@ -8,6 +8,8 @@ using TRAINING.API.Helper;
 using AutoMapper;
 using TRAINING.API.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using TRAINING.API.Model;
 
 namespace TRAINING.API.Controllers
 {
@@ -32,6 +34,83 @@ namespace TRAINING.API.Controllers
             Response.AddPagination(employee.CurrentPage, employee.PageSize, employee.TotalCount, employee.TotalPages);
 
             return Ok(result);
+        }
+        [HttpPost("employee")]
+        public async Task<IActionResult> AddEmployee(EmployeeDto data)
+        {
+            var employee = await _repo.GetEmployee(data.Nik);
+            if (employee != null)
+            {
+                employee.EMEGNO = data.Grade;
+                employee.EMDENO = data.DepartmentId;
+                employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+                employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+                employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+            else
+            {
+                var emp = _mapper.Map<MEMP>(data);
+                emp.EMCRUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                emp.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                _repo.Add<MEMP>(emp);
+            }
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            throw new Exception("Gagal menyimpan data");
+        }        
+        [HttpPut("employee/{nik}")]
+        public async Task<IActionResult> EditEmployee(string nik, EmployeeDto data)
+        {
+            var employee = await _repo.GetEmployee(nik);
+            if (employee == null)
+                return BadRequest("Employee tidak ditemukan");
+            
+            employee.EMEMNA = data.Nama;
+            employee.EMEGNO = data.Grade;
+            employee.EMDENO = data.DepartmentId;
+            employee.EMBTDT = CommonMethod.DateToNumeric(data.BirthDate.Value);
+            employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+            employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+            employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            if (await _repo.SaveAll())
+                return Ok();
+            
+            throw new Exception("Gagal mengupdate data");
+        }
+        [HttpDelete("employee/{nik}")]
+        public async Task<IActionResult> DeleteEmployee(string nik)
+        {
+            var employee = await _repo.GetEmployee(nik);
+            if (employee == null)
+                return BadRequest("Employee tidak ditemukan");
+            
+            // _repo.Delete<MEMP>(employee);
+            employee.EMRCST = 0;
+            employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+            employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+            employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            if (await _repo.SaveAll())
+                return Ok();
+            
+            throw new Exception("Gagal mengupdate data");
+        }
+
+        [HttpGet("dropdown")]
+        public async Task<IActionResult> GetDropdown([FromQuery]Params prm)
+        {
+            var gog1 = await _repo.GetOrganization();
+            var mgrd = await _repo.GetListGrade();
+            var ddl_org = _mapper.Map<IEnumerable<DropdownDto>>(gog1);
+            var ddl_grd = _mapper.Map<IEnumerable<DropdownDto>>(mgrd);            
+
+            return Ok(new {
+                grade = ddl_grd,
+                dept = ddl_org
+            });
         }
 
         [HttpGet("employee2")]

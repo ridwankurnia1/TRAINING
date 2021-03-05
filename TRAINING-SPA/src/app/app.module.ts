@@ -13,6 +13,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { EmployeeComponent } from './master/employee/employee.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+// import { ConfirmationService } from 'primeng/api';
+// import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -35,6 +38,7 @@ export function tokenGetter(): string {
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right'}),
+    BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter,

@@ -35,7 +35,7 @@ namespace TRAINING.API.Data
 
         public async Task<MEMP> GetEmployee(string nik)
         {
-            return await _context.MEMP.FirstOrDefaultAsync(x => x.EMEMNO == nik);
+            return await _context.MEMP.FirstOrDefaultAsync(x => x.EMEMNO == nik && x.EMRCST == 1);
         }
 
         public async Task<PagedList<MEMP>> GetListEmmployee(Params prm)
@@ -81,6 +81,11 @@ namespace TRAINING.API.Data
             }
 
             return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<MGRD>> GetListGrade()
+        {
+            return await _context.MGRD.ToListAsync();
         }
     }
 }

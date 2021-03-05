@@ -26,5 +26,33 @@ namespace TRAINING.API.Helper
             }
         }
 
+        public static decimal DateToNumeric(DateTime _prmDate)
+        {
+            string _day = String.Empty, _month = String.Empty, _year = String.Empty;
+            string _strDate = String.Empty;
+
+            _day = _prmDate.ToString("dd").Trim();
+            _month = _prmDate.ToString("MM").Trim();
+            _year = _prmDate.ToString("yyyy").Trim();
+
+            _strDate = _year + _month + _day;
+
+            return Convert.ToDecimal(_strDate);
+        }
+
+        public static decimal TimeToNumeric(DateTime _prmDate)
+        {
+            string _hour = String.Empty, _minute = String.Empty, _second = String.Empty;
+            string _strTime = String.Empty;
+
+            _hour = _prmDate.ToString("HH").Trim();
+            _minute = _prmDate.ToString("mm").Trim();
+            _second = _prmDate.ToString("ss").Trim();
+
+            _strTime = _hour + _minute + _second;
+
+            return Convert.ToDecimal(_strTime);
+        }
+
     }
 }

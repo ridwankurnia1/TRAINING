@@ -31,7 +31,8 @@
         <div class="float-right">
             <form *ngIf="!loggedIn()" class="form-row" #loginForm="ngForm" (submit)="login()">
                 <div class="col-auto">
-                    <input type="text" class="form-control" name="username" required [(ngModel)]="model.username" placeholder="User Id">
+                    <input type="text" class="form-control" name="username" required [(ngModel)]="model.username" placeholder="User Id"
+                        (ngModelChange)="inputvalue = $event.toUpperCase()">
                 </div>
                 <div class="col-auto">
                     <input type="password" class="form-control" name="password" required [(ngModel)]="model.password" placeholder="Password">

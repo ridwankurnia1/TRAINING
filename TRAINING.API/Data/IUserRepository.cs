@@ -14,6 +14,7 @@ namespace TRAINING.API.Data
         Task<MEMP> GetEmployee(string nik);
         Task<PagedList<MEMP>> GetListEmmployee(Params prm);
         Task<IEnumerable<GOG1>> GetOrganization();
+        Task<IEnumerable<MGRD>> GetListGrade();
         Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm);
     }
 }
