@@ -15,6 +15,7 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.DepartmentId, opt => opt.MapFrom(src => src.EMDENO))
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.GOG1.GOOGNA))
                 .ForMember(des => des.Grade, opt => opt.MapFrom(src => src.EMEGNO))
+                .ForMember(des => des.Photo, opt => opt.MapFrom<PhotoResolver, string>(src => src.EMBRNO + "|" + src.EMEMNO))
                 .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.EMBTDT)));
             CreateMap<EmployeeDto, MEMP>()
                 .ForMember(des => des.EMEMNO, opt => opt.MapFrom(src => src.Nik))
@@ -32,6 +33,33 @@ namespace TRAINING.API.Helper
             CreateMap<GOG1, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.GOOGNA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.GOOGNO));
+        }
+
+        public class PhotoResolver : IMemberValueResolver<object, object, string, string>
+        {
+            public string Resolve(object source, object destination, string sourceMember, string destinationMember, ResolutionContext context)
+            {
+                string[] member = sourceMember.Split("|");
+                string pictureUrl = "http://172.18.45.174/APRISE/Photo/";
+                switch(member[0])
+                {
+                    case "JKT":
+                        pictureUrl += "10000";
+                        break;
+                    case "SDA":
+                        pictureUrl += "20000";
+                        break;
+                    case "CKP":
+                        pictureUrl += "30000";
+                        break;
+                    case "CFG":
+                        pictureUrl += "40000";
+                        break;
+                }
+                pictureUrl += "/" + member[1] + ".jpg";
+
+                return pictureUrl;
+            }
         }
     }
 }

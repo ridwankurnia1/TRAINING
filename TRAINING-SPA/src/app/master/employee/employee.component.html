@@ -1,6 +1,7 @@
 <div class="container mt-3">
   <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
   <p-table #dt1 [value]="listEmployee" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+  styleClass="p-datatable-striped"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [responsive]="true"
     [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
     [totalRecords]="pagination.totalItems" [loading]="loading">
@@ -27,15 +28,15 @@
     <ng-template pTemplate="header">
         <tr>
           <th style="width: 6%;" scope="col">Edit</th>
-          <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> NIK</th>
-          <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th>
+          <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
+          <!-- <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th> -->
           <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
-          <th pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
+          <th style="width: 18%;" pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
           <th style="width: 6%;" scope="col">Del</th>        
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-      <tr>
+      <tr [ngClass]="{'bg-warning': item.departmentId.indexOf('1102')>=0}">
         <td>
           <button type="button" class="btn btn-sm btn-primary" (click)="edit(item, popup)">
             <i class="fa fa-pencil"></i>
@@ -43,13 +44,18 @@
         </td>
         <td>
           <div class="row ml-2">
-            <div class="w-100">
-              {{item.nama | titlecase}}              
+            <div class="table-img">
+              <img [src]="item.photo" width="50" height="50">              
             </div>
-            <small class="text-primary">{{item.nik}}</small>
+            <div class="col-8">
+              <div class="w-100">
+                {{item.nama | titlecase}}
+              </div>
+              <span class="text-primary">{{item.nik}}</span>
+            </div>
           </div>          
         </td>
-        <td>{{item.nama | titlecase}}</td>
+        <!-- <td>{{item.nama | titlecase}}</td> -->
         <td>{{item.department}}</td>
         <td>{{item.birthDate | date:'dd MMMM yyyy'}}</td>
         <td>

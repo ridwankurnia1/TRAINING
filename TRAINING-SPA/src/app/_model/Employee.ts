@@ -5,4 +5,5 @@ export interface Employee {
     department?: string;
     grade?: string;
     birthDate?: Date;
+    photo?: string;
 }
