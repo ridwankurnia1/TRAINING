@@ -14,8 +14,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { EmployeeComponent } from './master/employee/employee.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-// import { ConfirmationService } from 'primeng/api';
-// import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -34,6 +37,10 @@ export function tokenGetter(): string {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    TableModule,
+    ButtonModule,
+    ConfirmDialogModule,
+    DropdownModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
@@ -47,7 +54,9 @@ export function tokenGetter(): string {
       }
     })
   ],
-  providers: [],
+  providers: [
+    ConfirmationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

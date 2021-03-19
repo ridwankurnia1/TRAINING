@@ -26,6 +26,9 @@ export class EmployeeService {
       if (prm.name) {
         params = params.append('name', prm.name);
       }
+      if (prm.filter) {
+        params = params.append('filter', prm.filter);
+      }
     }
 
     return this.http.get<Employee[]>(this.baseUrl + 'employee', { observe: 'response', params})
@@ -66,7 +69,7 @@ export class EmployeeService {
       );
   }
 
-  getEmployee(nama: string): Observable<any> {
-    return this.http.get('');
+  getEmployee(nik: string): Observable<any> {
+    return this.http.get(this.baseUrl + 'employee/' + nik);
   }
 }

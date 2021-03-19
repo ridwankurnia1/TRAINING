@@ -16,5 +16,6 @@ namespace TRAINING.API.Helper
         public string name { get; set; }
         public string dept { get; set; }
         public string grade { get; set; }
+        public string filter { get; set; }
     }
 }

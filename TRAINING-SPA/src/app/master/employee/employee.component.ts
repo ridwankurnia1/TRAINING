@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-// import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
@@ -15,9 +15,7 @@ import { EmployeeService } from 'src/app/_service/employee.service';
   styleUrls: ['./employee.component.css']
 })
 export class EmployeeComponent implements OnInit {
-  param = {
-    name: ''
-  };
+  param = {};
   department: Dropdown[] = [];
   grade: Dropdown[] = [];
   modalRef: BsModalRef;
@@ -30,12 +28,13 @@ export class EmployeeComponent implements OnInit {
   };
   isEdit = false;
   bsConfig: Partial<BsDatepickerConfig>;
-  loading = false;
+  loading = true;
 
   constructor(
     private employeeService: EmployeeService,
     private fb: FormBuilder,
     private toastr: ToastrService,
+    private confirm: ConfirmationService,
     private modalService: BsModalService) { }
 
   ngOnInit(): void {
@@ -51,7 +50,7 @@ export class EmployeeComponent implements OnInit {
       totalItems: 0,
       totalPages: 0
     };
-    this.loadData(this.pagination.currentPage, this.pagination.itemPerPage);
+    this.loadData();
   }
 
   createForm(): void {
@@ -64,9 +63,11 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  loadData(page?, itemPerPage?): void {
-    this.employeeService.getEmployees(page, itemPerPage, this.param)
+  loadData(): void {
+    this.loading = true;
+    this.employeeService.getEmployees(this.pagination.currentPage, this.pagination.itemPerPage, this.param)
       .subscribe((res: PaginatedResult<Employee[]>) => {
+        this.loading = false;
         this.listEmployee = res.result;
         this.pagination = res.pagination;
       });
@@ -79,11 +80,53 @@ export class EmployeeComponent implements OnInit {
       });
   }
   pageChanged(event): void {
-    this.loadData(event.page, this.pageSize);
+    this.pagination.currentPage = (event.first / event.rows) + 1;
+    this.pagination.itemPerPage = event.rows;
+    this.param = {
+      filter: event.globalFilter
+    };
+    this.loadData();
   }
   itemPerPageChange(event): void {
-    this.loadData(1, event);
+    this.loadData();
   }
+  getEmployee(): void {
+    const nik = this.employeeForm.controls.nik.value;
+    this.employeeService.getEmployee(nik)
+      .subscribe({
+        next: (item: Employee) => {
+          if (item) {
+            this.employeeForm.setValue({
+              nik: item.nik,
+              nama: item.nama,
+              departmentId: item.departmentId,
+              grade: item.grade,
+              birthDate: new Date(item.birthDate),
+            });
+            this.employeeForm.controls.nik.disable();
+            this.toastr.info('Employee already exists');
+          }
+        }
+      });
+  }
+  exportExcel(): void {
+    import('xlsx').then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(this.listEmployee);
+        const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, 'employee');
+    });
+  }
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    import('file-saver').then(FileSaver => {
+        const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const EXCEL_EXTENSION = '.xlsx';
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE
+        });
+        FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    });
+}
   edit(item: Employee, template: TemplateRef<any>): void {
     if (item) {
       this.isEdit = true;
@@ -112,7 +155,7 @@ export class EmployeeComponent implements OnInit {
     if (this.isEdit) {
       this.employeeService.editEmployee(data)
       .subscribe(() => {
-        this.loadData(1, 10);
+        this.loadData();
         this.loading = false;
         this.modalRef.hide();
       }, (error) => {
@@ -122,29 +165,24 @@ export class EmployeeComponent implements OnInit {
     } else {
       this.employeeService.addEmployee(data)
       .subscribe(() => {
-        this.loadData(1, 10);
+        this.loadData();
       }, (error) => {
         this.toastr.error(error.error);
       });
     }
   }
   delete(data: Employee): void {
-    // this.confirm.confirm({
-    //   message: 'Delete employee ' + data.nama + ' ?',
-    //   header: 'Confirmation',
-    //   accept: () => {
-    //     this.employeeService.deleteEmployee(data.nik)
-    //       .subscribe(() => {
-    //         this.loadData(1, 10);
-    //         this.toastr.success('Employee Deleted');
-    //       });
-    //   }
-    // });
-    this.employeeService.deleteEmployee(data.nik)
-      .subscribe(() => {
-        this.loadData(1, 10);
-        this.toastr.success('Employee Deleted');
-      });
+    this.confirm.confirm({
+      message: 'Delete employee ' + data.nama + ' ?',
+      header: 'Confirmation',
+      accept: () => {
+        this.employeeService.deleteEmployee(data.nik)
+          .subscribe(() => {
+            this.loadData();
+            this.toastr.success('Employee Deleted');
+          });
+      }
+    });
   }
   validateFormEntry(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(field => {

@@ -54,6 +54,12 @@ namespace TRAINING.API.Data
             {
                 query = query.Where(x => x.EMEGNO == prm.grade);
             }
+            if (!string.IsNullOrEmpty(prm.filter))
+            {
+                query = query.Where(x => x.EMEMNO.Contains(prm.filter) || 
+                        x.EMEMNA.Contains(prm.filter) ||
+                        x.GOG1.GOOGNA.Contains(prm.filter));
+            }
 
             return await PagedList<MEMP>.CreateAsync(query, prm.PageNumber, prm.PageSize);
         }

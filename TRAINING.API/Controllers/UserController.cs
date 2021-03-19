@@ -35,6 +35,16 @@ namespace TRAINING.API.Controllers
 
             return Ok(result);
         }
+        [HttpGet("employee/{nik}")]
+        public async Task<IActionResult> GetEmployeeByNik(string nik)
+        {
+            var employee = await _repo.GetEmployee(nik);
+            if (employee == null)
+                return NoContent();
+            
+            var dataToReturn = _mapper.Map<EmployeeDto>(employee);
+            return Ok(dataToReturn);
+        }
         [HttpPost("employee")]
         public async Task<IActionResult> AddEmployee(EmployeeDto data)
         {
