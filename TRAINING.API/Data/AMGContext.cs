@@ -14,7 +14,7 @@ namespace TRAINING.API.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ZUSR>().HasKey(k => new { k.ZUUSNO });
-            builder.Entity<MEMP>().HasKey(k => new { k.EMEMNO, k.EMRCST });
+            builder.Entity<MEMP>().HasKey(k => new { k.EMEMNO, k.EMBRNO });
             builder.Entity<MGRD>().HasKey(k => new { k.GDEGNO });
             builder.Entity<GOG1>().HasKey(k => new { k.GOOGNO });
             builder.Entity<MEMP>()
