@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IBM.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,6 +19,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Data.Common;
 
 namespace TRAINING.API
 {
@@ -36,9 +38,20 @@ namespace TRAINING.API
             services.AddControllers();
             services.AddCors();
             services.AddDbContext<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")));
-            services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));
+            services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));            
+            services.AddDbContext<ORDSContext>(x => x.UseDb2(Configuration.GetConnectionString("ORDSConnection"), 
+                action => {
+                    action.CommandTimeout(10);
+                }));
+            // DbProviderFactories.RegisterFactory("IBM.data.DB2", IBM.Data.Db2.DB2Factory.Instance);
+            // DbConnection db = DbProviderFactories.GetFactory("IBM.data.DB2").CreateConnection();
+            // db.ConnectionString = Configuration.GetConnectionString("ORDSConnection");
+            // services.AddDbContext<ORDSContext>(x => x.UseDb2(db, action => {
+            //     action.CommandTimeout(10);
+            // }));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -83,6 +96,12 @@ namespace TRAINING.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
