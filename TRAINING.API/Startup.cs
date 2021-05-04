@@ -37,12 +37,13 @@ namespace TRAINING.API
         {
             services.AddControllers();
             services.AddCors();
-            services.AddDbContext<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")));
-            services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));            
-            services.AddDbContext<ORDSContext>(x => x.UseDb2(Configuration.GetConnectionString("ORDSConnection"), 
-                action => {
-                    action.CommandTimeout(10);
-                }));
+            services.AddDbContext<ECSContext>(x => x.UseSqlServer(Configuration.GetConnectionString("ECSConnection")));
+            services.AddDbContext<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")));            
+            // services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));            
+            // services.AddDbContext<ORDSContext>(x => x.UseDb2(Configuration.GetConnectionString("ORDSConnection"), 
+            //     action => {
+            //         action.CommandTimeout(10);
+            //     }));
             // DbProviderFactories.RegisterFactory("IBM.data.DB2", IBM.Data.Db2.DB2Factory.Instance);
             // DbConnection db = DbProviderFactories.GetFactory("IBM.data.DB2").CreateConnection();
             // db.ConnectionString = Configuration.GetConnectionString("ORDSConnection");
@@ -51,7 +52,8 @@ namespace TRAINING.API
             // }));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IORDSRepository, ORDSRepository>();
+            services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
+            // services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters
