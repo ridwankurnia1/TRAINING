@@ -19,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -31,6 +32,7 @@ export function tokenGetter(): string {
     EmployeeComponent
   ],
   imports: [
+    AutoCompleteModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
