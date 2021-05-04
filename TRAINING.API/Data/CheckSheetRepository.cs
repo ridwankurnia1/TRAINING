@@ -88,9 +88,13 @@ namespace TRAINING.API.Data
             {
                 query = query.Where(x => x.ELEMNA.Contains(prm.name));
             }
+            if (!string.IsNullOrEmpty(prm.filter))
+            {
+                query = query.Where(x => x.ELEMNA.Contains(prm.filter) || x.ELEMNO.Contains(prm.filter));
+            }
             if (!string.IsNullOrEmpty(prm.dept))
             {
-                query = query.Where(x => x.ELDENA.Contains(prm.dept));
+                query = query.Where(x => x.ELDENO == prm.dept);
             }
             if (!string.IsNullOrEmpty(prm.Filled))
             {
@@ -123,19 +127,33 @@ namespace TRAINING.API.Data
         public async Task<IEnumerable<LebaranSummaryDto>> GetSummaryLebaran(string location)
         {
             var query = _context.EHAL.Where(x => x.ELBRNO == location)
-                        .GroupBy(x => x.ELDENA)
+                        .GroupBy(x => new { x.ELDENO, x.ELDENA }).OrderBy(x => x.Key.ELDENA)
                         .Select(e => new LebaranSummaryDto
                         {
-                            Department = e.Key,
+                            DepartmentId = e.Key.ELDENO,
+                            Department = e.Key.ELDENA,
                             Filled = e.Sum(e => e.ELTRDT.HasValue ? 1 : 0),
                             Unfilled = e.Sum(e => e.ELTRDT.HasValue == false ? 1 : 0),
                             MustCheck = e.Sum(e => e.ELRCST == 1 ? 1 : 0),
                             NoNeedCheck = e.Sum(e => e.ELRCST == 0 ? 1 : 0),
-                            AlreadyCheck = e.Sum(e => e.ELRCST == 1 && e.ELHCDT.HasValue ? 1 : 0),
+                            AlreadyCheck = e.Sum(e => (e.ELRCST == 1 && e.ELHCDT.HasValue) ? 1 : 0),
                             NotYetCheck = e.Sum(e => e.ELRCST == 1 && e.ELHCDT.HasValue == false ? 1 : 0)
                         });
             
             return await query.ToListAsync();
-        }        
+        }
+
+        public async Task<IEnumerable<DropdownDto>> GetDepartment(string location)
+        {
+            var query = from e in _context.EHAL.Where(x => x.ELBRNO == location)
+                        .Select(x => new { x.ELDENO, x.ELDENA }).Distinct()
+                        select new DropdownDto 
+                        {
+                            Label = e.ELDENA,
+                            Value = e.ELDENO
+                        };
+            
+            return await query.ToListAsync();
+        }
     }
 }

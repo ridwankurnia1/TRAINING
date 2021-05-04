@@ -5,43 +5,52 @@
       <h5>PT Asahimas Flat Glass, Tbk</h5>
       <h6>Kuesioner Lebaran 2021</h6>
     </div>
-    <div class="row justify-content-md-center">
+    <div *ngIf="firstView" class="row justify-content-md-center">
       <div class="col-12 col-md-6">
-        <form [formGroup]="checkInForm" (submit)="submit()">
+        <div *ngIf="mustCheck && readOnly" class="alert alert-danger" role="alert">
+          Anda diharuskan melakukan check kesehatan di clinic Asahimas sebelum mulai bekerja.
+        </div>
+        <div *ngIf="!mustCheck && readOnly" class="alert alert-success" role="alert">
+          Anda siap untuk bekerja.
+        </div>
+        <form #checkInForm="ngForm" (submit)="submit()">
           <div class="form-group">
             <label for="nikorname">Identitas Karyawan</label>
-            <p-autoComplete [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="nama" [size]="10"
-              placeholder="Isi NIK atau nama" formControlName="nik" [minLength]="4" [style]="{'width':'100%'}"
-              [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)"
-              [ngClass]="{'is-invalid': checkInForm.get('nik').errors && checkInForm.get('nik').touched}">
+            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="nama" [size]="10"
+              placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4" [style]="{'width':'100%'}"
+              [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)" [forceSelection]="true" [disabled]="readOnly">
               <ng-template let-item pTemplate="item">
                 <div class="my-0">
                   {{item.nama}}
                 </div>
-                <small>{{item.nik}}</small>
+                <small><b>{{item.nik}}</b> - {{item.department}}</small>
               </ng-template>
             </p-autoComplete>
             <div class="invalid-feedback">
               Harap isi NIK
             </div>
           </div>
-          <div class="form-group">
-            <label for="kondisi">Kondisi</label>
+          <div class="form-group" *ngFor="let item of questions; let idx = index"
+            [ngClass]="{'bg-warning': item.invalid}">
+            <label for="pertanyaan">{{item.pertanyaan}}</label>
             <div class="row">
-              <div *ngFor="let item of ddlKondisi">
+              <div *ngFor="let opt of item.options">
                 <div class="col">
                   <div class="form-check form-check-inline">
-                    <p-radioButton name="option" [value]="item.value" [label]="item.label" (onClick)="optionCheck()"
-                      formControlName="kondisi">
+                    <p-radioButton [disabled]="readOnly" required name="radio{{idx}}" [value]="opt.value" [label]="opt.label" [(ngModel)]="item.nilai"
+                      (onClick)="radioClicked(item)">
                     </p-radioButton>
                   </div>
                 </div>
               </div>
             </div>
+            <small *ngIf="item.invalid">
+              Harap di isi
+            </small>
           </div>
           
           <div class="mb-3">
-            <button class="btn btn-danger" type="submit" [disabled]="loading">
+            <button *ngIf="!readOnly" class="btn btn-danger" type="submit" [disabled]="loading">
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
               <i *ngIf="!loading" class="fa fa-save mr-2"></i>Submit
             </button>
@@ -49,18 +58,24 @@
         </form>
       </div>
     </div>
+    <div class="mt-3" *ngIf="secondView">
+      <div class="justify-content-md-center">
+        <div *ngIf="mustCheck" class="alert alert-danger" role="alert">
+          Anda diharuskan melakukan check kesehatan di clinic Asahimas sebelum mulai bekerja.
+        </div>
+        <div *ngIf="!mustCheck" class="alert alert-success" role="alert">
+          Anda siap untuk bekerja.
+        </div>
+      </div>
+      <div class="justify-content-md-center">
+        <div class="text-center my-3 py-2">
+          <h6>Management PT Asahimas Flat Glass Tbk mengucapkan</h6>
+          <h5>Selamat Idul Fitri 1442 H</h5>
+          <h5>Mohon Maaf Lahir dan Bathin</h5>
+        </div>
+      </div>
+      
+    </div>
   </div>
 </div>
 
-<ng-template #popup>
-  <div class="modal-header">
-    Data Berhasil Disimpan
-  </div>
-  <div class="modal-body">
-    <p>Terima kasih atas kerjasamanya, semoga kita sehat selalu</p>
-    
-    <button class="btn btn-success" type="reset" (click)="modalRef.hide()">
-      <i class="fa fa-check mr-2"></i>OK
-    </button>
-  </div>
-</ng-template>

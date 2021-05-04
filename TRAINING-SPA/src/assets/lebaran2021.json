@@ -1,0 +1,349 @@
+{
+    "question": [
+        {
+            "id": 1,
+            "pertanyaan": "Apakah anda melakukan pulang kampung",
+            "category": "Pulang Kampung",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "pertanyaan": "Apakah anda menggunakan kendaraan umum",
+            "category": "Pulang Kampung",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "2"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "pertanyaan": "Apakah anda menggunakan masker selama melaksanakan kegiatan ibadah",
+            "category": "Kegiatan Ibadah",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "pertanyaan": "Apakah anda menggunakan handsanitizer sebelum, saat dan sesudah melakukan kegiatan ibadah",
+            "category": "Kegiatan Ibadah",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "pertanyaan": "Apakah anda melakukan kontak fisik saat bersalaman",
+            "category": "Kegiatan Sosial",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "2"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "pertanyaan": "Apakah anda menggunakan masker saat melakukan pertemuan keluarga/kerabat/ibadah",
+            "category": "Kegiatan Sosial",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "pertanyaan": "Apakah pertemuan keluarga/kerabat dilakukan diruangan tertutup",
+            "category": "Kegiatan Sosial",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "pertanyaan": "Apakah ventilasi/sirkulasi udara memadai?",
+            "category": "Kegiatan Sosial",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "pertanyaan": "Apakah anda mengunjungi tempat hiburan yang tertutup (bioskop / mall)?",
+            "category": "Tempat Keramaian",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "pertanyaan": "Apakah anda mengunjungi tempat wisata yang terbuka ( pantai / gunung )?",
+            "category": "Tempat Keramaian",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "pertanyaan": "Apakah anda mengunjungi tempat keramaian ( pasar )",
+            "category": "Tempat Keramaian",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "pertanyaan": "Apakah anda mengalami meriang?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "pertanyaan": "Apakah saat ini anda merasakan kesulitan bernafas secara normal?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "pertanyaan": "Apakah saat ini anda mengalami gangguan lambung (mual / nyeri / lambung)?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 15,
+            "pertanyaan": "Apakah saat ini anda mengalami diare?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 16,
+            "pertanyaan": "Apakah saat ini mengalami hilang rasa?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "10"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "pertanyaan": "Apakah saat ini mengalami hilang penciuman?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "10"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "pertanyaan": "Apakah saat ini anda mengalami batuk dan pilek?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "pertanyaan": "Apakah ada anggota keluarga inti yang tinggal serumah mengalami penyakit covid-19?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "pertanyaan": "Apakah anda dan atau keluarga mengunjungi orang sakit?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 21,
+            "pertanyaan": "Apakah anda dan atau keluarga menghadiri acara pemakan / kedukaan?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "pertanyaan": "Apakah anda dan atau keluarga melakukan kontak dengan orang yang terjangkit covid-19?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "pertanyaan": "Apakah keluarga anda ada yang mengalami gejala kesehatan ( meriang, kesulitan bernafas normal, gangguan lambung, diare, hilang rasa, holang penciuman, batuk dan pilek )?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        }
+    ]
+}

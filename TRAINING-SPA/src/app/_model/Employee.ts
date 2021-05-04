@@ -6,4 +6,10 @@ export interface Employee {
     grade?: string;
     birthDate?: Date;
     photo?: string;
+    fillDate?: Date;
+    status?: number;
+    attendDate?: Date;
+    healthCheckDate?: Date;
+    checkPIC?: string;
+    remarks?: string;
 }

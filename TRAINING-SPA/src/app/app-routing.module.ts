@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ClinicComponent } from './lebaran/clinic/clinic.component';
-import { DownloadComponent } from './lebaran/download/download.component';
+import { DetailComponent } from './lebaran/detail/detail.component';
 import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
 import { SecurityComponent } from './lebaran/security/security.component';
+import { SummaryComponent } from './lebaran/summary/summary.component';
+import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
@@ -17,11 +19,31 @@ const routes: Routes = [
   },
   {
     path: 'clinic',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     component: ClinicComponent
   },
   {
-    path: 'download',
-    component: DownloadComponent
+    path: 'summary',
+    // runGuardsAndResolvers: 'always',
+    // canActivate: [AuthGuard],
+    component: SummaryComponent
+  },
+  {
+    path: 'summary/:id',
+    // runGuardsAndResolvers: 'always',
+    // canActivate: [AuthGuard],
+    component: DetailComponent
+  },
+  {
+    path: 'detail',
+    // runGuardsAndResolvers: 'always',
+    // canActivate: [AuthGuard],
+    component: DetailComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: '**', redirectTo: ''

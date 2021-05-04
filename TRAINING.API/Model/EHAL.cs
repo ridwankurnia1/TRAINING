@@ -11,6 +11,7 @@ namespace TRAINING.API.Model
         public string ELBTCT { get; set; }
         public DateTime? ELBTDT { get; set; }
         public string ELEKTP { get; set; }
+        public string ELDENO { get; set; }
         public string ELDENA { get; set; }
         public DateTime? ELTRDT { get; set; }
         public Int16 ELSQ01 { get; set; }

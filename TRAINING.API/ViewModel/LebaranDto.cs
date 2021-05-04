@@ -11,6 +11,7 @@ namespace TRAINING.API.ViewModel
         public string BirthCity { get; set; }
         public DateTime? BirthDate { get; set; }
         public string EKTP { get; set; }
+        public string DepartmentId { get; set; }
         public string Department { get; set; }
         public DateTime? FillDate { get; set; }
         public Int16 Question01 { get; set; }

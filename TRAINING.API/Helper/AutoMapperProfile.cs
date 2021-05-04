@@ -47,6 +47,7 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.BirthCity, opt => opt.MapFrom(src => src.ELBTCT))
                 .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => src.ELBTDT))
                 .ForMember(des => des.EKTP, opt => opt.MapFrom(src => src.ELEKTP))
+                .ForMember(des => des.DepartmentId, opt => opt.MapFrom(src => src.ELDENO))
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA))
                 .ForMember(des => des.FillDate, opt => opt.MapFrom(src => src.ELTRDT))
                 .ForMember(des => des.Question01, opt => opt.MapFrom(src => src.ELSQ01))

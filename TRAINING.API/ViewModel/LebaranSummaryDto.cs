@@ -2,6 +2,7 @@ namespace TRAINING.API.ViewModel
 {
     public class LebaranSummaryDto
     {
+        public string DepartmentId { get; set; }
         public string Department { get; set; }
         public int Filled { get; set; }
         public int Unfilled { get; set; }

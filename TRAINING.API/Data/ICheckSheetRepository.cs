@@ -16,5 +16,6 @@ namespace TRAINING.API.Data
         Task<IEnumerable<EHAL>> GetListEmployee(Params prm);
         Task<PagedList<EHAL>> GetListEmployeePaging(Params prm);
         Task<IEnumerable<LebaranSummaryDto>> GetSummaryLebaran(string location);
+        Task<IEnumerable<DropdownDto>> GetDepartment(string location);
     }
 }

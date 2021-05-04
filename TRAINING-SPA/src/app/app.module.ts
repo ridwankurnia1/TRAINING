@@ -8,11 +8,14 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
+import { EmployeeComponent } from './master/employee/employee.component';
+import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
+import { ClinicComponent } from './lebaran/clinic/clinic.component';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
-import { EmployeeComponent } from './master/employee/employee.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -20,6 +23,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { LoginComponent } from './login/login.component';
+import { SummaryComponent } from './lebaran/summary/summary.component';
+import { DetailComponent } from './lebaran/detail/detail.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -29,8 +36,13 @@ export function tokenGetter(): string {
   declarations: [
     AppComponent,
     NavComponent,
-    EmployeeComponent
-  ],
+    EmployeeComponent,
+    QuestionnaireComponent,
+    ClinicComponent,
+    LoginComponent,
+    SummaryComponent,
+    DetailComponent
+   ],
   imports: [
     AutoCompleteModule,
     BrowserModule,
@@ -43,6 +55,7 @@ export function tokenGetter(): string {
     ButtonModule,
     ConfirmDialogModule,
     DropdownModule,
+    RadioButtonModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),

@@ -16,6 +16,7 @@ namespace TRAINING.API.Helper
         public string nik { get; set; }
         public string rfid { get; set; }
         public string name { get; set; }
+        public string brno { get; set; }
         public string dept { get; set; }
         public string grade { get; set; }
         public string filter { get; set; }

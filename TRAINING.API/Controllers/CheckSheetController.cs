@@ -32,19 +32,20 @@ namespace TRAINING.API.Controllers
 
             return Ok(result);
         }
+        [AllowAnonymous]
         [HttpGet("employee/summary")]
         public async Task<IActionResult> GetEmployeeSummary([FromQuery]Params prm)
         {
-            var data = await _repo.GetSummaryLebaran(User.GetDefaultLocation());
+            var data = await _repo.GetSummaryLebaran("CKP");
             return Ok(data);
-        }
-        
+        }        
         [AllowAnonymous]
         [HttpGet("employee")]
         public async Task<IActionResult> GetEmployee([FromQuery]Params prm)
         {
             var data = await _repo.GetListEmployeePaging(prm);
             var result = _mapper.Map<IEnumerable<EmployeeDto>>(data);
+            Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
 
             return Ok(result);
         }
@@ -129,7 +130,7 @@ namespace TRAINING.API.Controllers
             throw new Exception("Gagal menyimpan data");
         }
 
-        [HttpPut("employee/{id}")]
+        [HttpPut("employee/{id}/clinic")]
         public async Task<IActionResult> EditEmployeeStatus(string id, LebaranDto obj)
         {
             var emp = await _repo.GetEmployee(id, "");
@@ -145,6 +146,13 @@ namespace TRAINING.API.Controllers
                 return Ok();
 
             throw new Exception("Gagal menyimpan data");
+        }
+        [AllowAnonymous]
+        [HttpGet("department")]
+        public async Task<IActionResult> GetDepartment([FromQuery]Params prm)
+        {
+            var dept = await _repo.GetDepartment(prm.brno);
+            return Ok(dept);
         }
     }
 }

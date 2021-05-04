@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="my-3">
+    <div class="text-center">
+      <h5>Summary Kuestioner Lebaran 2021</h5>      
+    </div>
+    <div class="d-flex justify-content-center my-3">
+      <button class="btn btn-success mr-2" type="button" (click)="exportExcel()">
+        <i class="pi pi-file-excel"></i> Download
+      </button>
+      <a class="btn btn-danger" type="button" [routerLink]="['/detail']">
+        View Detail
+      </a>            
+    </div>
+    <div class="list-group list-group-flush border-bottom scrollarea">
+      <ng-container *ngFor="let item of data; let idx = index">
+        <a href="#" class="list-group-item list-group-item-action py-3 lh-tight"
+          [routerLink]="['/summary', item.departmentId]"
+          [ngClass]="{'active': idx === 0}">
+          <div class="d-flex w-100 align-items-center justify-content-between">
+            <strong class="mb-1">{{item.department}}</strong>
+            <!-- <small class="text-muted">Tues</small> -->
+          </div>
+          <div class="col-12 mb-1 small">
+            <div class="row">
+              <div class="col-6">
+                Sudah Mengisi <b>{{item.filled}}</b>
+              </div>
+              <div class="col-6">
+                Belum Mengisi <b>{{item.unfilled}}</b>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                Cek Kesehatan <b>{{item.mustCheck}}</b>
+              </div>
+              <div class="col-6">
+                Siap Bekerja <b>{{item.noNeedCheck}}</b>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                Sudah Cek Kesehatan <b>{{item.alreadyCheck}}</b>
+              </div>
+              <div class="col-12">
+                Belum Cek Kesehatan <b>{{item.notYetCheck}}</b>
+              </div>
+            </div>
+          </div>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</div>
