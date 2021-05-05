@@ -16,9 +16,10 @@
         <form #checkInForm="ngForm" (submit)="submit()">
           <div class="form-group">
             <label for="nikorname">Identitas Karyawan</label>
-            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="nama" [size]="10"
-              placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4" [style]="{'width':'100%'}"
-              [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)" [forceSelection]="true" [disabled]="readOnly">
+            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="nama"
+              [size]="10" placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4"
+              [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)"
+              [forceSelection]="true" [disabled]="readOnly">
               <ng-template let-item pTemplate="item">
                 <div class="my-0">
                   {{item.nama}}
@@ -37,8 +38,8 @@
               <div *ngFor="let opt of item.options">
                 <div class="col">
                   <div class="form-check form-check-inline">
-                    <p-radioButton [disabled]="readOnly" required name="radio{{idx}}" [value]="opt.value" [label]="opt.label" [(ngModel)]="item.nilai"
-                      (onClick)="radioClicked(item)">
+                    <p-radioButton [disabled]="readOnly" required name="radio{{idx}}" [value]="opt.value"
+                      [label]="opt.label" [(ngModel)]="item.nilai" (onClick)="radioClicked(item)">
                     </p-radioButton>
                   </div>
                 </div>
@@ -48,13 +49,14 @@
               Harap di isi
             </small>
           </div>
-          
+
           <div class="mb-3">
             <button *ngIf="!readOnly" class="btn btn-danger" type="submit" [disabled]="loading">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" role="status"
+                aria-hidden="true"></span>
               <i *ngIf="!loading" class="fa fa-save mr-2"></i>Submit
             </button>
-          </div>          
+          </div>
         </form>
       </div>
     </div>
@@ -69,13 +71,14 @@
       </div>
       <div class="justify-content-md-center">
         <div class="text-center my-3 py-2">
-          <h6>Management PT Asahimas Flat Glass Tbk mengucapkan</h6>
+          <h6>Management PT Asahimas Flat Glass Tbk</h6>
+          <h6>Mengucapkan</h6>
           <h5>Selamat Idul Fitri 1442 H</h5>
           <h5>Mohon Maaf Lahir dan Bathin</h5>
+          <img class="d-block mx-auto mb-2" src="assets/ketupat.png" alt="" width="72" height="72">    
         </div>
       </div>
-      
+
     </div>
   </div>
 </div>
-

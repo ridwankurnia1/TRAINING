@@ -25,20 +25,20 @@ const routes: Routes = [
   },
   {
     path: 'summary',
-    // runGuardsAndResolvers: 'always',
-    // canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     component: SummaryComponent
   },
   {
     path: 'summary/:id',
-    // runGuardsAndResolvers: 'always',
-    // canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     component: DetailComponent
   },
   {
     path: 'detail',
-    // runGuardsAndResolvers: 'always',
-    // canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     component: DetailComponent
   },
   {

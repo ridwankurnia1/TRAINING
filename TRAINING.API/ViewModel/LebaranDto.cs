@@ -10,6 +10,8 @@ namespace TRAINING.API.ViewModel
         public string RFID { get; set; }
         public string BirthCity { get; set; }
         public DateTime? BirthDate { get; set; }
+        public int Age { get; set; }
+        public string Photo { get; set; }
         public string EKTP { get; set; }
         public string DepartmentId { get; set; }
         public string Department { get; set; }

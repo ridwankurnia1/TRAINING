@@ -1,10 +1,12 @@
 export interface Lebaran {
     employeeId?: string;
     employeeName?: string;
+    photo?: string;
     location?: string;
     rfid?: string;
     birthCity?: string;
     birthDate?: Date;
+    age?: number;
     ektp?: string;
     department?: string;
     fillDate?: Date;
@@ -39,6 +41,7 @@ export interface Lebaran {
     question29?: number;
     question30?: number;
     status?: number;
+    statusDescription?: string;
     attendDate?: Date;
     healthCheckDate?: Date;
     checkPIC?: string;

@@ -87,7 +87,7 @@ export class QuestionnaireComponent implements OnInit {
     };
     this.csservice.getEmployees(1, 10, prm)
       .subscribe(
-        (data: PaginatedResult<Employee[]>) => {
+        (data: PaginatedResult<Lebaran[]>) => {
           this.filteredEmp = data.result;
         },
         error => {

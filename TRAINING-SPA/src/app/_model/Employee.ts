@@ -7,7 +7,7 @@ export interface Employee {
     birthDate?: Date;
     photo?: string;
     fillDate?: Date;
-    status?: number;
+    status?: string;
     attendDate?: Date;
     healthCheckDate?: Date;
     checkPIC?: string;

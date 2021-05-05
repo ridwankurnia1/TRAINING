@@ -37,7 +37,9 @@ namespace TRAINING.API.Helper
             CreateMap<EHAL, EmployeeDto>()
                 .ForMember(des => des.Nik, opt => opt.MapFrom(src => src.ELEMNO))
                 .ForMember(des => des.Nama, opt => opt.MapFrom(src => src.ELEMNA))
-                .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA));
+                .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA))
+                .ForMember(des => des.FillDate, opt => opt.MapFrom(src => src.ELTRDT))
+                .ForMember(des => des.Status, opt => opt.MapFrom(src => ""));
 
             CreateMap<EHAL, LebaranDto>()
                 .ForMember(des => des.EmployeeId, opt => opt.MapFrom(src => src.ELEMNO))
@@ -46,7 +48,9 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.RFID, opt => opt.MapFrom(src => src.ELRFID))
                 .ForMember(des => des.BirthCity, opt => opt.MapFrom(src => src.ELBTCT))
                 .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => src.ELBTDT))
+                .ForMember(des => des.Age, opt => opt.MapFrom<AgeResolver, DateTime?>(src => src.ELBTDT))
                 .ForMember(des => des.EKTP, opt => opt.MapFrom(src => src.ELEKTP))
+                .ForMember(des => des.Photo, opt => opt.MapFrom<PhotoResolver, string>(src => src.ELBRNO + "|" + src.ELEMNO))
                 .ForMember(des => des.DepartmentId, opt => opt.MapFrom(src => src.ELDENO))
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA))
                 .ForMember(des => des.FillDate, opt => opt.MapFrom(src => src.ELTRDT))
@@ -158,5 +162,20 @@ namespace TRAINING.API.Helper
                 return pictureUrl;
             }
         }
+        public class AgeResolver : IMemberValueResolver<object, object, DateTime?, int>
+        {
+            public int Resolve(object source, object destination, DateTime? sourceMember, int destinationMember, ResolutionContext context)
+            {
+                if (!sourceMember.HasValue)
+                    return 0;
+                
+                var today = DateTime.Today;
+                var age = today.Year - sourceMember.Value.Year;
+                if (sourceMember.Value.Date > today.AddYears(-age))
+                    age--;
+
+                return age;
+            }
+        }        
     }
 }

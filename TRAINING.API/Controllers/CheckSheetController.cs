@@ -32,25 +32,27 @@ namespace TRAINING.API.Controllers
 
             return Ok(result);
         }
-        [AllowAnonymous]
+        
         [HttpGet("employee/summary")]
         public async Task<IActionResult> GetEmployeeSummary([FromQuery]Params prm)
         {
-            var data = await _repo.GetSummaryLebaran("CKP");
+            var data = await _repo.GetSummaryLebaran(prm.brno);
             return Ok(data);
         }        
+
         [AllowAnonymous]
         [HttpGet("employee")]
         public async Task<IActionResult> GetEmployee([FromQuery]Params prm)
         {
             var data = await _repo.GetListEmployeePaging(prm);
-            var result = _mapper.Map<IEnumerable<EmployeeDto>>(data);
+            var result = _mapper.Map<IEnumerable<LebaranDto>>(data);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
 
             return Ok(result);
         }
+
         [AllowAnonymous]
-        [HttpGet("employee/{id}")]
+        [HttpGet("employee/{id}", Name = "GetEmployee")]
         public async Task<IActionResult> GetEmployeeByNikOrRFID(string id)
         {
             string strNIK = string.Empty;
@@ -147,7 +149,37 @@ namespace TRAINING.API.Controllers
 
             throw new Exception("Gagal menyimpan data");
         }
+
         [AllowAnonymous]
+        [HttpPost("employee/security")]
+        public async Task<IActionResult> EditEmployeeAttendance(EmployeeIdDto obj)
+        {
+            if (string.IsNullOrEmpty(obj.Nik) && string.IsNullOrEmpty(obj.RFID))
+                return BadRequest("Harap TAP Id Card atau input NIK");
+
+            var emp = await _repo.GetEmployee(obj.Nik, obj.RFID);
+            if (emp == null)
+                return BadRequest("Data Karyawan tidak ditemukan");
+
+            if (!emp.ELATDT.HasValue)
+            {
+                emp.ELATDT = DateTime.Now;
+                if (await _repo.SaveAll())
+                {
+                    var ehal = await _repo.GetEmployee(emp.ELEMNO, "");
+                    var response = _mapper.Map<LebaranDto>(ehal);
+                    return CreatedAtRoute("GetEmployee", new { id = response.EmployeeId }, response);
+                }
+            }
+            else
+            {
+                var resp = _mapper.Map<LebaranDto>(emp);
+                return Ok(resp);
+            }
+
+            throw new Exception("Gagal menyimpan data, ulangi proses absensi");
+        }
+        
         [HttpGet("department")]
         public async Task<IActionResult> GetDepartment([FromQuery]Params prm)
         {

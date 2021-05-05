@@ -1,3 +1,126 @@
-<p>
-  clinic works!
-</p>
+<div class="container my-3">
+  <div class="d-flex justify-content-end">
+    <div class="col-6 col-md-3">
+      <div class="input-group">
+        <input type="text" [(ngModel)]="nikorid" autofocus class="form-control" placeholder="Search" (keydown.enter)="getEmployee()">
+        <span class="input-group-text" id="basic-addon2">
+          <i *ngIf="!loading" class="fa fa-search"></i>
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+        </span>
+      </div>
+    </div>    
+  </div>
+
+  <div class="my-3">
+    <div class="row">
+      <div class="col-6">
+        <h5 class="pb-2 border-bottom">Kuestioner Lebaran 2021</h5>
+        <div *ngIf="displayAnswer">
+          <div class="form-group" *ngFor="let item of questions; let idx = index" [ngClass]="{'bg-warning': item.invalid}">
+            <label for="pertanyaan">{{item.pertanyaan}}</label>
+            <div class="row">
+              <div *ngFor="let opt of item.options">
+                <div class="col">
+                  <div class="form-check form-check-inline">
+                    <p-radioButton [disabled]="readOnly" required name="radio{{idx}}" [value]="opt.value" [label]="opt.label"
+                      [(ngModel)]="item.nilai" (onClick)="radioClicked(item)">
+                    </p-radioButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <small *ngIf="item.invalid">
+              Harap di isi
+            </small>
+          </div>
+        </div>        
+      </div>
+      <div class="col-6">
+        <h5 class="pb-2 border-bottom">Identitas Karyawan</h5>
+        <div class="row">
+          <div class="ml-3 d-flex flex-column position-static">
+            <div class="table-img pt-2 text-right">
+              <img id="img0" [src]="employeeData.photo" alt="" width="55" height="55">
+            </div>
+          </div>
+          <div class="col-md-8 col-6">
+            <h6 class="my-0">{{employeeData.employeeName | titlecase }}</h6>
+            <small>{{employeeData.department}}</small>
+            <div class="w-100">
+              <small>Age <b>{{employeeData.age}}</b></small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col mb-3">
+            <label for="tglKuestioner" class="form-label">Tanggal Pengisian Kuestioner</label>            
+            <div class="input-group">
+              <input type="text" class="form-control" #dp1="bsDatepicker" placeholder="dd-MM-yyyy"
+                readonly bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="employeeData.fillDate">
+              <div class="input-group-append">
+                <button class="btn btn-outline-success" (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col mb-3">
+            <label for="tglCheckclock" class="form-label">Check Clock</label>
+            <div class="input-group">
+              <input type="text" class="form-control" #dp2="bsDatepicker" placeholder="dd-MM-yyyy"
+                readonly bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="employeeData.attendDate">
+              <div class="input-group-append">
+                <button class="btn btn-outline-success" (click)="dp2.toggle()" [attr.aria-expanded]="dp2.isOpen">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Hasil Pemeriksaan</label>
+          <textarea name="queEssay" class="form-control" rows="2" [(ngModel)]="employeeData.remarks">
+          </textarea>
+        </div>
+
+        <div class="row">
+          <div class="col mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Tanggal Check Kesehatan</label>
+            <div class="input-group">
+              <input type="text" class="form-control" #dp3="bsDatepicker" placeholder="dd-MM-yyyy"
+                readonly bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="employeeData.healthCheckDate">
+              <div class="input-group-append">
+                <button class="btn btn-outline-success" (click)="dp3.toggle()" [attr.aria-expanded]="dp3.isOpen">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Kesimpulan : Siap Bekerja ?</label>
+            <div class="row">
+              <div class="col">
+                <p-radioButton required name="radioYes" [value]="0" label="Ya" [(ngModel)]="employeeData.status">
+                </p-radioButton>
+              </div>
+              <div class="col">
+                <p-radioButton required name="radioYes" [value]="1" label="Tidak" [(ngModel)]="employeeData.status">
+                </p-radioButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3" *ngIf="displayAnswer">
+          <button class="btn btn-danger" type="submit" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" role="status"
+              aria-hidden="true"></span>
+            <i *ngIf="!loading" class="fa fa-save mr-2"></i>Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Dropdown } from '../_model/Dropdown';
 import { Employee } from '../_model/Employee';
+import { EmployeeId } from '../_model/EmployeeId';
 import { Lebaran } from '../_model/Lebaran';
 import { PaginatedResult } from '../_model/Pagination';
 
@@ -16,8 +17,8 @@ export class ChecksheetService {
 
   constructor(private http: HttpClient) { }
 
-  getEmployees(page?, itemPerPage?, prm?): Observable<PaginatedResult<Employee[]>> {
-    const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
+  getEmployees(page?, itemPerPage?, prm?): Observable<PaginatedResult<Lebaran[]>> {
+    const paginatedResult: PaginatedResult<Lebaran[]> = new PaginatedResult<Lebaran[]>();
     let params = new HttpParams();
 
     if (page != null && itemPerPage != null) {
@@ -36,7 +37,7 @@ export class ChecksheetService {
       }
     }
 
-    return this.http.get<Employee[]>(this.baseUrl + 'employee', { observe: 'response', params})
+    return this.http.get<Lebaran[]>(this.baseUrl + 'employee', { observe: 'response', params})
       .pipe(
         map(reponse => {
           paginatedResult.result = reponse.body;
@@ -87,6 +88,9 @@ export class ChecksheetService {
   }
   updateClinic(data: Lebaran): Observable<any> {
     return this.http.put(this.baseUrl + 'employee/' + data.employeeId + '/clinic', data);
+  }
+  updateSecurity(data: EmployeeId): Observable<Lebaran> {
+    return this.http.post(this.baseUrl + 'employee/security', data);
   }
   getDepartment(location: string): Observable<Dropdown[]> {
     let params = new HttpParams();

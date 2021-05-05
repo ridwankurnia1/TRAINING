@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dropdown } from 'src/app/_model/Dropdown';
+import { Employee } from 'src/app/_model/Employee';
 import { Lebaran } from 'src/app/_model/Lebaran';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
@@ -55,10 +56,23 @@ export class DetailComponent implements OnInit {
     this.loading = true;
     this.param.dept = this.selectedDept;
     this.csservice.getEmployees(this.pagination.currentPage, this.pagination.itemPerPage, this.param)
-      .subscribe((res: PaginatedResult<Lebaran[]>) => {
-        this.loading = false;
-        this.detail = res.result;
-        this.pagination = res.pagination;
+      .subscribe({
+        next: (res: PaginatedResult<Lebaran[]>) => {
+          this.loading = false;
+          this.detail = res.result;
+          this.detail.forEach(x => {
+            if (this.ui.isNullOrEmpty(x.fillDate)) {
+              x.statusDescription = 'Belum Mengisi';
+            } else {
+              if (x.status === 1) {
+                x.statusDescription = 'Check Kesehatan Sebelum Mulai Bekerja';
+              } else {
+                x.statusDescription = 'Sehat dan Siap Bekerja';
+              }
+            }
+          });
+          this.pagination = res.pagination;
+        }
       });
   }
 }

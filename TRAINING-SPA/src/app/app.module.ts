@@ -27,6 +27,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { LoginComponent } from './login/login.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { DetailComponent } from './lebaran/detail/detail.component';
+import { SecurityComponent } from './lebaran/security/security.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -41,7 +42,8 @@ export function tokenGetter(): string {
     ClinicComponent,
     LoginComponent,
     SummaryComponent,
-    DetailComponent
+    DetailComponent,
+    SecurityComponent
    ],
   imports: [
     AutoCompleteModule,

@@ -48,7 +48,17 @@
               <p class="my-0">
                 <b>{{item.nik}}</b> - {{item.nama | titlecase}} 
               </p>
-               {{item.department}}
+              <div class="d-flex justify-content-between">
+                <div>
+                  {{item.department}}
+                </div>
+                <div>
+                  <p class="my-0">
+                    {{item.statusDescription}}
+                  </p>
+                  {{item.fillDate | date:'dd-MM-yy hh:mm'}}
+                </div>
+              </div>
             </small>            
           </td>
         </tr>

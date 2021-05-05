@@ -11,5 +11,7 @@ namespace TRAINING.API.ViewModel
         public string Grade { get; set; }
         public string Photo { get; set; }
         public DateTime? BirthDate { get; set; }
+        public DateTime? FillDate { get; set; }
+        public string Status { get; set; }
     }
 }
