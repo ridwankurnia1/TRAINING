@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LebaranSummary } from 'src/app/_model/LebaranSummary';
+import { AuthService } from 'src/app/_service/auth.service';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 
 @Component({
@@ -11,10 +12,14 @@ export class SummaryComponent implements OnInit {
   data: LebaranSummary[] = [];
   constructor(
     private csservice: ChecksheetService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.csservice.getSummaryEmployee().subscribe({
+    const prm = {
+      brno: this.authService.decodedToken.locality
+    };
+    this.csservice.getSummaryEmployee(prm).subscribe({
       next: (resp: LebaranSummary[]) => {
         this.data = resp;
         const total: LebaranSummary = {

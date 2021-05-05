@@ -16,15 +16,15 @@
         <form #checkInForm="ngForm" (submit)="submit()">
           <div class="form-group">
             <label for="nikorname">Identitas Karyawan</label>
-            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="nama"
+            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="employeeName"
               [size]="10" placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4"
               [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)"
               [forceSelection]="true" [disabled]="readOnly">
               <ng-template let-item pTemplate="item">
                 <div class="my-0">
-                  {{item.nama}}
+                  {{item.employeeName}}
                 </div>
-                <small><b>{{item.nik}}</b> - {{item.department}}</small>
+                <small><b>{{item.employeeId}}</b> - {{item.department}}</small>
               </ng-template>
             </p-autoComplete>
             <div class="invalid-feedback">

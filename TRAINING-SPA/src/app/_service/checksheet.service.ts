@@ -55,6 +55,9 @@ export class ChecksheetService {
     let params = new HttpParams();
 
     if (prm) {
+      if (prm.brno) {
+        params = params.append('brno', prm.brno);
+      }
       if (prm.name) {
         params = params.append('name', prm.name);
       }

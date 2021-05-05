@@ -16,7 +16,7 @@ import * as Quiz from '../../../assets/lebaran2021.json';
 })
 export class QuestionnaireComponent implements OnInit {
   questions: LebaranQuiz[] = [];
-  employee: Employee = {};
+  employee: Lebaran = {};
   answer: Lebaran = {};
   loading = false;
   readOnly = false;
@@ -35,9 +35,9 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   filterSelect(event): void {
-    this.csservice.getEmployee(event.nik).subscribe({
+    this.csservice.getEmployee(event.employeeId).subscribe({
       next: (resp: Lebaran) => {
-        if (!this.ui.isNullOrEmpty(resp.fillDate)) {
+        if (resp.fillDate) {
           this.readOnly = true;
           this.setFormValue(resp);
           this.toastr.error('Anda sudah mengisi kuesioner ini tanggal ' + moment(resp.fillDate).format('DD-MM-YYYY hh:mm'));
@@ -46,11 +46,7 @@ export class QuestionnaireComponent implements OnInit {
     });
   }
   setFormValue(data: Lebaran): void {
-    this.employee = {
-      nik: data.employeeId,
-      nama: data.employeeName,
-      department: data.department
-    };
+    this.employee = data;
     this.questions[0].nilai = data.question01.toString();
     this.questions[1].nilai = data.question02.toString();
     this.questions[2].nilai = data.question03.toString();
@@ -116,8 +112,8 @@ export class QuestionnaireComponent implements OnInit {
     }
 
     this.loading = true;
-    this.answer.employeeId = this.employee.nik;
-    this.answer.employeeName = this.employee.nama;
+    this.answer.employeeId = this.employee.employeeId;
+    this.answer.employeeName = this.employee.employeeName;
     this.answer.department = this.employee.department;
     this.answer.question01 = Number(this.questions[0].nilai);
     this.answer.question02 = Number(this.questions[1].nilai);
