@@ -6,6 +6,7 @@ import { Lebaran } from 'src/app/_model/Lebaran';
 import { LebaranQuiz } from 'src/app/_model/LebaranQuiz';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
+import { environment } from 'src/environments/environment';
 import * as Quiz from '../../../assets/lebaran2021.json';
 
 @Component({
@@ -22,6 +23,7 @@ export class ClinicComponent implements OnInit {
   nikorid = '';
   readOnly = true;
   bsConfig: Partial<BsDatepickerConfig>;
+  defaultImages = environment.imgEmpUrl + 'NoImage.png';
   constructor(
     private ui: UIService,
     private csservice: ChecksheetService,
@@ -103,5 +105,8 @@ export class ClinicComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+  setDefaultImage(): void {
+    this.employeeData.photo = this.defaultImages;
   }
 }

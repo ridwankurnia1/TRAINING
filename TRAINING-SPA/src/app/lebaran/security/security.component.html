@@ -23,7 +23,7 @@
             </div>
             <div class="col-auto d-none d-lg-block mb-2">
               <div class="table-img mt-2 pt-3 text-right">
-                <img id="img0" [src]="item.photo" alt="" width="75" height="75">
+                <img id="img0" [src]="item.photo" alt="" width="75" height="75" (error)="setDefaultImage(item)">
               </div>
             </div>
           </div>

@@ -2,18 +2,10 @@ using System;
 
 namespace TRAINING.API.ViewModel
 {
-    public class LebaranDto
+    public class LebaranXLSDto
     {
         public string EmployeeId { get; set; }
-        public string EmployeeName { get; set; }
-        public string Location { get; set; }
-        public string RFID { get; set; }
-        public string BirthCity { get; set; }
-        public DateTime? BirthDate { get; set; }
-        public int Age { get; set; }
-        public string Photo { get; set; }
-        public string EKTP { get; set; }
-        public string DepartmentId { get; set; }
+        public string EmployeeName { get; set; }        
         public string Department { get; set; }
         public DateTime? FillDate { get; set; }
         public Int16 Question01 { get; set; }
@@ -46,7 +38,7 @@ namespace TRAINING.API.ViewModel
         // public Int16 Question28 { get; set; }
         // public Int16 Question29 { get; set; }
         // public Int16 Question30 { get; set; }
-        public decimal Status { get; set; }
+        public string StatusDescription { get; set; }
         public DateTime? AttendDate { get; set; }
         public DateTime? HealthCheckDate { get; set; }
         public string CheckPIC { get; set; }

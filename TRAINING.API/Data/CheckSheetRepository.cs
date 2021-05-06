@@ -48,27 +48,27 @@ namespace TRAINING.API.Data
             {
                 query = query.Where(x => x.ELDENA.Contains(prm.dept));
             }
-            if (!string.IsNullOrEmpty(prm.Filled))
+            if (!string.IsNullOrEmpty(prm.filled))
             {
                 query = query.Where(x => x.ELTRDT.HasValue == true);
             }
-            if (!string.IsNullOrEmpty(prm.Unfilled))
+            if (!string.IsNullOrEmpty(prm.unfilled))
             {
                 query = query.Where(x => x.ELTRDT.HasValue == false);
             }
-            if (!string.IsNullOrEmpty(prm.MustCheck))
+            if (!string.IsNullOrEmpty(prm.mustcheck))
             {
                 query = query.Where(x => x.ELRCST == 1);
             }
-            if (!string.IsNullOrEmpty(prm.NoNeedCheck))
+            if (!string.IsNullOrEmpty(prm.noneedcheck))
             {
                 query = query.Where(x => x.ELRCST == 0);
             }
-            if (!string.IsNullOrEmpty(prm.AlreadyCheck))
+            if (!string.IsNullOrEmpty(prm.alreadycheck))
             {
                 query = query.Where(x => x.ELHCDT.HasValue);
             }
-            if (!string.IsNullOrEmpty(prm.NotYetCheck))
+            if (!string.IsNullOrEmpty(prm.notyetcheck))
             {
                 query = query.Where(x => x.ELHCDT.HasValue == false);
             }
@@ -96,27 +96,27 @@ namespace TRAINING.API.Data
             {
                 query = query.Where(x => x.ELDENO == prm.dept);
             }
-            if (!string.IsNullOrEmpty(prm.Filled))
+            if (!string.IsNullOrEmpty(prm.filled))
             {
                 query = query.Where(x => x.ELTRDT.HasValue == true);
             }
-            if (!string.IsNullOrEmpty(prm.Unfilled))
+            if (!string.IsNullOrEmpty(prm.unfilled))
             {
                 query = query.Where(x => x.ELTRDT.HasValue == false);
             }
-            if (!string.IsNullOrEmpty(prm.MustCheck))
+            if (!string.IsNullOrEmpty(prm.mustcheck))
             {
                 query = query.Where(x => x.ELRCST == 1);
             }
-            if (!string.IsNullOrEmpty(prm.NoNeedCheck))
+            if (!string.IsNullOrEmpty(prm.noneedcheck))
             {
                 query = query.Where(x => x.ELRCST == 0);
             }
-            if (!string.IsNullOrEmpty(prm.AlreadyCheck))
+            if (!string.IsNullOrEmpty(prm.alreadycheck))
             {
                 query = query.Where(x => x.ELHCDT.HasValue);
             }
-            if (!string.IsNullOrEmpty(prm.NotYetCheck))
+            if (!string.IsNullOrEmpty(prm.notyetcheck))
             {
                 query = query.Where(x => x.ELHCDT.HasValue == false);
             }

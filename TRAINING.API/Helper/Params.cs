@@ -13,6 +13,7 @@ namespace TRAINING.API.Helper
             set { pageSize = (value > MaxPageSize) ? MaxPageSize : value; }
         }
         
+        public string xls { get; set; }
         public string nik { get; set; }
         public string rfid { get; set; }
         public string name { get; set; }
@@ -20,11 +21,11 @@ namespace TRAINING.API.Helper
         public string dept { get; set; }
         public string grade { get; set; }
         public string filter { get; set; }
-        public string Filled { get; set; }
-        public string Unfilled { get; set; }
-        public string MustCheck { get; set; }
-        public string NoNeedCheck { get; set; }
-        public string AlreadyCheck { get; set; }
-        public string NotYetCheck { get; set; }
+        public string filled { get; set; }
+        public string unfilled { get; set; }
+        public string mustcheck { get; set; }
+        public string noneedcheck { get; set; }
+        public string alreadycheck { get; set; }
+        public string notyetcheck { get; set; }
     }
 }

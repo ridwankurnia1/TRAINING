@@ -4,6 +4,7 @@ import { EmployeeId } from 'src/app/_model/EmployeeId';
 import { Lebaran } from 'src/app/_model/Lebaran';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-security',
@@ -15,6 +16,7 @@ export class SecurityComponent implements OnInit {
   employee: Lebaran = {};
   listEmployee: Lebaran[] = [];
   display = 3;
+  defaultImages = environment.imgEmpUrl + 'NoImage.png';
   constructor(
     private ui: UIService,
     private csservice: ChecksheetService,
@@ -55,5 +57,8 @@ export class SecurityComponent implements OnInit {
         this.nikorid = '';
       }
     });
+  }
+  setDefaultImage(item: Lebaran): void {
+    item.photo = this.defaultImages;
   }
 }

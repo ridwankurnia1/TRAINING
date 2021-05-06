@@ -1,13 +1,6 @@
-export interface Lebaran {
+export interface LebaranXLS {
     employeeId?: string;
     employeeName?: string;
-    photo?: string;
-    location?: string;
-    rfid?: string;
-    birthCity?: string;
-    birthDate?: Date;
-    age?: number;
-    ektp?: string;
     department?: string;
     fillDate?: Date;
     question01?: number;
@@ -33,14 +26,6 @@ export interface Lebaran {
     question21?: number;
     question22?: number;
     question23?: number;
-    // question24?: number;
-    // question25?: number;
-    // question26?: number;
-    // question27?: number;
-    // question28?: number;
-    // question29?: number;
-    // question30?: number;
-    status?: number;
     statusDescription?: string;
     attendDate?: Date;
     healthCheckDate?: Date;

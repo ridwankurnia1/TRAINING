@@ -40,7 +40,7 @@
         <div class="row">
           <div class="ml-3 d-flex flex-column position-static">
             <div class="table-img pt-2 text-right">
-              <img id="img0" [src]="employeeData.photo" alt="" width="55" height="55">
+              <img id="img0" [src]="employeeData.photo" alt="" width="55" height="55" (error)="setDefaultImage()">
             </div>
           </div>
           <div class="col-md-8 col-6">

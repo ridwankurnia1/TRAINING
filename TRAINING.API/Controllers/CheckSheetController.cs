@@ -45,9 +45,15 @@ namespace TRAINING.API.Controllers
         public async Task<IActionResult> GetEmployee([FromQuery]Params prm)
         {
             var data = await _repo.GetListEmployeePaging(prm);
+            if (!string.IsNullOrEmpty(prm.xls))
+            {
+                var xls = _mapper.Map<IEnumerable<LebaranXLSDto>>(data);
+                Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);    
+                return Ok(xls);
+            }
+
             var result = _mapper.Map<IEnumerable<LebaranDto>>(data);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
-
             return Ok(result);
         }
 
@@ -104,24 +110,25 @@ namespace TRAINING.API.Controllers
             emp.ELSQ21 = obj.Question21;
             emp.ELSQ22 = obj.Question22;
             emp.ELSQ23 = obj.Question23;
-            emp.ELSQ24 = obj.Question24;
-            emp.ELSQ25 = obj.Question25;
-            emp.ELSQ26 = obj.Question26;
-            emp.ELSQ27 = obj.Question27;
-            emp.ELSQ28 = obj.Question28;
-            emp.ELSQ29 = obj.Question29;
-            emp.ELSQ30 = obj.Question30;
+            // emp.ELSQ24 = obj.Question24;
+            // emp.ELSQ25 = obj.Question25;
+            // emp.ELSQ26 = obj.Question26;
+            // emp.ELSQ27 = obj.Question27;
+            // emp.ELSQ28 = obj.Question28;
+            // emp.ELSQ29 = obj.Question29;
+            // emp.ELSQ30 = obj.Question30;
             emp.ELRCST = 0;
 
             var sum1 = obj.Question01 + obj.Question02 + obj.Question03 + obj.Question04 + obj.Question05 +
                        obj.Question06 + obj.Question07 + obj.Question08 + obj.Question09 + obj.Question10 +
                        obj.Question11 + obj.Question12 + obj.Question13 + obj.Question14 + obj.Question15 +
                        obj.Question16 + obj.Question17 + obj.Question18 + obj.Question19 + obj.Question20 +
-                       obj.Question21 + obj.Question22 + obj.Question23 + obj.Question24 + obj.Question25 +
-                       obj.Question26 + obj.Question27 + obj.Question28 + obj.Question29 + obj.Question30;
-            var sum2 = obj.Question05 + obj.Question06 + obj.Question07 + obj.Question08;
+                       obj.Question21 + obj.Question22 + obj.Question23; 
+                    //    + obj.Question24 + obj.Question25 +
+                    //    obj.Question26 + obj.Question27 + obj.Question28 + obj.Question29 + obj.Question30;
+            // var sum2 = obj.Question05 + obj.Question06 + obj.Question07 + obj.Question08;
             
-            if (sum1 == 0 || sum1 >= 11 || sum2 < 3)
+            if (sum1 == 0 || sum1 >= 11)
             {
                 emp.ELRCST = 1;
             }

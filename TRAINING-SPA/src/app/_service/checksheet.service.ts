@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Dropdown } from '../_model/Dropdown';
-import { Employee } from '../_model/Employee';
 import { EmployeeId } from '../_model/EmployeeId';
 import { Lebaran } from '../_model/Lebaran';
 import { PaginatedResult } from '../_model/Pagination';
@@ -26,6 +25,30 @@ export class ChecksheetService {
       params = params.append('pageSize', itemPerPage);
     }
     if (prm) {
+      if (prm.status) {
+        switch (prm.status) {
+          case '0':
+            params = params.append('unfilled', prm.status);
+            break;
+          case '1':
+            params = params.append('filled', prm.status);
+            break;
+          case '2':
+            params = params.append('noneedcheck', prm.status);
+            break;
+          case '3':
+            params = params.append('mustcheck', prm.status);
+            break;
+          case '4':
+            params = params.append('notyetcheck', prm.status);
+            break;
+          case '5':
+            params = params.append('alreadycheck', prm.status);
+            break;
+          default:
+            break;
+        }
+      }
       if (prm.name) {
         params = params.append('name', prm.name);
       }
@@ -34,6 +57,9 @@ export class ChecksheetService {
       }
       if (prm.filter) {
         params = params.append('filter', prm.filter);
+      }
+      if (prm.xls) {
+        params = params.append('xls', prm.xls);
       }
     }
 

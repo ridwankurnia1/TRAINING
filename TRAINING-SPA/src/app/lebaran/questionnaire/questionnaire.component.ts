@@ -138,13 +138,13 @@ export class QuestionnaireComponent implements OnInit {
     this.answer.question21 = Number(this.questions[20].nilai);
     this.answer.question22 = Number(this.questions[21].nilai);
     this.answer.question23 = Number(this.questions[22].nilai);
-    this.answer.question24 = 0;
-    this.answer.question25 = 0;
-    this.answer.question26 = 0;
-    this.answer.question27 = 0;
-    this.answer.question28 = 0;
-    this.answer.question29 = 0;
-    this.answer.question30 = 0;
+    // this.answer.question24 = 0;
+    // this.answer.question25 = 0;
+    // this.answer.question26 = 0;
+    // this.answer.question27 = 0;
+    // this.answer.question28 = 0;
+    // this.answer.question29 = 0;
+    // this.answer.question30 = 0;
 
     this.csservice.addQuistioner(this.answer).subscribe({
       next: () => {
@@ -162,7 +162,7 @@ export class QuestionnaireComponent implements OnInit {
     });
   }
 
-  toggleView() {
+  toggleView(): void {
     this.firstView = !this.firstView;
     this.secondView = !this.secondView;
   }
