@@ -59,7 +59,7 @@ export class DetailComponent implements OnInit {
     });
     this.status.push({
       value: '2',
-      label: 'Sehat & Siap Bekerja'
+      label: 'Boleh Bekerja'
     });
     this.status.push({
       value: '3',
@@ -99,7 +99,7 @@ export class DetailComponent implements OnInit {
               if (x.status === 1) {
                 x.statusDescription = 'Check Kesehatan';
               } else {
-                x.statusDescription = 'Sehat & Siap Bekerja';
+                x.statusDescription = 'Boleh Bekerja';
               }
             }
           });

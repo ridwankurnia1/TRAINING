@@ -170,7 +170,7 @@ namespace TRAINING.API.Helper
                 // .ForMember(des => des.Question28, opt => opt.MapFrom(src => src.ELSQ28))
                 // .ForMember(des => des.Question29, opt => opt.MapFrom(src => src.ELSQ29))
                 // .ForMember(des => des.Question30, opt => opt.MapFrom(src => src.ELSQ30))
-                .ForMember(des => des.StatusDescription, opt => opt.MapFrom(src => src.ELRCST == 0 ? "Sehat & Siap Bekerja" : "Check Kesehatan"))
+                .ForMember(des => des.StatusDescription, opt => opt.MapFrom(src => src.ELRCST == 0 ? "Boleh Bekerja" : "Check Kesehatan"))
                 .ForMember(des => des.AttendDate, opt => opt.MapFrom(src => src.ELATDT))
                 .ForMember(des => des.HealthCheckDate, opt => opt.MapFrom(src => src.ELHCDT))
                 .ForMember(des => des.CheckPIC, opt => opt.MapFrom(src => src.ELCPIC))

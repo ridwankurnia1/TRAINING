@@ -50,7 +50,7 @@ export class SecurityComponent implements OnInit {
           if (resp.status === 1) {
             resp.statusDescription = 'Check Kesehatan Sebelum Mulai Bekerja';
           } else {
-            resp.statusDescription = 'Sehat dan Siap Bekerja';
+            resp.statusDescription = 'Dipersilahkan masuk Bekerja';
           }
         }
         this.listEmployee.unshift(resp);
