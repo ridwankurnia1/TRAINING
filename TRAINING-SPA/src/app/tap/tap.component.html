@@ -1,0 +1,44 @@
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
+    <div>
+      <small><b>{{today | date:'dd-MM-yyyy'}}</b></small>
+      <h3>{{todayCount}}</h3>
+    </div>
+    <div class="text-center my-3">
+      <img class="d-block mx-auto mb-2" src="assets/amg_logo.png" alt="" width="72" height="72">
+      <h5>PT Asahimas Flat Glass, Tbk</h5>
+      <h6>{{header.title}}</h6>
+    </div>
+    <div>
+      <small><b>TOTAL</b></small>
+      <h3>{{totalCount}}</h3>
+    </div>
+  </div>
+  
+
+  <div class="col-md-4 offset-md-4">
+    <input id="txtNIK" name="txtNIK" type="text" [(ngModel)]="nikorid" class="form-control form-control-lg text-center"
+      autofocus (keydown.enter)="getEmployee()">
+  </div>
+
+  <div class="my-3">
+    <ng-container *ngFor="let item of listEmployee">
+      <div class="d-flex justify-content-center">
+        <div class="col-md-8 col-12">
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <!-- <strong class="d-inline-block mb-2 text-primary">{{item.statusDescription}}</strong> -->
+              <h4 class="mb-0">{{item.nama | titlecase}}</h4>
+              <div class="mb-1">{{item.department}} | {{item.attendDate | date:'dd-MM-yyyy hh:mm'}}</div>
+            </div>
+            <div class="col-auto d-none d-lg-block mb-2">
+              <div class="table-img mt-2 pt-3 text-right">
+                <img id="img0" [src]="item.photo" alt="" width="60" height="60" (error)="setDefaultImage(item)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>    
+  </div>
+</div>

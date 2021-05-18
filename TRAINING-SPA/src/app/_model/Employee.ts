@@ -1,6 +1,7 @@
 export interface Employee {
     nik?: string;
     nama?: string;
+    rfid?: string;
     departmentId?: string;
     department?: string;
     grade?: string;

@@ -28,13 +28,16 @@ import { LoginComponent } from './login/login.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { DetailComponent } from './lebaran/detail/detail.component';
 import { SecurityComponent } from './lebaran/security/security.component';
+import { RegisterComponent } from './lebaran/register/register.component';
+import { TapComponent } from './tap/tap.component';
+import { TaplistComponent } from './taplist/taplist.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
 }
 
 @NgModule({
-  declarations: [
+  declarations: [		
     AppComponent,
     NavComponent,
     EmployeeComponent,
@@ -43,7 +46,10 @@ export function tokenGetter(): string {
     LoginComponent,
     SummaryComponent,
     DetailComponent,
-    SecurityComponent
+    SecurityComponent,
+    RegisterComponent,
+    TapComponent,
+      TaplistComponent
    ],
   imports: [
     AutoCompleteModule,

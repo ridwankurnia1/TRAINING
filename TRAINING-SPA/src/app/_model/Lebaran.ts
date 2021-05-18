@@ -33,8 +33,8 @@ export interface Lebaran {
     question21?: number;
     question22?: number;
     question23?: number;
-    // question24?: number;
-    // question25?: number;
+    question24?: number;
+    question25?: number;
     // question26?: number;
     // question27?: number;
     // question28?: number;

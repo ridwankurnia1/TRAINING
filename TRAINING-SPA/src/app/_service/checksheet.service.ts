@@ -4,8 +4,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Dropdown } from '../_model/Dropdown';
+import { Employee } from '../_model/Employee';
 import { EmployeeId } from '../_model/EmployeeId';
 import { Lebaran } from '../_model/Lebaran';
+import { LogHeader } from '../_model/LogHeader';
 import { PaginatedResult } from '../_model/Pagination';
 
 @Injectable({
@@ -77,6 +79,9 @@ export class ChecksheetService {
   getEmployee(nik: string): Observable<Lebaran> {
     return this.http.get<Lebaran>(this.baseUrl + 'employee/' + nik);
   }
+  addEmployee(data: Employee) {
+    return this.http.post(this.baseUrl + 'employee', data);
+  }
   getSummaryEmployee(prm?): Observable<any> {
     let params = new HttpParams();
 
@@ -118,6 +123,25 @@ export class ChecksheetService {
   updateClinic(data: Lebaran): Observable<any> {
     return this.http.put(this.baseUrl + 'employee/' + data.employeeId + '/clinic', data);
   }
+  getSecurity(page?, itemPerPage?, prm?): Observable<PaginatedResult<Lebaran[]>> {
+    const paginatedResult: PaginatedResult<Lebaran[]> = new PaginatedResult<Lebaran[]>();
+    let params = new HttpParams();
+
+    if (page != null && itemPerPage != null) {
+      params = params.append('PageNumber', page);
+      params = params.append('pageSize', itemPerPage);
+    }
+    return this.http.get<Lebaran[]>(this.baseUrl + 'employee/security', { observe: 'response', params})
+      .pipe(
+        map(reponse => {
+          paginatedResult.result = reponse.body;
+          if (reponse.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(reponse.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        })
+      );
+  }
   updateSecurity(data: EmployeeId): Observable<Lebaran> {
     return this.http.post(this.baseUrl + 'employee/security', data);
   }
@@ -134,5 +158,45 @@ export class ChecksheetService {
           return reponse.body;
         })
       );
+  }
+  getListLogHeader(prm?): Observable<LogHeader[]> {
+    let params = new HttpParams();
+
+    return this.http.get<LogHeader[]>(this.baseUrl + 'tap', { observe: 'response', params})
+      .pipe(
+        map(reponse => {
+          return reponse.body;
+        })
+      );
+  }
+  getLogHeader(id: string): Observable<LogHeader> {
+    return this.http.get<LogHeader>(this.baseUrl + 'tap/' + id);
+  }
+  getTapLog(page?, itemPerPage?, prm?): Observable<PaginatedResult<Employee[]>> {
+    const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
+    let params = new HttpParams();
+
+    if (page != null && itemPerPage != null) {
+      params = params.append('PageNumber', page);
+      params = params.append('pageSize', itemPerPage);
+    }
+    if (prm) {
+      if (prm.id) {
+        params = params.append('id', prm.id);
+      }
+    }
+    return this.http.get<Employee[]>(this.baseUrl + 'tap/log', { observe: 'response', params})
+      .pipe(
+        map(reponse => {
+          paginatedResult.result = reponse.body;
+          if (reponse.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(reponse.headers.get('Pagination'));
+          }
+          return paginatedResult;
+        })
+      );
+  }
+  addTapLog(id: string, data: EmployeeId): Observable<Employee> {
+    return this.http.post(this.baseUrl + 'tap/' + id, data);
   }
 }

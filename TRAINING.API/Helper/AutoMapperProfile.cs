@@ -27,6 +27,27 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.EMCRTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)))
                 .ForMember(des => des.EMCHDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(DateTime.Now)))
                 .ForMember(des => des.EMCHTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)));
+            
+            CreateMap<MEMP, ELOG>()
+                .ForMember(des => des.ELEMNO, opt => opt.MapFrom(src => src.EMEMNO))
+                .ForMember(des => des.ELEMNA, opt => opt.MapFrom(src => src.EMEMNA))
+                .ForMember(des => des.ELBRNO, opt => opt.MapFrom(src => src.EMBRNO))
+                .ForMember(des => des.ELRFID, opt => opt.MapFrom(src => src.EMRFID))
+                .ForMember(des => des.ELDENO, opt => opt.MapFrom(src => src.EMDENO))
+                .ForMember(des => des.ELDENA, opt => opt.MapFrom(src => src.GOG1.GOOGNA))
+                .ForMember(des => des.ELTRDT, opt => opt.MapFrom(src => DateTime.Now));
+            CreateMap<ELOG, EmployeeDto>()
+                .ForMember(des => des.Nik, opt => opt.MapFrom(src => src.ELEMNO))
+                .ForMember(des => des.Nama, opt => opt.MapFrom(src => src.ELEMNA))
+                .ForMember(des => des.DepartmentId, opt => opt.MapFrom(src => src.ELDENO))
+                .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA))
+                .ForMember(des => des.Photo, opt => opt.MapFrom<PhotoResolver, string>(src => src.ELBRNO + "|" + src.ELEMNO))
+                .ForMember(des => des.AttendDate, opt => opt.MapFrom(src => src.ELTRDT));
+            
+            CreateMap<ELOH, LogHeaderDto>()
+                .ForMember(des => des.Id, opt => opt.MapFrom(src => src.EHRCID))
+                .ForMember(des => des.Title, opt => opt.MapFrom(src => src.EHDESC));
+
             CreateMap<MGRD, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.GDEGNA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.GDEGNO));
@@ -40,6 +61,14 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.ELDENA))
                 .ForMember(des => des.FillDate, opt => opt.MapFrom(src => src.ELTRDT))
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => ""));
+            CreateMap<EmployeeDto, EHAL>()
+                .ForMember(des => des.ELEMNO, opt => opt.MapFrom(src => src.Nik))
+                .ForMember(des => des.ELEMNA, opt => opt.MapFrom(src => src.Nama))
+                .ForMember(des => des.ELBRNO, opt => opt.MapFrom(src => "CKP"))
+                .ForMember(des => des.ELRFID, opt => opt.MapFrom(src => src.RFID))
+                .ForMember(des => des.ELDENO, opt => opt.MapFrom(src => src.DepartmentId))
+                .ForMember(des => des.ELDENA, opt => opt.MapFrom(src => src.Department))
+                .ForMember(des => des.ELRCST, opt => opt.MapFrom(src => 1));
 
             CreateMap<EHAL, LebaranDto>()
                 .ForMember(des => des.EmployeeId, opt => opt.MapFrom(src => src.ELEMNO))
@@ -77,8 +106,8 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.Question21, opt => opt.MapFrom(src => src.ELSQ21))
                 .ForMember(des => des.Question22, opt => opt.MapFrom(src => src.ELSQ22))
                 .ForMember(des => des.Question23, opt => opt.MapFrom(src => src.ELSQ23))
-                // .ForMember(des => des.Question24, opt => opt.MapFrom(src => src.ELSQ24))
-                // .ForMember(des => des.Question25, opt => opt.MapFrom(src => src.ELSQ25))
+                .ForMember(des => des.Question24, opt => opt.MapFrom(src => src.ELSQ24))
+                .ForMember(des => des.Question25, opt => opt.MapFrom(src => src.ELSQ25))
                 // .ForMember(des => des.Question26, opt => opt.MapFrom(src => src.ELSQ26))
                 // .ForMember(des => des.Question27, opt => opt.MapFrom(src => src.ELSQ27))
                 // .ForMember(des => des.Question28, opt => opt.MapFrom(src => src.ELSQ28))
@@ -122,8 +151,8 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.ELSQ21, opt => opt.MapFrom(src => src.Question21))
                 .ForMember(des => des.ELSQ22, opt => opt.MapFrom(src => src.Question22))
                 .ForMember(des => des.ELSQ23, opt => opt.MapFrom(src => src.Question23))
-                // .ForMember(des => des.ELSQ24, opt => opt.MapFrom(src => src.Question24))
-                // .ForMember(des => des.ELSQ25, opt => opt.MapFrom(src => src.Question25))
+                .ForMember(des => des.ELSQ24, opt => opt.MapFrom(src => src.Question24))
+                .ForMember(des => des.ELSQ25, opt => opt.MapFrom(src => src.Question25))
                 // .ForMember(des => des.ELSQ26, opt => opt.MapFrom(src => src.Question26))
                 // .ForMember(des => des.ELSQ27, opt => opt.MapFrom(src => src.Question27))
                 // .ForMember(des => des.ELSQ28, opt => opt.MapFrom(src => src.Question28))
@@ -163,8 +192,8 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.Question21, opt => opt.MapFrom(src => src.ELSQ21))
                 .ForMember(des => des.Question22, opt => opt.MapFrom(src => src.ELSQ22))
                 .ForMember(des => des.Question23, opt => opt.MapFrom(src => src.ELSQ23))
-                // .ForMember(des => des.Question24, opt => opt.MapFrom(src => src.ELSQ24))
-                // .ForMember(des => des.Question25, opt => opt.MapFrom(src => src.ELSQ25))
+                .ForMember(des => des.Question24, opt => opt.MapFrom(src => src.ELSQ24))
+                .ForMember(des => des.Question25, opt => opt.MapFrom(src => src.ELSQ25))
                 // .ForMember(des => des.Question26, opt => opt.MapFrom(src => src.ELSQ26))
                 // .ForMember(des => des.Question27, opt => opt.MapFrom(src => src.ELSQ27))
                 // .ForMember(des => des.Question28, opt => opt.MapFrom(src => src.ELSQ28))

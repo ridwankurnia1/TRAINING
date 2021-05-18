@@ -6,6 +6,7 @@ namespace TRAINING.API.Model
         public string EMBRNO { get; set; }
         public string EMEMNO { get; set; }
         public string EMEMNA { get; set; }
+        public string EMRFID { get; set; }
         public string EMNICK { get; set; }
         public string EMGEND { get; set; }
         public string EMBTCT { get; set; }
@@ -16,7 +17,7 @@ namespace TRAINING.API.Model
         public string EMRELI { get; set; }
         public string EMNANO { get; set; }
         public decimal EMSTDT { get; set; }
-        public decimal EMEDDT { get; set; }
+        public decimal? EMEDDT { get; set; }
         public decimal EMPBDT { get; set; }
         public string EMMRST { get; set; }
         public string EMADR1 { get; set; }

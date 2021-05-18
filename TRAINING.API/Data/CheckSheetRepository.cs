@@ -5,6 +5,7 @@ using System.Linq;
 using TRAINING.API.Helper;
 using TRAINING.API.Model;
 using TRAINING.API.ViewModel;
+using System;
 
 namespace TRAINING.API.Data
 {
@@ -78,7 +79,16 @@ namespace TRAINING.API.Data
 
         public async Task<PagedList<EHAL>> GetListEmployeePaging(Params prm)
         {
-            var query = _context.EHAL.OrderBy(x => x.ELEMNA).AsQueryable();
+            var query = _context.EHAL.AsQueryable();
+
+            if (prm.attendance == 1)
+            {
+                query = query.OrderByDescending(x => x.ELATDT);
+            }
+            else 
+            {
+                query = query.OrderBy(x => x.ELEMNA);
+            }
 
             if (!string.IsNullOrEmpty(prm.nik))
             {
@@ -154,6 +164,43 @@ namespace TRAINING.API.Data
                         };
             
             return await query.ToListAsync();
+        }
+
+        public async Task<ELOG> GetTapLog(int id)
+        {
+            return await _context.ELOG.FirstOrDefaultAsync(x => x.ELTRID == id);
+        }
+
+        public async Task<PagedList<ELOG>> GetListTapLog(Params prm)
+        {
+            var query = _context.ELOG.Where(x => x.ELRCID == prm.id)
+                        .OrderByDescending(x => x.ELTRDT)
+                        .AsQueryable();
+            
+            if (!string.IsNullOrEmpty(prm.name))
+            {
+                query = query.Where(x => x.ELEMNA.Contains(prm.name));
+            }
+
+            return await PagedList<ELOG>.CreateAsync(query, prm.PageNumber, prm.PageSize);           
+        }
+
+        public async Task<ELOH> GetTapHeader(int id)
+        {
+            return await _context.ELOH.FirstOrDefaultAsync(x => x.EHRCID == id);
+        }
+
+        public async Task<IEnumerable<ELOH>> GetListTapHeader()
+        {
+            return await _context.ELOH.Where(x => x.EHRCST == 1).ToListAsync();
+        }
+
+        public async Task<int> GetTapLogCount(DateTime dt)
+        {
+            return await _context.ELOG.Where(x => 
+                x.ELTRDT.Value.Year == dt.Year &&
+                x.ELTRDT.Value.Month == dt.Month &&
+                x.ELTRDT.Value.Day == dt.Day).CountAsync();
         }
     }
 }

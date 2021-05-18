@@ -1,0 +1,41 @@
+<div class="container my-3">
+  <h4>Register Employee</h4>
+  <form [formGroup]="formItem" (submit)="save()">
+    <div class="form-group mb-3">
+      <label for="nik" class="form-label">NIK</label><span class="text-danger"> *</span>
+      <input type="text" class="form-control" formControlName="nik"
+        [ngClass]="{'is-invalid': formItem.get('nik').errors && formItem.get('nik').touched}">
+      <div class="invalid-feedback">
+        Harap input NIK
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <label for="nama" class="form-label">Nama</label><span class="text-danger"> *</span>
+      <input type="text" class="form-control" formControlName="nama"
+        [ngClass]="{'is-invalid': formItem.get('nama').errors && formItem.get('nama').touched}">
+      <div class="invalid-feedback">
+        Harap input Nama
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <label for="rfid" class="form-label">RFID</label>
+      <input type="text" class="form-control" formControlName="rfid">
+    </div>
+    <div class="form-group mb-3">
+      <label for="departmentId" class="form-label">Department</label><span class="text-danger"> *</span>
+      <select class="form-control" formControlName="departmentId" 
+        [ngClass]="{'is-invalid': formItem.get('departmentId').errors && formItem.get('departmentId').touched}">
+        <option *ngFor="let item of department" [value]="item.value">{{item.label}}</option>
+      </select>
+      <div class="invalid-feedback">
+        Harap pilih department
+      </div>
+    </div>
+    <div class="form-group">
+      <button [disabled]="process" class="btn btn-danger" type="submit">
+        <span *ngIf="process" class="spinner-border spinner-border-sm"></span>
+        <i *ngIf="!process" class="fa fa-save mx-2"></i>Save
+      </button>
+    </div>
+  </form>
+</div>

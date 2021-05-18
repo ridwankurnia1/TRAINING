@@ -167,11 +167,13 @@ export class DetailComponent implements OnInit {
       h25: 'SCORE 21',
       h26: 'SCORE 22',
       h27: 'SCORE 23',
-      h28: 'STATUS',
-      h29: 'CHECK CLOCK',
-      h30: 'TGL CHECK KESEHATAN',
-      h31: 'PIC CHECK KESEHATAN',
-      h32: 'KETERANGAN',
+      h28: 'SCORE 24',
+      h29: 'SCORE 25',
+      h30: 'STATUS',
+      h31: 'CHECK CLOCK',
+      h32: 'TGL CHECK KESEHATAN',
+      h33: 'PIC CHECK KESEHATAN',
+      h34: 'KETERANGAN',
     }];
 
     let startCell = '';

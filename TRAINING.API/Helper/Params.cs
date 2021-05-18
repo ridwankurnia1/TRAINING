@@ -27,5 +27,7 @@ namespace TRAINING.API.Helper
         public string noneedcheck { get; set; }
         public string alreadycheck { get; set; }
         public string notyetcheck { get; set; }
+        public int attendance { get; set; }
+        public int id { get; set; }
     }
 }

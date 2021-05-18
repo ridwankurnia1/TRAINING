@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { Employee } from 'src/app/_model/Employee';
 import { Lebaran } from 'src/app/_model/Lebaran';
 import { LebaranQuiz } from 'src/app/_model/LebaranQuiz';
 import { PaginatedResult } from 'src/app/_model/Pagination';
@@ -70,6 +69,8 @@ export class QuestionnaireComponent implements OnInit {
     this.questions[20].nilai = data.question21.toString();
     this.questions[21].nilai = data.question22.toString();
     this.questions[22].nilai = data.question23.toString();
+    this.questions[23].nilai = data.question24.toString();
+    this.questions[24].nilai = data.question25.toString();
     const nilai = this.questions.reduce((a, b) => a + Number(b.nilai), 0);
     if (nilai >= 11 || nilai === 0) {
       this.mustCheck = true;
@@ -138,8 +139,8 @@ export class QuestionnaireComponent implements OnInit {
     this.answer.question21 = Number(this.questions[20].nilai);
     this.answer.question22 = Number(this.questions[21].nilai);
     this.answer.question23 = Number(this.questions[22].nilai);
-    // this.answer.question24 = 0;
-    // this.answer.question25 = 0;
+    this.answer.question24 = Number(this.questions[23].nilai);
+    this.answer.question25 = Number(this.questions[24].nilai);
     // this.answer.question26 = 0;
     // this.answer.question27 = 0;
     // this.answer.question28 = 0;

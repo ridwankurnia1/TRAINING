@@ -3,9 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { ClinicComponent } from './lebaran/clinic/clinic.component';
 import { DetailComponent } from './lebaran/detail/detail.component';
 import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
+import { RegisterComponent } from './lebaran/register/register.component';
 import { SecurityComponent } from './lebaran/security/security.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { LoginComponent } from './login/login.component';
+import { TapComponent } from './tap/tap.component';
+import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
@@ -14,8 +17,22 @@ const routes: Routes = [
     component: QuestionnaireComponent
   },
   {
+    path: 'tap',
+    component: TaplistComponent
+  },
+  {
+    path: 'tap/:id',
+    component: TapComponent
+  },
+  {
     path: 'security',
     component: SecurityComponent
+  },
+  {
+    path: 'register',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    component: RegisterComponent
   },
   {
     path: 'clinic',

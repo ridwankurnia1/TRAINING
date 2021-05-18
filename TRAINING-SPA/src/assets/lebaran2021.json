@@ -167,6 +167,21 @@
         },
         {
             "id": 12,
+            "pertanyaan": "Apakah saat ini anda dalam keadaan sehat?",
+            "category": "Kesehatan Pribadi / Gejala",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 13,
             "pertanyaan": "Apakah anda mengalami meriang?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -181,7 +196,7 @@
             ]
         },
         {
-            "id": 13,
+            "id": 14,
             "pertanyaan": "Apakah saat ini anda merasakan kesulitan bernafas secara normal?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -196,7 +211,7 @@
             ]
         },
         {
-            "id": 14,
+            "id": 15,
             "pertanyaan": "Apakah saat ini anda mengalami gangguan lambung (mual / nyeri / lambung)?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -211,7 +226,7 @@
             ]
         },
         {
-            "id": 15,
+            "id": 16,
             "pertanyaan": "Apakah saat ini anda mengalami diare?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -226,7 +241,7 @@
             ]
         },
         {
-            "id": 16,
+            "id": 17,
             "pertanyaan": "Apakah saat ini mengalami hilang rasa?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -241,7 +256,7 @@
             ]
         },
         {
-            "id": 17,
+            "id": 18,
             "pertanyaan": "Apakah saat ini mengalami hilang penciuman?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -256,7 +271,7 @@
             ]
         },
         {
-            "id": 18,
+            "id": 19,
             "pertanyaan": "Apakah saat ini anda mengalami batuk dan pilek?",
             "category": "Kesehatan Pribadi / Gejala",
             "options": [
@@ -271,23 +286,8 @@
             ]
         },
         {
-            "id": 19,
-            "pertanyaan": "Apakah ada anggota keluarga inti yang tinggal serumah mengalami penyakit covid-19?",
-            "category": "Kesehatan Keluarga",
-            "options": [
-                {
-                    "label": "Ya",
-                    "value": "5"
-                },
-                {
-                    "label": "Tidak",
-                    "value": "0"
-                }
-            ]
-        },
-        {
             "id": 20,
-            "pertanyaan": "Apakah anda dan atau keluarga mengunjungi orang sakit?",
+            "pertanyaan": "Apakah anda mengetahui protokol kesehatan 5M ?",
             "category": "Kesehatan Keluarga",
             "options": [
                 {
@@ -302,12 +302,12 @@
         },
         {
             "id": 21,
-            "pertanyaan": "Apakah anda dan atau keluarga menghadiri acara pemakan / kedukaan?",
+            "pertanyaan": "Apakah keluarga anda ada yang mengalami gejala kesehatan. ( meriang, kesulitan bernafas normal, gangguan lambung, diare, hilang rasa, holang penciuman, batuk dan pilek) ?",
             "category": "Kesehatan Keluarga",
             "options": [
                 {
                     "label": "Ya",
-                    "value": "1"
+                    "value": "5"
                 },
                 {
                     "label": "Tidak",
@@ -317,7 +317,7 @@
         },
         {
             "id": 22,
-            "pertanyaan": "Apakah anda dan atau keluarga melakukan kontak dengan orang yang terjangkit covid-19?",
+            "pertanyaan": "Apakah anda dan atau keluarga mengunjungi orang sakit?",
             "category": "Kesehatan Keluarga",
             "options": [
                 {
@@ -332,7 +332,37 @@
         },
         {
             "id": 23,
-            "pertanyaan": "Apakah keluarga anda ada yang mengalami gejala kesehatan ( meriang, kesulitan bernafas normal, gangguan lambung, diare, hilang rasa, holang penciuman, batuk dan pilek )?",
+            "pertanyaan": "Apakah anda dan atau keluarga menghadiri acara pemakaman / kedukaan?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "1"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 24,
+            "pertanyaan": "Apakah anda dan atau keluarga melakukan kontak dengan orang yang terjangkit covid-19?",
+            "category": "Kesehatan Keluarga",
+            "options": [
+                {
+                    "label": "Ya",
+                    "value": "5"
+                },
+                {
+                    "label": "Tidak",
+                    "value": "0"
+                }
+            ]
+        },
+        {
+            "id": 25,
+            "pertanyaan": "Apakah keluarga anda menjalankan protokol kesehatan dengan baik?",
             "category": "Kesehatan Keluarga",
             "options": [
                 {

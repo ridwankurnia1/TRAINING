@@ -1,0 +1,95 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+import { Employee } from '../_model/Employee';
+import { EmployeeId } from '../_model/EmployeeId';
+import { LogHeader } from '../_model/LogHeader';
+import { PaginatedResult } from '../_model/Pagination';
+import { ChecksheetService } from '../_service/checksheet.service';
+import { UIService } from '../_service/ui.service';
+
+@Component({
+  selector: 'app-tap',
+  templateUrl: './tap.component.html',
+  styleUrls: ['./tap.component.css']
+})
+export class TapComponent implements OnInit {
+  header: LogHeader = {};
+  id = '1';
+  nikorid = '';
+  employee: Employee = {};
+  listEmployee: Employee[] = [];
+  display = 10;
+  today = new Date();
+  todayCount = 0;
+  totalCount = 0;
+  defaultImages = environment.imgEmpUrl + 'NoImage.png';
+
+  constructor(
+    private ui: UIService,
+    private csservice: ChecksheetService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+  ) { }
+
+  ngOnInit(): void {
+    const docId = this.route.snapshot.paramMap.get('id');
+    if (this.ui.isNullOrEmpty(docId)) {
+      return;
+    }
+    this.csservice.getLogHeader(docId).subscribe({
+      next: (res: LogHeader) => {
+        this.header = res;
+        this.todayCount = this.header.count;
+      },
+      error: (err) => {
+        this.toastr.error(err.error);
+      }
+    });
+    
+    this.id = docId;
+    const prm = {
+      id: this.id
+    };
+    this.csservice.getTapLog(1, 10, prm).subscribe({
+      next: (res: PaginatedResult<Employee[]>) => {
+        if (res.result) {
+          this.listEmployee = res.result;
+          this.totalCount = res.pagination.totalItems;
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.error);
+      }
+    });
+  }
+  getEmployee(): void {
+    if (this.ui.isNullOrEmpty(this.nikorid)) {
+      return;
+    }
+
+    const param: EmployeeId = {};
+    if (this.nikorid.length === 10) {
+      param.rfid = this.nikorid;
+    } else {
+      param.nik = this.nikorid;
+    }
+
+    this.csservice.addTapLog(this.id, param).subscribe({
+      next: (resp: Employee) => {
+        if (this.listEmployee.length >= this.display) {
+          this.listEmployee.splice((this.display - 1), 1);
+        }
+        this.listEmployee.unshift(resp);
+        this.nikorid = '';
+        this.totalCount++;
+        this.todayCount++;
+      }
+    });
+  }
+  setDefaultImage(item: Employee): void {
+    item.photo = this.defaultImages;
+  }
+
+}

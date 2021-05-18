@@ -87,6 +87,8 @@ export class ClinicComponent implements OnInit {
     this.questions[20].nilai = data.question21.toString();
     this.questions[21].nilai = data.question22.toString();
     this.questions[22].nilai = data.question23.toString();
+    this.questions[23].nilai = data.question24.toString();
+    this.questions[24].nilai = data.question25.toString();
     const nilai = this.questions.reduce((a, b) => a + Number(b.nilai), 0);
     if (nilai >= 11 || nilai === 0) {
       this.mustCheck = true;
@@ -101,8 +103,10 @@ export class ClinicComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.toastr.success('Data berhasil di simpan');
-      }, error: () => {
+      }, error: (err) => {
         this.loading = false;
+        this.toastr.error(err.error);
+        
       }
     });
   }

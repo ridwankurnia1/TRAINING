@@ -31,8 +31,8 @@ namespace TRAINING.API.ViewModel
         public Int16 Question21 { get; set; }
         public Int16 Question22 { get; set; }
         public Int16 Question23 { get; set; }
-        // public Int16 Question24 { get; set; }
-        // public Int16 Question25 { get; set; }
+        public Int16 Question24 { get; set; }
+        public Int16 Question25 { get; set; }
         // public Int16 Question26 { get; set; }
         // public Int16 Question27 { get; set; }
         // public Int16 Question28 { get; set; }

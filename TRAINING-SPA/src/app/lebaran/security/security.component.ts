@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeId } from 'src/app/_model/EmployeeId';
 import { Lebaran } from 'src/app/_model/Lebaran';
+import { PaginatedResult } from 'src/app/_model/Pagination';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { environment } from 'src/environments/environment';
@@ -15,7 +16,7 @@ export class SecurityComponent implements OnInit {
   nikorid = '';
   employee: Lebaran = {};
   listEmployee: Lebaran[] = [];
-  display = 3;
+  display = 5;
   defaultImages = environment.imgEmpUrl + 'NoImage.png';
   constructor(
     private ui: UIService,
@@ -24,6 +25,28 @@ export class SecurityComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.csservice.getSecurity(1, 5).subscribe({
+      next: (res: PaginatedResult<Lebaran[]>) => {
+        if (res.result) {
+          this.listEmployee = res.result;
+          this.listEmployee.forEach(resp => {
+            if (this.ui.isNullOrEmpty(resp.fillDate)) {
+              resp.statusDescription = 'Belum Mengisi';
+              resp.status = 2;
+            } else {
+              if (resp.status === 1) {
+                resp.statusDescription = 'Check Kesehatan Sebelum Mulai Bekerja';
+              } else {
+                resp.statusDescription = 'Dipersilahkan masuk Bekerja';
+              }
+            }
+          });
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.error);
+      }
+    });
   }
 
   getEmployee(): void {

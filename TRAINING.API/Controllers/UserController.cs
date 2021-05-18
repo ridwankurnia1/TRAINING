@@ -123,24 +123,24 @@ namespace TRAINING.API.Controllers
             });
         }
 
-        [HttpGet("employee2")]
-        public async Task<IActionResult> GetEmployeeAPRISE([FromQuery]Params prm)
-        {
-            var employee = await _repo.GetListEmmployeeAPRISE(prm);
-            var org = await _repo.GetOrganization();
+        // [HttpGet("employee2")]
+        // public async Task<IActionResult> GetEmployeeAPRISE([FromQuery]Params prm)
+        // {
+        //     var employee = await _repo.GetListEmmployeeAPRISE(prm);
+        //     var org = await _repo.GetOrganization();
 
-            var result = from m in employee
-                         join g in org on m.ORGANIZATIONSTRUCTURE equals g.GOOGNO 
-                         select new EmployeeDto() 
-                         {
-                            Nik = m.NIK,
-                            Nama = m.NAME,
-                            DepartmentId = m.ORGANIZATIONSTRUCTURE,
-                            Department = g.GOOGNA,
-                            Grade = m.GRADECODE
-                         };
+        //     var result = from m in employee
+        //                  join g in org on m.ORGANIZATIONSTRUCTURE equals g.GOOGNO 
+        //                  select new EmployeeDto() 
+        //                  {
+        //                     Nik = m.NIK,
+        //                     Nama = m.NAME,
+        //                     DepartmentId = m.ORGANIZATIONSTRUCTURE,
+        //                     Department = g.GOOGNA,
+        //                     Grade = m.GRADECODE
+        //                  };
 
-            return Ok(result);
-        }
+        //     return Ok(result);
+        // }
     }
 }

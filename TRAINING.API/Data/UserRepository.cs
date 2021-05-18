@@ -10,11 +10,10 @@ namespace TRAINING.API.Data
     public class UserRepository : IUserRepository
     {
         private readonly AMGContext _context;
-        private readonly APRISEContext _apriseContext;
+        // private readonly APRISEContext _apriseContext;
 
-        public UserRepository(AMGContext context, APRISEContext apriseContext)
+        public UserRepository(AMGContext context)
         {
-            _apriseContext = apriseContext;
             _context = context;            
         }
 
@@ -36,6 +35,13 @@ namespace TRAINING.API.Data
         public async Task<MEMP> GetEmployee(string nik)
         {
             return await _context.MEMP.FirstOrDefaultAsync(x => x.EMEMNO == nik && x.EMRCST == 1);
+        }
+        public async Task<MEMP> GetEmployee(string nik, string rfid)
+        {
+            if (!string.IsNullOrEmpty(nik))
+                return await _context.MEMP.Include(x => x.GOG1).FirstOrDefaultAsync(x => x.EMEMNO == nik);
+            
+            return await _context.MEMP.Include(x => x.GOG1).FirstOrDefaultAsync(x => x.EMRFID == rfid);
         }
 
         public async Task<PagedList<MEMP>> GetListEmmployee(Params prm)
@@ -69,25 +75,25 @@ namespace TRAINING.API.Data
             return await _context.GOG1.Where(x => x.GORCST == 1).ToListAsync();
         }
 
-        public async Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm)
-        {
-            var query = _apriseContext.EMPLOYEE.AsQueryable();
+        // public async Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm)
+        // {
+        //     var query = _apriseContext.EMPLOYEE.AsQueryable();
 
-            if (!string.IsNullOrEmpty(prm.name))
-            {
-                query = query.Where(x => x.NAME.Contains(prm.name));
-            }
-            if (!string.IsNullOrEmpty(prm.dept))
-            {
-                query = query.Where(x => x.ORGANIZATIONSTRUCTURE.Contains(prm.dept));
-            }
-            if (!string.IsNullOrEmpty(prm.grade))
-            {
-                query = query.Where(x => x.GRADECODE == prm.grade);
-            }
+        //     if (!string.IsNullOrEmpty(prm.name))
+        //     {
+        //         query = query.Where(x => x.NAME.Contains(prm.name));
+        //     }
+        //     if (!string.IsNullOrEmpty(prm.dept))
+        //     {
+        //         query = query.Where(x => x.ORGANIZATIONSTRUCTURE.Contains(prm.dept));
+        //     }
+        //     if (!string.IsNullOrEmpty(prm.grade))
+        //     {
+        //         query = query.Where(x => x.GRADECODE == prm.grade);
+        //     }
 
-            return await query.ToListAsync();
-        }
+        //     return await query.ToListAsync();
+        // }
 
         public async Task<IEnumerable<MGRD>> GetListGrade()
         {

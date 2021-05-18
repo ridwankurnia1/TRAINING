@@ -114,7 +114,7 @@
         </div>
 
         <div class="mb-3" *ngIf="displayAnswer">
-          <button class="btn btn-danger" type="submit" [disabled]="loading">
+          <button class="btn btn-danger" type="submit" [disabled]="loading" (click)="save()">
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1" role="status"
               aria-hidden="true"></span>
             <i *ngIf="!loading" class="fa fa-save mr-2"></i>Submit
