@@ -42,3 +42,52 @@
     </ng-container>    
   </div>
 </div>
+
+<ng-template #popup>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Input NIK</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="needs-validation" [formGroup]="employeeForm">
+      <div class="mb-3">
+        <label for="rfid" class="form-label">RFID</label>
+        <input type="text" class="form-control" formControlName="rfid" placeholder="RFID"
+          [ngClass]="{'is-invalid': employeeForm.get('rfid').errors && employeeForm.get('rfid').touched}">
+        <div class="invalid-feedback">
+          Harap isi RFID
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="nik" class="form-label">NIK</label>
+        <input type="text" class="form-control" formControlName="nik" placeholder="NIK"
+          (blur)="getEmployee()"
+          [ngClass]="{'is-invalid': employeeForm.get('nik').errors && employeeForm.get('nik').touched}">
+        <div class="invalid-feedback">
+          Harap isi NIK
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="nama" class="form-label">Nama</label>
+        <input type="text" class="form-control" formControlName="nama" placeholder="Nama"          
+         [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
+        <div class="invalid-feedback">
+          Harap isi Nama
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <button type="button" class="btn btn-sm btn-danger mr-2" (click)="save()">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+          <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">            
+          <i class="fa fa-undo mr-2"></i> Cancel
+        </button>  
+      </div>
+    </form>
+   
+  </div>
+</ng-template>

@@ -45,8 +45,23 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.AttendDate, opt => opt.MapFrom(src => src.ELTRDT));
             
             CreateMap<ELOH, LogHeaderDto>()
-                .ForMember(des => des.Id, opt => opt.MapFrom(src => src.EHRCID))
-                .ForMember(des => des.Title, opt => opt.MapFrom(src => src.EHDESC));
+                .ForMember(des => des.Id, opt => opt.MapFrom(src => src.EHRCID))                
+                .ForMember(des => des.Title, opt => opt.MapFrom(src => src.EHDESC))
+                .ForMember(des => des.DateFrom, opt => opt.MapFrom(src => src.EHDTFR))
+                .ForMember(des => des.DateTo, opt => opt.MapFrom(src => src.EHDTTO))
+                .ForMember(des => des.DuplicateFlag, opt => opt.MapFrom(src => src.EHDUPF))
+                .ForMember(des => des.PredefinedFlag, opt => opt.MapFrom(src => src.EHPREF))
+                .ForMember(des => des.Status, opt => opt.MapFrom(src => src.EHRCST));
+            CreateMap<LogHeaderDto, ELOH>()
+                .ForMember(des => des.EHRCID, opt => opt.MapFrom(src => src.Id))
+                .ForMember(des => des.EHDESC, opt => opt.MapFrom(src => src.Title))
+                .ForMember(des => des.EHDTFR, opt => opt.MapFrom(src => src.DateFrom))
+                .ForMember(des => des.EHDTTO, opt => opt.MapFrom(src => src.DateTo))
+                .ForMember(des => des.EHDUPF, opt => opt.MapFrom(src => src.DuplicateFlag))
+                .ForMember(des => des.EHPREF, opt => opt.MapFrom(src => src.PredefinedFlag))
+                .ForMember(des => des.EHRCST, opt => opt.MapFrom(src => src.Status))
+                .ForMember(des => des.EHCRDT, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(des => des.EHCHDT, opt => opt.MapFrom(src => DateTime.Now));
 
             CreateMap<MGRD, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.GDEGNA))

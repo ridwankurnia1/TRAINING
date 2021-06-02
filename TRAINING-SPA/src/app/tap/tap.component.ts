@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { Employee } from '../_model/Employee';
@@ -15,6 +17,7 @@ import { UIService } from '../_service/ui.service';
   styleUrls: ['./tap.component.css']
 })
 export class TapComponent implements OnInit {
+  @ViewChild('popup', { static: true}) popUp: TemplateRef<any>;
   header: LogHeader = {};
   id = '1';
   nikorid = '';
@@ -25,12 +28,19 @@ export class TapComponent implements OnInit {
   todayCount = 0;
   totalCount = 0;
   defaultImages = environment.imgEmpUrl + 'NoImage.png';
-
+  employeeForm: FormGroup;
+  config = {
+    ignoreBackdropClick: true
+  };
+  modalRef: BsModalRef;
+  
   constructor(
     private ui: UIService,
+    private fb: FormBuilder,
     private csservice: ChecksheetService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
+    private modalService: BsModalService,
   ) { }
 
   ngOnInit(): void {
@@ -63,6 +73,14 @@ export class TapComponent implements OnInit {
         this.toastr.error(err.error);
       }
     });
+    this.createEmployeeForm();
+  }
+  createEmployeeForm() {
+    this.employeeForm = this.fb.group({
+      nik: ['', Validators.required],
+      nama: [{values:'', disabled: true}],
+      rfid: [{values:'', disabled: true}],
+    });
   }
   getEmployee(): void {
     if (this.ui.isNullOrEmpty(this.nikorid)) {
@@ -85,11 +103,22 @@ export class TapComponent implements OnInit {
         this.nikorid = '';
         this.totalCount++;
         this.todayCount++;
+      }, error: (err) => {
+        this.toastr.error(err.error);
+        // if (this.nikorid.length === 10) {
+        //   this.employeeForm.controls.rfid.setValue(param.rfid);
+        // } else {
+        //   this.employeeForm.controls.rfid.enable();
+        // }
+        // this.employeeForm.controls.rfid.setValue(param.rfid);
+        // this.modalRef = this.modalService.show(this.popUp, this.config);
       }
     });
   }
   setDefaultImage(item: Employee): void {
     item.photo = this.defaultImages;
   }
+  save() {
 
+  }
 }
