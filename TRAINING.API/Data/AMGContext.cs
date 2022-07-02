@@ -9,11 +9,13 @@ namespace TRAINING.API.Data
         public DbSet<MEMP> MEMP { get; set; }
         public DbSet<MGRD> MGRD { get; set; }
         public DbSet<GOG1> GOG1 { get; set; }
+        public DbSet<SCMI> SCMI { get; set; }
         public DbSet<XUSR> XUSR { get; set; }
         public DbSet<ZUSR> ZUSR { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<SCMI>().HasKey(k => new { k.CXCUNO, k.CXCUIT });
             builder.Entity<XUSR>().HasKey(k => new { k.XUUSNO });
             builder.Entity<ZUSR>().HasKey(k => new { k.ZUUSNO });
             builder.Entity<MEMP>().HasKey(k => new { k.EMEMNO, k.EMBRNO });
