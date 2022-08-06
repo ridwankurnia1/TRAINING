@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using TRAINING.API.Model;
+using TRAINING.API.Schema.Queries;
 using TRAINING.API.ViewModel;
 
 namespace TRAINING.API.Helper
@@ -219,6 +220,18 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.HealthCheckDate, opt => opt.MapFrom(src => src.ELHCDT))
                 .ForMember(des => des.CheckPIC, opt => opt.MapFrom(src => src.ELCPIC))
                 .ForMember(des => des.Remarks, opt => opt.MapFrom(src => src.ELREMA));
+            
+            CreateMap<SCMI, PartNumberType>()
+                .ForMember(des => des.CustomerId, opt => opt.MapFrom(src => src.CXCUNO))
+                .ForMember(des => des.ModelName, opt => opt.MapFrom(src => src.CXITNO))
+                .ForMember(des => des.PartNumber, opt => opt.MapFrom(src => src.CXCUIT))
+                .ForMember(des => des.PartDescription, opt => opt.MapFrom(src => src.CXITNA))
+                .ForMember(des => des.Remarks, opt => opt.MapFrom(src => src.CXREMA))
+                .ForMember(des => des.Status, opt => opt.MapFrom(src => src.CXRCST))
+                .ForMember(des => des.Created, opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.CXCRDT)))
+                .ForMember(des => des.CreatedBy, opt => opt.MapFrom(src => src.CXCRUS))
+                .ForMember(des => des.Updated ,opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.CXCHDT)))
+                .ForMember(des => des.UpdatedBy ,opt => opt.MapFrom(src => src.CXCHUS));
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

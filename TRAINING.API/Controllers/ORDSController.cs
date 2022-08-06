@@ -15,7 +15,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("ktpa02/{*id}")]
-        public async Task<IActionResult> GetKTPA02(string id)
+        public IActionResult GetKTPA02(string id)
         {
             // DB2Connection con = new DB2Connection("DataSource=172.18.178.57");
             // con.Open();
