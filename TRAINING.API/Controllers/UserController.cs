@@ -10,6 +10,7 @@ using TRAINING.API.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TRAINING.API.Model;
+using TRAINING.API.Schema.Queries;
 
 namespace TRAINING.API.Controllers
 {
@@ -18,12 +19,14 @@ namespace TRAINING.API.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
+        private readonly ISalesRepository _salesRepo;
         private readonly IUserRepository _repo;
         private readonly IMapper _mapper;
-        public UserController(IUserRepository repo, IMapper mapper)
+        public UserController(IUserRepository repo, ISalesRepository salesRepo, IMapper mapper)
         {
             _mapper = mapper;
-            _repo = repo;            
+            _repo = repo;
+            _salesRepo = salesRepo;
         }
 
         [HttpGet("employee")]
@@ -126,20 +129,8 @@ namespace TRAINING.API.Controllers
         // [HttpGet("employee2")]
         // public async Task<IActionResult> GetEmployeeAPRISE([FromQuery]Params prm)
         // {
-        //     var employee = await _repo.GetListEmmployeeAPRISE(prm);
-        //     var org = await _repo.GetOrganization();
-
-        //     var result = from m in employee
-        //                  join g in org on m.ORGANIZATIONSTRUCTURE equals g.GOOGNO 
-        //                  select new EmployeeDto() 
-        //                  {
-        //                     Nik = m.NIK,
-        //                     Nama = m.NAME,
-        //                     DepartmentId = m.ORGANIZATIONSTRUCTURE,
-        //                     Department = g.GOOGNA,
-        //                     Grade = m.GRADECODE
-        //                  };
-
+        //     var data = await _salesRepo.GetPartNumber("311050", "73450-T7Y -K100");
+        //     var result = _mapper.Map<PartNumberType>(data);
         //     return Ok(result);
         // }
     }

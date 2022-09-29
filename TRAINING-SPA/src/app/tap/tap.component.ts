@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -28,7 +28,7 @@ export class TapComponent implements OnInit {
   todayCount = 0;
   totalCount = 0;
   defaultImages = environment.imgEmpUrl + 'NoImage.png';
-  employeeForm: FormGroup;
+  employeeForm: UntypedFormGroup;
   config = {
     ignoreBackdropClick: true
   };
@@ -36,7 +36,7 @@ export class TapComponent implements OnInit {
   
   constructor(
     private ui: UIService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private csservice: ChecksheetService,
     private toastr: ToastrService,
     private route: ActivatedRoute,

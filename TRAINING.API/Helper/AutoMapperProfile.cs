@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using TRAINING.API.Model;
+using TRAINING.API.Schema.Mutations;
 using TRAINING.API.Schema.Queries;
 using TRAINING.API.ViewModel;
 
@@ -232,6 +233,26 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.CreatedBy, opt => opt.MapFrom(src => src.CXCRUS))
                 .ForMember(des => des.Updated ,opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.CXCHDT)))
                 .ForMember(des => des.UpdatedBy ,opt => opt.MapFrom(src => src.CXCHUS));
+            CreateMap<PartTypeInput, SCMI>()
+                .ForMember(des => des.CXCONO, opt => opt.MapFrom(src => "AMG"))
+                .ForMember(des => des.CXBRNO, opt => opt.MapFrom(src => "CKP"))
+                .ForMember(des => des.CXCUNO, opt => opt.MapFrom(src => src.CustomerId))
+                .ForMember(des => des.CXITNO, opt => opt.MapFrom(src => src.ModelName))
+                .ForMember(des => des.CXCUIT, opt => opt.MapFrom(src => src.PartNumber))
+                .ForMember(des => des.CXITNA, opt => opt.MapFrom(src => src.PartDescription))
+                .ForMember(des => des.CXITN2, opt => opt.MapFrom(src => ""))
+                .ForMember(des => des.CXUNNO, opt => opt.MapFrom(src => ""))
+                .ForMember(des => des.CXREMA, opt => opt.MapFrom(src => src.Remarks))
+                .ForMember(des => des.CXOTRM, opt => opt.MapFrom(src => ""))
+                .ForMember(des => des.CXALCN, opt => opt.MapFrom(src => src.AlcNumber))
+                .ForMember(des => des.CXEONO, opt => opt.MapFrom(src => src.EoNumber))
+                .ForMember(des => des.CXSYST, opt => opt.MapFrom(src => "10"))
+                .ForMember(des => des.CXSTAT, opt => opt.MapFrom(src => "10"))
+                .ForMember(des => des.CXRCST, opt => opt.MapFrom(src => 1))
+                .ForMember(des => des.CXCRDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(DateTime.Now)))
+                .ForMember(des => des.CXCRTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)))
+                .ForMember(des => des.CXCHDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(DateTime.Now)))
+                .ForMember(des => des.CXCHTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)));
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

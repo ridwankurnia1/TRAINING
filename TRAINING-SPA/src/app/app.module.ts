@@ -31,6 +31,8 @@ import { SecurityComponent } from './lebaran/security/security.component';
 import { RegisterComponent } from './lebaran/register/register.component';
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
+import { PartNumberComponent } from './master/part-number/part-number.component';
+import { GraphQLModule } from './graphql.module';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -49,7 +51,8 @@ export function tokenGetter(): string {
     SecurityComponent,
     RegisterComponent,
     TapComponent,
-      TaplistComponent
+    TaplistComponent,
+    PartNumberComponent
    ],
   imports: [
     AutoCompleteModule,
@@ -64,6 +67,7 @@ export function tokenGetter(): string {
     ConfirmDialogModule,
     DropdownModule,
     RadioButtonModule,
+    GraphQLModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),

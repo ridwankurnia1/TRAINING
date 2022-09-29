@@ -1,0 +1,197 @@
+<div class="mx-3 my-3">
+  <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+  <p-table #dt styleClass="p-datatable-striped" [value]="data" [paginator]="true" [rows]="10"
+    [totalRecords]="pagination.totalCount" [lazy]="true" [responsive]="true" sortMode="multiple"
+    [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50,100]"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+    (onLazyLoad)="pageChanged($event)" [loading]="loading">
+    <ng-template pTemplate="header">
+      <tr style="font-size: small;">
+        <th style="width:4.5em; text-align: center;">
+          <div class="d-grid">
+            <button type="button" class="btn btn-sm btn-primary" (click)="entry(null, false, true)" tooltip="add part number"
+              placement="bottom">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </th>
+        <th style="width:4.5em; text-align: center;">
+          <div class="d-grid">
+            <button type="button" class="btn btn-sm btn-success" (click)="entry(null, false, true)"
+              tooltip="download part number to excel" placement="bottom">
+              <i class="fa fa-file-excel-o"></i>
+            </button>
+          </div>
+        </th>
+        <th>Customer</th>
+        <th>Part Number</th>
+        <th>Model Name</th>
+        <th>Remarks</th>
+        <th>ALC / EO number</th>
+        <th style="width: 9em;">Status</th>
+        <th style="width:4.5em; text-align: center;" rowspan="2">Del</th>
+      </tr>
+      <tr>
+        <th style="font-size: small;">
+          Edit
+        </th>
+        <th style="font-size: small;">
+          Copy
+        </th>
+        <th>
+          <input type="text" class="form-control form-control-sm" (input)="dt.filter($event.target.value, 'customerId', 'eq')">
+        </th>
+        <th>
+          <input type="text" class="form-control form-control-sm" (input)="dt.filter($event.target.value, 'partNumber', 'contains')">
+        </th>
+        <th>
+          <input type="text" class="form-control form-control-sm" (input)="dt.filter($event.target.value, 'modelName', 'contains')">
+        </th>
+        <th>
+          <input type="text" class="form-control form-control-sm" (input)="dt.filter($event.target.value, 'remark', 'contains')">
+        </th>
+        <th>
+          <input type="text" class="form-control form-control-sm" (input)="dt.filter($event.target.value, 'eoNumber', 'contains')">
+        </th>
+        <th>
+          <select class="form-control form-control-sm" (change)="dt.filter($event.target.value, 'status', 'eq')"
+            [(ngModel)]="selectedStatus">
+            <option value="">Status</option>
+            <option *ngFor="let item of status" [value]="item.value">{{item.value}}
+            </option>
+          </select>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+      <tr style="font-size: small;">
+        <td>
+          <button type="button" class="btn btn-sm btn-outline-primary"
+            (click)="entry(rowData, false, true)">
+            <i class="fa fa-pencil"></i>
+          </button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-sm btn-outline-success"
+            (click)="entry(rowData, true, true)">
+            <i class="fa fa-copy"></i>
+          </button>
+        </td>
+        <td>
+          {{rowData.customerId}} - {{rowData.customerName}}
+        </td>
+        <td>
+          {{rowData.partNumber}}
+        </td>
+        <td>
+          {{rowData.modelName}}
+        </td>
+        <td>
+          {{rowData.remark}}
+          <div class="w-100 text-muted">
+            {{rowData.otherRemark}}
+          </div>
+        </td>
+        <td>
+          {{rowData.alcNumber}}
+          <div class="w-100 text-muted">
+            {{rowData.eoNumber}}
+          </div>
+        </td>
+        <td class="align-middle text-center">
+          <div [ngSwitch]="rowData.status">
+            <div *ngSwitchCase="1"><span class="fa fa-circle text-success me-2"></span>Active</div>
+            <div *ngSwitchCase="0"><span class="fa fa-circle text-muted me-2"></span>Inactive</div>
+          </div>
+        </td>
+        <td style="text-align: center;">
+          <div [ngSwitch]="rowData.status">
+            <div *ngSwitchCase="1">
+              <button type="button" class="btn btn-outline-danger btn-sm" (click)="delete(rowData)">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+            <div *ngSwitchDefault>
+              <button type="button" class="btn btn-outline-primary btn-sm" (click)="restore(rowData)">
+                <i class="fa fa-undo"></i>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-template #popup>
+    <div class="modal-header">
+      <h5 class="font-weight-normal">{{popTitle}}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.hide()"></button>
+    </div>
+    <div class="modal-body">
+      <form class="needs-validation" [formGroup]="form" (submit)="save()">
+        <div class="form-group col-12 mb-2">
+          <label for="customerId" class="form-label">Customer <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="customerId"
+            [ngClass]="{'is-invalid': form.get('customerId').errors && form.get('customerId').touched}">
+          <div class="invalid-feedback">
+            Please input Customer Id
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 col-12 mb-2">
+            <label for="partNumber" class="form-label">Part Number <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="partNumber"
+              [ngClass]="{'is-invalid': form.get('partNumber').errors && form.get('partNumber').touched}">
+            <div class="invalid-feedback">
+              Please input Part Number
+            </div>
+          </div>
+          <div class="form-group col-md-6 col-12 mb-2">
+            <label for="modelName" class="form-label">Model Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="modelName"
+              [ngClass]="{'is-invalid': form.get('modelName').errors && form.get('modelName').touched}">
+            <div class="invalid-feedback">
+              Please input Model Name
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label for="partDescription" class="form-label">Part Description</label>
+          <input type="text" class="form-control" formControlName="partDescription">
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 col-12 mb-2">
+            <label for="remark" class="form-label">Remark</label>
+            <input type="text" class="form-control" formControlName="remark">
+          </div>
+          <div class="form-group col-md-6 col-12 mb-2">
+            <label for="otherRemark" class="form-label">Other Remark</label>
+            <input type="text" class="form-control" formControlName="otherRemark">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-6 mb-2">
+            <label for="alcNumber" class="form-label">ALC Number</label>
+            <input type="text" class="form-control" formControlName="alcNumber"
+              placeholder="For Hyundai Only">
+          </div>
+          <div class="form-group col-6 mb-2">
+            <label for="eoNumber" class="form-label">EO Number</label>
+            <input type="text" class="form-control" formControlName="eoNumber"
+              placeholder="For Hyundai Only">
+          </div>
+        </div>
+
+        <div class="form-group my-2">
+          <button [disabled]="process" class="btn btn-danger me-2" type="submit">
+            <span *ngIf="process" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!process" class="fa fa-save me-2"></i>Save
+          </button>
+          <button [disabled]="process" class="btn btn-primary" type="reset" (click)='modalRef.hide()'>
+            <i class="fa fa-undo me-2"></i>Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

@@ -37,7 +37,7 @@ export class DetailComponent implements OnInit {
     }
     this.pagination = {
       currentPage: 1,
-      itemPerPage: 10,
+      itemsPerPage: 10,
       totalItems: 0,
       totalPages: 0
     };
@@ -76,7 +76,7 @@ export class DetailComponent implements OnInit {
   }
   pageChanged(event): void {
     this.pagination.currentPage = (event.first / event.rows) + 1;
-    this.pagination.itemPerPage = event.rows;
+    this.pagination.itemsPerPage = event.rows;
     this.param = {
       filter: event.globalFilter
     };
@@ -87,7 +87,7 @@ export class DetailComponent implements OnInit {
     this.param.dept = this.selectedDept;
     this.param.status = this.selectedStatus;
     this.param.xls = '';
-    this.csservice.getEmployees(this.pagination.currentPage, this.pagination.itemPerPage, this.param)
+    this.csservice.getEmployees(this.pagination.currentPage, this.pagination.itemsPerPage, this.param)
       .subscribe({
         next: (res: PaginatedResult<Lebaran[]>) => {
           this.loading = false;

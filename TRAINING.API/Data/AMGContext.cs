@@ -15,7 +15,7 @@ namespace TRAINING.API.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<SCMI>().HasKey(k => new { k.CXCUNO, k.CXCUIT });
+            builder.Entity<SCMI>().HasKey(k => new { k.CXCONO, k.CXBRNO, k.CXITNO, k.CXCUNO, k.CXCUIT });
             builder.Entity<XUSR>().HasKey(k => new { k.XUUSNO });
             builder.Entity<ZUSR>().HasKey(k => new { k.ZUUSNO });
             builder.Entity<MEMP>().HasKey(k => new { k.EMEMNO, k.EMBRNO });

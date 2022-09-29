@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import * as moment from 'moment';
 
 @Injectable({
@@ -8,12 +8,12 @@ import * as moment from 'moment';
 export class UIService {
 
 constructor() { }
-  validateFormEntry(formGroup: FormGroup): void {
+  validateFormEntry(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);
-      if (control instanceof FormControl) {
+      if (control instanceof UntypedFormControl) {
         control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof FormGroup) {
+      } else if (control instanceof UntypedFormGroup) {
         this.validateFormEntry(control);
       }
     });

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +22,7 @@ export class EmployeeComponent implements OnInit {
   listEmployee: Employee[] = [];
   pagination: Pagination;
   pageSize = 10;
-  employeeForm: FormGroup;
+  employeeForm: UntypedFormGroup;
   configModal = {
     ignoreBackdropClick: true
   };
@@ -32,7 +32,7 @@ export class EmployeeComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private toastr: ToastrService,
     private confirm: ConfirmationService,
     private modalService: BsModalService) { }
@@ -46,7 +46,7 @@ export class EmployeeComponent implements OnInit {
     this.loadDropdown();
     this.pagination = {
       currentPage: 1,
-      itemPerPage: 10,
+      itemsPerPage: 10,
       totalItems: 0,
       totalPages: 0
     };
@@ -65,7 +65,7 @@ export class EmployeeComponent implements OnInit {
 
   loadData(): void {
     this.loading = true;
-    this.employeeService.getEmployees(this.pagination.currentPage, this.pagination.itemPerPage, this.param)
+    this.employeeService.getEmployees(this.pagination.currentPage, this.pagination.itemsPerPage, this.param)
       .subscribe((res: PaginatedResult<Employee[]>) => {
         this.loading = false;
         this.listEmployee = res.result;
@@ -81,7 +81,7 @@ export class EmployeeComponent implements OnInit {
   }
   pageChanged(event): void {
     this.pagination.currentPage = (event.first / event.rows) + 1;
-    this.pagination.itemPerPage = event.rows;
+    this.pagination.itemsPerPage = event.rows;
     this.param = {
       filter: event.globalFilter
     };
@@ -184,12 +184,12 @@ export class EmployeeComponent implements OnInit {
       }
     });
   }
-  validateFormEntry(formGroup: FormGroup): void {
+  validateFormEntry(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);
-      if (control instanceof FormControl) {
+      if (control instanceof UntypedFormControl) {
         control.markAsTouched({ onlySelf: true });
-      } else if (control instanceof FormGroup) {
+      } else if (control instanceof UntypedFormGroup) {
         this.validateFormEntry(control);
       }
     });

@@ -7,6 +7,7 @@ import { RegisterComponent } from './lebaran/register/register.component';
 import { SecurityComponent } from './lebaran/security/security.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { LoginComponent } from './login/login.component';
+import { PartNumberComponent } from './master/part-number/part-number.component';
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
@@ -57,6 +58,10 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     component: DetailComponent
+  },
+  {
+    path: 'part',
+    component: PartNumberComponent
   },
   {
     path: 'login',

@@ -107,7 +107,6 @@
       }
     }
   },
-  "defaultProject": "TRAINING-SPA",
   "cli": {
     "analytics": false
   }

@@ -7,7 +7,7 @@ import { LebaranQuiz } from 'src/app/_model/LebaranQuiz';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { environment } from 'src/environments/environment';
-import * as Quiz from '../../../assets/lebaran2021.json';
+import Quiz from '../../../assets/lebaran2021.json';
 
 @Component({
   selector: 'app-clinic',

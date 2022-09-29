@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
@@ -11,12 +11,12 @@ import { UIService } from 'src/app/_service/ui.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  formItem: FormGroup;
+  formItem: UntypedFormGroup;
   process = false;
   department: Dropdown[] = [];
   constructor(
     private toastr: ToastrService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ui: UIService,
     private csservice: ChecksheetService
   ) { }

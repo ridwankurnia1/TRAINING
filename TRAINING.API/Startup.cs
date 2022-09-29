@@ -21,6 +21,7 @@ using System.Text;
 using System.Data.Common;
 using TRAINING.API.GraphQL;
 using TRAINING.API.Schema.Queries;
+using TRAINING.API.Schema.Mutation;
 
 namespace TRAINING.API
 {
@@ -38,11 +39,17 @@ namespace TRAINING.API
         {
             services.AddControllers();
             services.AddCors();
+            services.AddPooledDbContextFactory<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")).LogTo(Console.WriteLine));
             services.AddDbContext<ECSContext>(x => x.UseSqlServer(Configuration.GetConnectionString("ECSConnection")));
-            services.AddPooledDbContextFactory<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")));            
+            services.AddDbContext<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")).LogTo(Console.WriteLine));
 
-            // services.AddGraphQLServer().AddQueryType<Query>();
-            services.AddGraphQLServer().AddQueryType<PartNumberQuery>();
+            services.AddGraphQLServer()
+                .AddAuthorization()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>()
+                .AddType<PartNumberType>()
+                .AddTypeExtension<PartNumberQuery>()
+                .AddFiltering();
 
             // services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));            
             // services.AddDbContext<ORDSContext>(x => x.UseDb2(Configuration.GetConnectionString("ORDSConnection"), 
@@ -102,17 +109,25 @@ namespace TRAINING.API
                 .AllowAnyMethod()
                 .WithOrigins("http://localhost:4200"));
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGraphQL();
+                endpoints.MapGraphQL()
+                    .WithOptions(new HotChocolate.AspNetCore.GraphQLServerOptions()
+                    {
+                        EnableSchemaRequests = env.IsDevelopment(),
+                        Tool = { Enable = env.IsDevelopment() }
+                    });
+                // endpoints.MapFallbackToController("Index", "Fallback");
             });
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
-                endpoints.MapFallbackToController("Index", "Fallback");
-            });
+
+            // app.UseEndpoints(endpoints => {
+            //     endpoints.MapControllers();
+                
+            // });
         }
     }
 }

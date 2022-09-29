@@ -6,7 +6,7 @@ import { LebaranQuiz } from 'src/app/_model/LebaranQuiz';
 import { PaginatedResult } from 'src/app/_model/Pagination';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
-import * as Quiz from '../../../assets/lebaran2021.json';
+import Quiz from '../../../assets/lebaran2021.json';
 
 @Component({
   selector: 'app-questionnaire',
