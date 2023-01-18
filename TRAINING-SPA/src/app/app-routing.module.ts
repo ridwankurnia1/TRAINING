@@ -7,6 +7,7 @@ import { RegisterComponent } from './lebaran/register/register.component';
 import { SecurityComponent } from './lebaran/security/security.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { LoginComponent } from './login/login.component';
+import { PalletTypeComponent } from './master/pallet-type/pallet-type.component';
 import { PartNumberComponent } from './master/part-number/part-number.component';
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
@@ -16,6 +17,13 @@ const routes: Routes = [
   {
     path: '',
     component: QuestionnaireComponent
+  },
+  {
+    path: 'pallet-type',
+    /* runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard], */
+    loadChildren: () => import('./master/pallet-type/pallet-type.module').then(m => m.PalletTypeModule),
+    component: PalletTypeComponent
   },
   {
     path: 'tap',
@@ -31,8 +39,8 @@ const routes: Routes = [
   },
   {
     path: 'register',
-    runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard],
+    /* runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard], */
     component: RegisterComponent
   },
   {
@@ -69,7 +77,7 @@ const routes: Routes = [
   },
   {
     path: '**', redirectTo: ''
-  }
+  },
 ];
 
 @NgModule({
