@@ -33,13 +33,14 @@ import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
 import { PartNumberComponent } from './master/part-number/part-number.component';
 import { GraphQLModule } from './graphql.module';
+import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
 }
 
 @NgModule({
-  declarations: [		
+  declarations: [
     AppComponent,
     NavComponent,
     EmployeeComponent,
@@ -52,7 +53,8 @@ export function tokenGetter(): string {
     RegisterComponent,
     TapComponent,
     TaplistComponent,
-    PartNumberComponent
+    PartNumberComponent,
+    DefectGroupComponent
    ],
   imports: [
     AutoCompleteModule,

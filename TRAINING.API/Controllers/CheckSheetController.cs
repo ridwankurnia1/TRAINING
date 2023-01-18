@@ -280,5 +280,15 @@ namespace TRAINING.API.Controllers
 
             throw new Exception("Gagal menyimpan data, ulangi proses absensi");
         }
+        // [AllowAnonymous]
+        // [HttpGet("DatMDF0")]
+        // public async Task<IActionResult> GetMDF0([FromQuery] Params prm)
+        // {
+        //     var data = await _repo.GetListMDF0(prm);
+
+        //     //var result = _mapper.Map<IEnumerable<LebaranDto>>(data);
+        //     //Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
+        //     return Ok(data);
+        // }
     }
 }

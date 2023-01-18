@@ -66,6 +66,7 @@ namespace TRAINING.API
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ISalesRepository, SalesRepository>();
             services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
+             services.AddScoped<IProductionRepository, ProductionRepository>();
             
             // services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

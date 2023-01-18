@@ -12,6 +12,7 @@ namespace TRAINING.API.Data
     public class CheckSheetRepository : ICheckSheetRepository
     {
         private readonly ECSContext _context;
+
         public CheckSheetRepository(ECSContext context)
         {
             _context = context;
@@ -202,5 +203,7 @@ namespace TRAINING.API.Data
                 x.ELTRDT.Value.Month == dt.Month &&
                 x.ELTRDT.Value.Day == dt.Day).CountAsync();
         }
+
+        
     }
 }

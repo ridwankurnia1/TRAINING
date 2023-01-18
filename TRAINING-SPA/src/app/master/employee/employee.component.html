@@ -1,5 +1,5 @@
 <div class="container mt-3">
-  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+  <!-- <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog> -->
   <p-table #dt1 [value]="listEmployee" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
   styleClass="p-datatable-striped"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [responsive]="true"
@@ -29,7 +29,7 @@
         <tr>
           <th style="width: 6%;" scope="col">Edit</th>
           <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
-          <!-- <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th> -->
+          <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th> 
           <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
           <th style="width: 18%;" pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
           <th style="width: 6%;" scope="col">Del</th>        
@@ -55,7 +55,7 @@
             </div>
           </div>          
         </td>
-        <!-- <td>{{item.nama | titlecase}}</td> -->
+        <td>{{item.nama | titlecase}}</td>
         <td>{{item.department}}</td>
         <td>{{item.birthDate | date:'dd MMMM yyyy'}}</td>
         <td>
@@ -115,8 +115,8 @@
         </div>
       </div>
     </caption>
-  </table>
-  -->
+  </table> -->
+ 
   <ng-template #popup>
     <div class="modal-header">
       <h4 class="modal-title pull-left">Edit Employee</h4>

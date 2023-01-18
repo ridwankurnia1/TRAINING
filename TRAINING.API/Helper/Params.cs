@@ -29,5 +29,9 @@ namespace TRAINING.API.Helper
         public string notyetcheck { get; set; }
         public int attendance { get; set; }
         public int id { get; set; }
+
+        public int ddtrid {get; set;}
+
+        public string ddrema {get;}
     }
 }

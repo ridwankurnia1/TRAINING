@@ -12,6 +12,8 @@ namespace TRAINING.API.Data
         public DbSet<SCMI> SCMI { get; set; }
         public DbSet<XUSR> XUSR { get; set; }
         public DbSet<ZUSR> ZUSR { get; set; }
+        public DbSet<MDF0> MDF0 { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,6 +27,7 @@ namespace TRAINING.API.Data
                 .HasOne(p => p.GOG1)
                 .WithMany(p => p.MEMP)
                 .HasForeignKey(p => new { p.EMDENO });
+            builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
         }
     }
 }
