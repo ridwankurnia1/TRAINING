@@ -113,6 +113,23 @@ namespace TRAINING.API.Data
                 query = query.Where(x => x.DDDFGR.Contains(prm.filter));
             }
 
+            if(!string.IsNullOrEmpty(prm.remark))
+            {
+                query = query.Where(x => x.DDREMA.Contains(prm.remark));
+            }
+            
+            // if (!string.IsNullOrEmpty(prm.mustcheck))
+            // {
+            //     query = query.Where(x => x.DDRCST == 1);
+            // }
+            
+            // if (!string.IsNullOrEmpty(prm.noneedcheck))
+            // {
+            //     query = query.Where(x => x.DDRCST == 0);
+            // }
+
+
+
             return await PagedList<MDF0>.CreateAsync(query, prm.PageNumber, prm.PageSize);
         }
     }

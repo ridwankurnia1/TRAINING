@@ -26,6 +26,9 @@ export class ProductionService {
       if (prm.filter) {
         params = params.append('filter', prm.filter);
       }
+      if (prm.remark){
+        params = params.append('remark', prm.remark);
+      }
     }
 
     return this.http.get(this.baseUrl + 'DatMDF0Map', { observe: 'response', params})

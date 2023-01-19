@@ -30,8 +30,8 @@ namespace TRAINING.API.Helper
         public int attendance { get; set; }
         public int id { get; set; }
 
-        public int ddtrid {get; set;}
+        public decimal status {get; set;}
 
-        public string ddrema {get;}
+        public string remark {get; set; }
     }
 }

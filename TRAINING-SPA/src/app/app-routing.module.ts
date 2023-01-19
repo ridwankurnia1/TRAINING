@@ -14,6 +14,7 @@ import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { EmployeeComponent } from './master/employee/employee.component';
+import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
 
 const routes: Routes = [
   {
@@ -84,6 +85,10 @@ const routes: Routes = [
   {
     path: 'defect',
     component: DefectGroupComponent
+  },
+  {
+    path: 'defectSecond',
+    component: DefectGroupSecondComponent
   },
   {
     path: '**', redirectTo: ''

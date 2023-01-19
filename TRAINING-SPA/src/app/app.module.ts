@@ -34,6 +34,7 @@ import { TaplistComponent } from './taplist/taplist.component';
 import { PartNumberComponent } from './master/part-number/part-number.component';
 import { GraphQLModule } from './graphql.module';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
+import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -54,7 +55,8 @@ export function tokenGetter(): string {
     TapComponent,
     TaplistComponent,
     PartNumberComponent,
-    DefectGroupComponent
+    DefectGroupComponent,
+    DefectGroupSecondComponent
    ],
   imports: [
     AutoCompleteModule,
