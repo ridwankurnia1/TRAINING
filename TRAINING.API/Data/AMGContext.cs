@@ -5,13 +5,14 @@ namespace TRAINING.API.Data
 {
     public class AMGContext : DbContext
     {
-        public AMGContext(DbContextOptions<AMGContext> options) : base(options) {}
+        public AMGContext(DbContextOptions<AMGContext> options) : base(options) { }
         public DbSet<MEMP> MEMP { get; set; }
         public DbSet<MGRD> MGRD { get; set; }
         public DbSet<GOG1> GOG1 { get; set; }
         public DbSet<SCMI> SCMI { get; set; }
         public DbSet<XUSR> XUSR { get; set; }
         public DbSet<ZUSR> ZUSR { get; set; }
+        public DbSet<IPTY> IPTY { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,6 +26,7 @@ namespace TRAINING.API.Data
                 .HasOne(p => p.GOG1)
                 .WithMany(p => p.MEMP)
                 .HasForeignKey(p => new { p.EMDENO });
+            builder.Entity<IPTY>().HasKey(k => new { k.HSCONO, k.HSBRNO, k.HSPETY });
         }
     }
 }

@@ -1,16 +1,14 @@
-import {
-  Component,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  TemplateRef,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PalletType } from 'src/app/_model/PalletType';
 import { PalletTypeService } from 'src/app/_service/pallet-type.service';
 import { UIService } from 'src/app/_service/ui.service';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { delay } from 'rxjs/operators';
+import {
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  Validators,
+} from '@angular/forms';
+import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 
 @Component({
   selector: 'app-pallet-type',
@@ -18,18 +16,24 @@ import { delay } from 'rxjs/operators';
   styleUrls: ['./pallet-type.component.css'],
 })
 export class PalletTypeComponent implements OnInit {
-  modalRef: BsModalRef;
-  isCollapsed = true;
+  // common
   pallets: PalletType[];
+  param = {};
+
+  // service
+  modalRef: BsModalRef;
+
+  // state variables
+  isSubmitting: Boolean = false;
+  isFormValid: Boolean = false;
+  isCollapsed = true;
+  isLoading: Boolean;
 
   // table variables
   globalSearch: String;
   nameFilter: String;
   lengthFilter: Number;
   heightFilter: Number;
-  isLoading: Boolean;
-  isSubmitting: Boolean = false;
-  isFormValid: Boolean = false;
 
   // form variables
   formGroup: UntypedFormGroup;
@@ -60,6 +64,10 @@ export class PalletTypeComponent implements OnInit {
   dMeasure = [];
   dWeight = [];
 
+  // paging
+  itemsPerPage: any;
+  pagination: Pagination;
+
   constructor(
     private modalService: BsModalService,
     private palletService: PalletTypeService,
@@ -70,19 +78,47 @@ export class PalletTypeComponent implements OnInit {
   ngOnInit() {
     this.initForm();
     this.initDropdowns();
+    this.initTable();
+  }
+
+  loadData(event: any) {
+    this.pagination.currentPage = event.first / event.rows + 1;
+    this.pagination.itemsPerPage = event.rows;
+
+    this.param = {
+      searchString: this.nameFilter,
+    };
+
+    this.getData();
   }
 
   getData() {
     this.isLoading = true;
-    this.pallets = [];
-    this.lazyLoad().then(() => {
-      this.pallets = this.palletService.all();
-      this.isLoading = false;
-    });
+    this.palletService
+      .all(
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage,
+        this.param
+      )
+      .subscribe((res: PaginatedResult<PalletType[]>) => {
+        this.pallets = res.result;
+        this.pagination = res.pagination;
+        this.isLoading = false;
+      });
   }
 
-  async lazyLoad() {
-    await new Promise((res) => setTimeout(res, 3000));
+  initTable() {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    };
+  }
+
+  resetTable() {
+    this.pagination.currentPage = 1;
+    this.pagination.itemsPerPage = 10;
   }
 
   initForm() {

@@ -7,15 +7,21 @@ import { Employee } from '../_model/Employee';
 import { PaginatedResult } from '../_model/Pagination';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
   baseUrl = environment.apiUrl + 'user/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getEmployees(page?, itemPerPage?, prm?): Observable<PaginatedResult<Employee[]>> {
-    const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<Employee[]>();
+  getEmployees(
+    page?,
+    itemPerPage?,
+    prm?
+  ): Observable<PaginatedResult<Employee[]>> {
+    const paginatedResult: PaginatedResult<Employee[]> = new PaginatedResult<
+      Employee[]
+    >();
     let params = new HttpParams();
 
     if (page != null && itemPerPage != null) {
@@ -31,12 +37,18 @@ export class EmployeeService {
       }
     }
 
-    return this.http.get<Employee[]>(this.baseUrl + 'employee', { observe: 'response', params})
+    return this.http
+      .get<Employee[]>(this.baseUrl + 'employee', {
+        observe: 'response',
+        params,
+      })
       .pipe(
-        map(reponse => {
+        map((reponse) => {
           paginatedResult.result = reponse.body;
           if (reponse.headers.get('Pagination') != null) {
-            paginatedResult.pagination = JSON.parse(reponse.headers.get('Pagination'));
+            paginatedResult.pagination = JSON.parse(
+              reponse.headers.get('Pagination')
+            );
           }
           return paginatedResult;
         })
@@ -61,9 +73,10 @@ export class EmployeeService {
       }
     }
 
-    return this.http.get(this.baseUrl + 'dropdown', { observe: 'response', params})
+    return this.http
+      .get(this.baseUrl + 'dropdown', { observe: 'response', params })
       .pipe(
-        map(reponse => {
+        map((reponse) => {
           return reponse.body;
         })
       );

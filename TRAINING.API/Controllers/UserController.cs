@@ -30,7 +30,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("employee")]
-        public async Task<IActionResult> GetEmployee([FromQuery]Params prm)
+        public async Task<IActionResult> GetEmployee([FromQuery]InventoryParams prm)
         {
             var employee = await _repo.GetListEmmployee(prm);
             var result = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
@@ -113,7 +113,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("dropdown")]
-        public async Task<IActionResult> GetDropdown([FromQuery]Params prm)
+        public async Task<IActionResult> GetDropdown([FromQuery]InventoryParams prm)
         {
             var gog1 = await _repo.GetOrganization();
             var mgrd = await _repo.GetListGrade();

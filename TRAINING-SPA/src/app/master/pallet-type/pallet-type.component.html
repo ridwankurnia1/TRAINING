@@ -1,12 +1,19 @@
 <div class="container-fluid mt-3" [collapse]="!isCollapsed" [isAnimated]="true">
   <p-table
     #ptable
-    (onLazyLoad)="getData()"
+    (onLazyLoad)="loadData($event)"
     [lazy]="true"
     [loading]="isLoading"
     [value]="pallets"
-    styleClass="p-datatable-striped"
-    [globalFilterFields]="['name', 'height', 'length']"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="pagination.totalItems"
+    [paginatorDropdownAppendTo]="itemsPerPage"
+    [globalFilterFields]="['palletType','palletLength']"
+    styleClass="p-datatable-striped mb-3"
     selectionMode="single"
     sortMode="multiple"
     [responsive]="true"
@@ -34,25 +41,57 @@
         </div>
         <div class="col-8">
           <div class="row">
-            <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="dd-mm-yyyy"
-                #dp="bsDatepicker"
-                bsDatepicker
-                [bsValue]="bsValue"
-              />
+            <div class="col-9">
+              <div class="row">
+                <div class="col-4 form-group mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="dd-mm-yyyy"
+                    #dp="bsDatepicker"
+                    bsDatepicker
+                    [bsValue]="bsValue"
+                  />
+                </div>
+                <div class="col-2 form-group mb-3">
+                  <button
+                    class="btn btn-success"
+                    (click)="dp.toggle()"
+                    [attr.aria-expanded]="dp.isOpen"
+                    type="button"
+                  >
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="col-4 form-group mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="dd-mm-yyyy"
+                    #dp="bsDatepicker"
+                    bsDatepicker
+                    [bsValue]="bsValue"
+                  />
+                </div>
+                <div class="col-2 form-group mb-3">
+                  <button
+                    class="btn btn-success"
+                    (click)="dp.toggle()"
+                    [attr.aria-expanded]="dp.isOpen"
+                    type="button"
+                  >
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="col-xs-12 col-12 col-md-3 form-group mb-3">
-              <button
-                class="btn btn-success"
-                (click)="dp.toggle()"
-                [attr.aria-expanded]="dp.isOpen"
-                type="button"
-              >
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-              </button>
+            <div class="col-3">
+              <div class="flex align-items-center justify-content-between">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input type="text" pInputText (input)="ptable.filterGlobal(globalSearch, 'contains')" placeholder="Search" />
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -61,15 +100,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 10%">
-          <div class="flex justify-content-center align-items-center">Name</div>
-        </th>
-        <th style="width: 10%">
           <div class="flex justify-content-center align-items-center">Type</div>
-        </th>
-        <th style="width: 10%">
-          <div class="flex justify-content-center align-items-center">
-            Length
-          </div>
         </th>
         <th style="width: 10%">
           <div class="flex justify-content-center align-items-center">App</div>
@@ -82,11 +113,6 @@
         <th style="width: 10%">
           <div class="flex justify-content-center align-items-center">
             Color
-          </div>
-        </th>
-        <th style="width: 10%">
-          <div class="flex justify-content-center align-items-center">
-            Currency
           </div>
         </th>
         <th style="width: 10%">
@@ -111,11 +137,6 @@
         </th>
         <th style="width: 10%">
           <div class="flex justify-content-center align-items-center">
-            Price
-          </div>
-        </th>
-        <th style="width: 10%">
-          <div class="flex justify-content-center align-items-center">
             Remark
           </div>
         </th>
@@ -125,7 +146,7 @@
           </div>
         </th>
       </tr>
-      <!-- <tr>
+      <tr>
         <th>
           <input
             type="text"
@@ -150,26 +171,32 @@
             (input)="ptable.filterGlobal(heightFilter, 'equals')"
           />
         </th>
-      </tr> -->
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-pallet>
       <tr [pSelectableRow]="pallet">
-        <td>{{ pallet.name }}</td>
-        <td>{{ pallet.type }}</td>
-        <td>{{ pallet.codification }}</td>
-        <td>{{ pallet.app }}</td>
+        <td>{{ pallet.palletType }}</td>
+        <td>{{ pallet.palletApp }}</td>
         <td>{{ pallet.materialType }}</td>
-        <td>{{ pallet.color }}</td>
-        <td>{{ pallet.currency }}</td>
-        <td>{{ pallet.length }}</td>
-        <td>{{ pallet.width }}</td>
-        <td>{{ pallet.height }}</td>
-        <td>{{ pallet.weight }}</td>
-        <td>{{ pallet.price }}</td>
+        <td>{{ pallet.palletColor }}</td>
+        <td>{{ pallet.palletLength }}</td>
+        <td>{{ pallet.palletWidth }}</td>
+        <td>{{ pallet.palletHeight }}</td>
+        <td>{{ pallet.palletWeight }}</td>
         <td>{{ pallet.remark }}</td>
-        <td>{{ pallet.createdTimestamp }}</td>
+        <td>{{ pallet.createdTime | date : "dd-MMM-yyyy" }}</td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <p-button type="button" icon="pi pi-refresh" (click)="ptable.first = 0" styleClass="p-button-rounded"></p-button>
+  </ng-template>
   </p-table>
 </div>
 

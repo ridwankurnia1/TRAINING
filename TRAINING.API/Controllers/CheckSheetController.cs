@@ -28,7 +28,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("employee/detail")]
-        public async Task<IActionResult> GetEmployeeDetail([FromQuery] Params prm)
+        public async Task<IActionResult> GetEmployeeDetail([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListEmployee(prm);
             var result = _mapper.Map<IEnumerable<LebaranDto>>(data);
@@ -37,7 +37,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("employee/summary")]
-        public async Task<IActionResult> GetEmployeeSummary([FromQuery] Params prm)
+        public async Task<IActionResult> GetEmployeeSummary([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetSummaryLebaran(prm.brno);
             return Ok(data);
@@ -45,7 +45,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("employee")]
-        public async Task<IActionResult> GetEmployee([FromQuery] Params prm)
+        public async Task<IActionResult> GetEmployee([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListEmployeePaging(prm);
             if (!string.IsNullOrEmpty(prm.xls))
@@ -176,7 +176,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("employee/security")]
-        public async Task<IActionResult> GetEmployeeAttendance([FromQuery] Params prm)
+        public async Task<IActionResult> GetEmployeeAttendance([FromQuery] InventoryParams prm)
         {
             prm.attendance = 1;
             prm.PageNumber = 1;
@@ -219,7 +219,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("department")]
-        public async Task<IActionResult> GetDepartment([FromQuery] Params prm)
+        public async Task<IActionResult> GetDepartment([FromQuery] InventoryParams prm)
         {
             var dept = await _repo.GetDepartment(prm.brno);
             return Ok(dept);
@@ -227,11 +227,11 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("tap")]
-        public async Task<IActionResult> GetTapHeader([FromQuery]Params prm)
+        public async Task<IActionResult> GetTapHeader([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListTapHeader();
             var result = _mapper.Map<IEnumerable<LogHeaderDto>>(data);
-            
+
             return Ok(result);
         }
         [AllowAnonymous]
@@ -242,13 +242,13 @@ namespace TRAINING.API.Controllers
             var result = _mapper.Map<LogHeaderDto>(data);
             var count = await _repo.GetTapLogCount(DateTime.Now);
             result.Count = count;
-            
+
             return Ok(result);
         }
 
         [AllowAnonymous]
         [HttpGet("tap/log")]
-        public async Task<IActionResult> GetTapLog([FromQuery]Params prm)
+        public async Task<IActionResult> GetTapLog([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListTapLog(prm);
             var result = _mapper.Map<IEnumerable<EmployeeDto>>(data);

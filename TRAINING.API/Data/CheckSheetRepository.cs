@@ -37,7 +37,7 @@ namespace TRAINING.API.Data
             return await _context.EHAL.FirstOrDefaultAsync(x => x.ELRFID == rfid);
         }
 
-        public async Task<IEnumerable<EHAL>> GetListEmployee(Params prm)
+        public async Task<IEnumerable<EHAL>> GetListEmployee(InventoryParams prm)
         {
             var query = _context.EHAL.AsQueryable();
 
@@ -77,7 +77,7 @@ namespace TRAINING.API.Data
             return await query.ToListAsync();
         }
 
-        public async Task<PagedList<EHAL>> GetListEmployeePaging(Params prm)
+        public async Task<PagedList<EHAL>> GetListEmployeePaging(InventoryParams prm)
         {
             var query = _context.EHAL.AsQueryable();
 
@@ -171,7 +171,7 @@ namespace TRAINING.API.Data
             return await _context.ELOG.FirstOrDefaultAsync(x => x.ELTRID == id);
         }
 
-        public async Task<PagedList<ELOG>> GetListTapLog(Params prm)
+        public async Task<PagedList<ELOG>> GetListTapLog(InventoryParams prm)
         {
             var query = _context.ELOG.Where(x => x.ELRCID == prm.id)
                         .OrderByDescending(x => x.ELTRDT)

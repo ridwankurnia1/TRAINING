@@ -1,4 +1,9 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { PaginatedResult } from '../_model/Pagination';
 import { PalletType } from '../_model/PalletType';
 
 @Injectable({
@@ -6,147 +11,50 @@ import { PalletType } from '../_model/PalletType';
 })
 export class PalletTypeService {
   pallets: PalletType[] = [];
+  baseUrl = environment.apiUrl + 'ipty/';
 
-  constructor() {
-    this._initData();
-  }
+  constructor(private http: HttpClient) {}
 
   create(pallet: PalletType) {
     this.pallets.push(pallet);
   }
 
-  all() {
-    return this.pallets;
-  }
+  all(page?, perPage?, params?): Observable<PaginatedResult<PalletType[]>> {
+    const paginatedResult: PaginatedResult<PalletType[]> = new PaginatedResult<
+      PalletType[]
+    >();
+    let httpParam = new HttpParams();
 
-  private _initData() {
-    this.pallets = [
-      {
-        id: 1,
-        name: 'GGASAG',
-        type: 'ASADADD',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-      {
-        id: 2,
-        name: 'NMHHSD',
-        type: 'ASDAFAF',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-      {
-        id: 3,
-        name: 'TTQQAS',
-        type: 'ASDASFA',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-      {
-        id: 4,
-        name: 'GHASAD',
-        type: 'FFASSAE',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-      {
-        id: 5,
-        name: 'QWAASD',
-        type: 'FFASDAS',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-      {
-        id: 6,
-        name: 'MMSSDS',
-        type: 'ASDASFAS',
-        codification: 1,
-        app: 'OWP',
-        materialType: 'WOODEN',
-        color: 'BLACK',
-        currency: 'IDR',
-        recordStatus: 1,
-        weight: 144,
-        height: 145,
-        length: 133,
-        width: 143,
-        widthType: 'MM',
-        weightType: 'MR',
-        lengthType: 'MM',
-        price: 1453124,
-        remark: 'OK',
-        createdTimestamp: '13-04-2023',
-      },
-    ];
+    if (page != null && perPage != null) {
+      httpParam = httpParam.append('PageNumber', page);
+      httpParam = httpParam.append('PageSize', perPage);
+    }
+
+    if (params) {
+      /* if (params.name) {
+        httpParam = httpParam.append('name', params.name);
+      } */
+
+      if (params.searchString) {
+        console.info(params.searchString);
+        httpParam = httpParam.append('SearchString', params.searchString);
+      }
+    }
+
+    return this.http
+      .get<PalletType[]>(this.baseUrl, { observe: 'response', params:httpParam })
+      .pipe(
+        map((res) => {
+          paginatedResult.result = res.body;
+
+          if (res.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              res.headers.get('Pagination')
+            );
+          }
+
+          return paginatedResult;
+        })
+      );
   }
 }

@@ -37,7 +37,12 @@ namespace TRAINING.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+            .AddJsonOptions(o =>
+            {
+                // ignore null field when serialized
+                // o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+            });
             services.AddCors();
             services.AddPooledDbContextFactory<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")).LogTo(Console.WriteLine));
             services.AddDbContext<ECSContext>(x => x.UseSqlServer(Configuration.GetConnectionString("ECSConnection")));
@@ -66,10 +71,12 @@ namespace TRAINING.API
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ISalesRepository, SalesRepository>();
             services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
-            
+            services.AddScoped<IPalletTypeRepository, PalletTypeRepository>();
+
             // services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => {
+                .AddJwtBearer(options =>
+                {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -78,7 +85,7 @@ namespace TRAINING.API
                         ValidateAudience = false,
                     };
                 });
-            var mapConfig = new MapperConfiguration(mc => 
+            var mapConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new AutoMapperProfile());
             });
@@ -111,7 +118,7 @@ namespace TRAINING.API
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -126,7 +133,7 @@ namespace TRAINING.API
 
             // app.UseEndpoints(endpoints => {
             //     endpoints.MapControllers();
-                
+
             // });
         }
     }

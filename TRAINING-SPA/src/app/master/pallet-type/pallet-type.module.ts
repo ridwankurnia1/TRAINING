@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PalletTypeComponent } from './pallet-type.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     DropdownModule,
     RadioButtonModule,
     CheckboxModule,
+    ButtonModule
   ],
   declarations: [PalletTypeComponent]
 })
