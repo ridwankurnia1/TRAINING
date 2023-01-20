@@ -18,5 +18,9 @@ namespace TRAINING.API.Helper
         public string notyetcheck { get; set; }
         public int attendance { get; set; }
         public int id { get; set; }
+
+        public decimal status {get; set;}
+
+        public string remark {get; set; }
     }
 }

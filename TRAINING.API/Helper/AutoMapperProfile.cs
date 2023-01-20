@@ -329,6 +329,29 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.HSCHTM, opt => opt.MapFrom(src => src.ChangedTime))
             .ForMember(des => des.HSCHUS, opt => opt.MapFrom(src => src.ChangedUser));
 
+
+                //buat step 3 disini
+                CreateMap<MDF0, Mdf0Dto>()
+                .ForMember(des => des.TransactionId, opt => opt.MapFrom(src => src.DDTRID))
+                .ForMember(des => des.DefectGroup, opt => opt.MapFrom(src => src.DDDFGR))
+                .ForMember(des => des.Remark, opt => opt.MapFrom(src => src.DDREMA))
+                .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.DDRCST))
+                .ForMember(des => des.CreateTime, opt => opt.MapFrom(src => src.DDCRTM))
+                .ForMember(des => des.CreateUser, opt => opt.MapFrom(src => src.DDCRUS))
+                .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DDCHTM))
+                .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DDCHUS))
+                .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DDRCST == 0 ? "Inactive" : "Active" ));
+
+                CreateMap<Mdf0Dto, MDF0>()
+                .ForMember(des => des.DDTRID, opt => opt.MapFrom(src => src.TransactionId))
+                .ForMember(des => des.DDDFGR, opt => opt.MapFrom(src => src.DefectGroup))
+                .ForMember(des => des.DDREMA, opt => opt.MapFrom(src => src.Remark))
+                .ForMember(des => des.DDRCST, opt => opt.MapFrom(src => src.RecordStatus))
+                .ForMember(des => des.DDCRTM, opt => opt.MapFrom(src => src.CreateTime))
+                .ForMember(des => des.DDCRUS, opt => opt.MapFrom(src => src.CreateUser))
+                .ForMember(des => des.DDCHTM, opt => opt.MapFrom(src => src.ChangeTime))
+                .ForMember(des => des.DDCHUS, opt => opt.MapFrom(src => src.ChangeUser));
+
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

@@ -13,6 +13,8 @@ namespace TRAINING.API.Data
         public DbSet<XUSR> XUSR { get; set; }
         public DbSet<ZUSR> ZUSR { get; set; }
         public DbSet<IPTY> IPTY { get; set; }
+        public DbSet<MDF0> MDF0 { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +29,7 @@ namespace TRAINING.API.Data
                 .WithMany(p => p.MEMP)
                 .HasForeignKey(p => new { p.EMDENO });
             builder.Entity<IPTY>().HasKey(k => new { k.HSCONO, k.HSBRNO, k.HSPETY });
+            builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
         }
     }
 }

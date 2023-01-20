@@ -32,7 +32,7 @@ export class PartNumberComponent implements OnInit {
   config = {
     ignoreBackdropClick: true
   };
-  
+
   constructor(
     private apollo: Apollo,
     private fb: FormBuilder,
@@ -62,7 +62,7 @@ export class PartNumberComponent implements OnInit {
         label: 'Inactive',
         value: '0'
       }
-    ]
+    ];
   }
   createForm() {
     this.form = this.fb.group({
@@ -81,7 +81,7 @@ export class PartNumberComponent implements OnInit {
     this.loading = true;
     this.pagination.skip = event.first;
     this.pagination.take = event.rows;
-    
+
     if (event.filters) {
       this.params = {};
       if (event.filters.partNumber) {
@@ -116,9 +116,9 @@ export class PartNumberComponent implements OnInit {
         and: [
           this.params
         ]
-      }
+      };
     }
-    
+
     this.apollo.watchQuery({
       query: GET_LIST_PART_NUMBER,
       variables: {
@@ -161,7 +161,7 @@ export class PartNumberComponent implements OnInit {
       this.helper.validateFormEntry(this.form);
       return;
     }
-    
+
     this.process = true;
     const data = this.form.getRawValue();
     // edit or add

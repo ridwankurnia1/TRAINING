@@ -80,7 +80,7 @@ export class ChecksheetService {
     return this.http.get<Lebaran>(this.baseUrl + 'employee/' + nik);
   }
   addEmployee(data: Employee) {
-    return this.http.post(this.baseUrl + 'employee', data);
+    return this.http.post(this.baseUrl + '', data);
   }
   getSummaryEmployee(prm?): Observable<any> {
     let params = new HttpParams();

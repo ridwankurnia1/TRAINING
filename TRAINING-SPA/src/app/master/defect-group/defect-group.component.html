@@ -1,0 +1,146 @@
+<!-- The form -->
+
+
+<h2 style="text-align:center">Master Defect</h2>
+
+<div class="container my-3">
+
+
+    <!-- button manggil fungsi addclick -->
+
+
+      
+      <!-- Modal -->
+      <!-- <ng-template #popup> -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{popTitle}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <!-- form dalam modal -->
+                <form class="needs-validation" [formGroup]="Mdf0Form">
+
+                    <!-- form untuk group defect -->
+
+
+                    <div class="mb-3">
+                      <label for="Group Defect" class="form-label">Group Defect</label>
+                      <input type="text" class="form-control" formControlName="defectGroup" placeholder="Group Defect"
+                      [ngClass]="{'is-invalid': Mdf0Form.get('defectGroup').errors && Mdf0Form.get('defectGroup').touched}">
+                      <div class="invalid-feedback">
+                        Invalid Group Defect
+                      </div>
+                    </div>
+
+                    <!-- eof form group defect -->
+
+                    <!-- form untuk remark -->
+
+                    <div class="mb-3">
+                      <label for="Group Defect" class="form-label">Remark</label>
+                      <input type="text" class="form-control" formControlName="remark" placeholder="Remark"
+                      [ngClass]="{'is-invalid': Mdf0Form.get('remark').errors && Mdf0Form.get('remark').touched}">
+                      <div class="invalid-feedback">
+                        Invalid Remark
+                      </div>
+                    </div>
+
+                    <!-- eof form untuk remark -->
+
+                    <!-- FORM DROWPDOWN -->
+                  <label class="col-sm-2 col-form-label"> Status</label>
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{StatusDropdown}}
+                  </a>
+                  <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton" >
+                      <a class="dropdown-item" (click)="StatusDropdown = 'Active'">Active</a>
+                      <a class="dropdown-item" (click)="StatusDropdown = 'Inactive'" >Inactive</a>
+                      <div class="invalid-feedback">
+                        Invalid Status
+                      </div>
+                  </div>
+
+                  <!-- EOF FORM DROPDOWN -->
+
+
+                  </form>
+
+                <!-- eof form dalam modal -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="cancelClick()" ><i class="fa fa-undo me-2"></i>Close</button>
+              <button type="button" class="btn btn-danger" *ngIf="isAdd==true" (click)="saveClick()"><i class="fa fa-save me-2"></i>Save</button>
+              <button type="button" class="btn btn-danger" *ngIf="isEdit==true" (click)="saveClick()"><i class="fa fa-save me-2"></i>Update</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <p-table #dt1 [value]="listDefectGroup" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    styleClass="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [responsive]="true"
+      [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+      [totalRecords]="pagination.totalItems" [loading]="loading">
+      <ng-template pTemplate="caption">
+
+        <div class="row justify-content-between">
+          <div class="col-3">            
+            <button type="button" class="btn btn-primary" (click)="edit(null, false)" data-toggle="modal" data-target="#exampleModal">
+              <i class="fa fa-plus me-2"></i>Add        
+            </button>
+          </div>
+          <div class="col-3">
+            <input type="text" class="form-control" placeholder="Search" formControlName="search" (input)="searchClick($event.target.value)">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 4em; text-align: center">Edit</th>
+              <th>GroupId</th>
+              <th>Group Name</th>
+              <th>Remark</th>
+              <th><select class="form-control form-control-sm" (change)="dt.filter($event.target.value, 'status', 'eq')"
+                [(ngModel)]="selectedStatus">
+                <option *ngFor="let item of status" [value]="item.value">{{item.value}}
+                </option>
+              </select></th>
+              <th style="width: 4em;">del</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-listDefectGroup>
+          <tr style="font-size: small; text-align: center;">
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-primary mr-1" 
+                      data-toggle="modal" data-target="#exampleModal"
+                      (click)="edit(listDefectGroup, false)"
+                      data-backdrop="static" data-keyboard="false">
+                      <i class="fa fa-pencil"></i>
+                </button>
+              </td>
+              <td>{{listDefectGroup.transactionId}}</td>
+              <td>{{listDefectGroup.defectGroup}}</td>
+              <td>{{listDefectGroup.remark}}</td>
+              <td>{{listDefectGroup.recordStatusText}}</td>
+              <td>
+                <button type="button" class="btn btn-sm btn-outline-danger mr-1" 
+                      (click)="deleteClick(listDefectGroup)"
+                      >
+                  <i class="fa fa-times"></i>
+                </button>
+              </td>
+          </tr>
+      </ng-template>
+      <!-- <ng-template pTemplate="summary">
+          Footer
+      </ng-template> -->
+  </p-table>
+
+
+</div>

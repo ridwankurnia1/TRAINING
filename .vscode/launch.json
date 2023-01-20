@@ -5,7 +5,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder}/TRAINING.API/bin/Debug/net5.0/TRAINING.API.dll",
+        "program": "${workspaceFolder}/TRAINING.API/bin/Debug/net6.0/TRAINING.API.dll",
         "args": [],
         "cwd": "${workspaceFolder}/TRAINING.API",
         "stopAtEntry": false,

@@ -12,6 +12,9 @@ import { PartNumberComponent } from './master/part-number/part-number.component'
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { DefectGroupComponent } from './master/defect-group/defect-group.component';
+import { EmployeeComponent } from './master/employee/employee.component';
+import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
 
 const routes: Routes = [
   {
@@ -36,6 +39,10 @@ const routes: Routes = [
   {
     path: 'security',
     component: SecurityComponent
+  },
+  {
+    path: 'emp',
+    component: EmployeeComponent
   },
   {
     path: 'register',
@@ -74,6 +81,14 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'defect',
+    component: DefectGroupComponent
+  },
+  {
+    path: 'defectSecond',
+    component: DefectGroupSecondComponent
   },
   {
     path: '**', redirectTo: ''
