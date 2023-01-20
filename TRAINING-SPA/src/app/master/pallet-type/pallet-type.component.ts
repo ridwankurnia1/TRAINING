@@ -9,6 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
+import { Dropdown2 } from 'src/app/_model/Dropdown2';
+import { DropdownFilterOptions } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-pallet-type',
@@ -30,10 +32,18 @@ export class PalletTypeComponent implements OnInit {
   isLoading: Boolean;
 
   // table variables
+
+  // filters
   globalSearch: String;
+  typeFilter: String;
+  appFilter: String;
+  materialFilter: String;
   nameFilter: String;
-  lengthFilter: Number;
-  heightFilter: Number;
+  // dropdown type filter
+  dAppFilterable = [];
+  dMaterialFilterable = [];
+  dCurrencyFilter = '';
+  dColorFilter = '';
 
   // form variables
   formGroup: UntypedFormGroup;
@@ -42,7 +52,7 @@ export class PalletTypeComponent implements OnInit {
   ipCodification: Number;
   ipApp: String = '';
   ipMaterial: String = '';
-  ipColor: Number;
+  ipColor: String;
   ipCurrency: String = '';
   ipLength: Number;
   ipLengthType: String;
@@ -60,9 +70,8 @@ export class PalletTypeComponent implements OnInit {
   dApp = [];
   dMaterial = [];
   dColor = [];
-  dCurrency = [];
+  dCurrency: Dropdown2[] = [];
   dMeasure = [];
-  dWeight = [];
 
   // paging
   itemsPerPage: any;
@@ -86,8 +95,18 @@ export class PalletTypeComponent implements OnInit {
     this.pagination.itemsPerPage = event.rows;
 
     this.param = {
-      searchString: this.nameFilter,
+      searchString: this.globalSearch,
+      searchType: this.typeFilter,
+      searchName: this.nameFilter,
+      searchApp: this.appFilter,
+      searchMaterial: this.materialFilter,
+      // searchColor: this.colorFilter,
+      // searchLength: this.lengthFilter,
+      // searchWidth: this.widthFilter,
+      // searchRemark: this.remarkFilter,
     };
+
+    console.info(this.param);
 
     this.getData();
   }
@@ -103,6 +122,8 @@ export class PalletTypeComponent implements OnInit {
       .subscribe((res: PaginatedResult<PalletType[]>) => {
         this.pallets = res.result;
         this.pagination = res.pagination;
+      })
+      .add(() => {
         this.isLoading = false;
       });
   }
@@ -128,7 +149,7 @@ export class PalletTypeComponent implements OnInit {
       codification: [1, Validators.required],
       app: ['', Validators.required],
       materialType: ['', Validators.required],
-      color: [0, Validators.min(1)],
+      color: ['', Validators.required],
       currency: ['', Validators.required],
       length: [0, Validators.min(1)],
       lengthType: ['MM', Validators.required],
@@ -145,40 +166,37 @@ export class PalletTypeComponent implements OnInit {
   }
 
   initDropdowns() {
-    this.dMaterial = [
-      { label: 'SELECT MATERIAL', value: '' },
-      { label: 'STEEL', value: 'STEEL' },
-      { label: 'WOODEN', value: 'WOODEN' },
-    ];
+    this.palletService.getMaterialType().subscribe((res) => {
+      this.dMaterial = res;
+      this.dMaterialFilterable = res;
+    });
 
-    this.dApp = [
-      { label: 'SELECT APP', value: '' },
-      { label: 'ONE WAY PALLET', value: 'OWP' },
-      { label: 'RETURNABLE PALLET', value: 'RTN' },
-    ];
+    this.palletService.getPalletApp().subscribe((res) => {
+      this.dApp = res;
+      this.dAppFilterable = res;
+    });
 
-    this.dColor = [
-      { label: 'SELECT COLOR', value: '' },
-      { label: 'GREEN', value: 1 },
-      { label: 'GRAY', value: 2 },
-      { label: 'BLACK', value: 3 },
-    ];
+    this.palletService.getColorType().subscribe((res) => {
+      this.dColor = res;
+    });
 
-    this.dCurrency = [
-      { label: 'SELECT CURRENCY', value: '' },
-      { label: 'IDR', value: 'IDR' },
-      { label: 'USD', value: 'USD' },
-    ];
+    this.palletService.getCurrencies().subscribe((res) => {
+      this.dCurrency = res;
+    });
 
-    this.dMeasure = [
-      { label: 'MILIMETERS', value: 'MM' },
-      { label: 'METERS', value: 'M' },
-    ];
+    this.palletService.getMeasurements().subscribe((res) => {
+      this.dMeasure = res;
+    });
 
-    this.dWeight = [
-      { label: 'KILOGRAMS', value: 'KG' },
-      { label: 'GRAMS', value: 'GR' },
-    ];
+    this.ipHeightType = 'MM';
+    this.ipWidthType = 'MM';
+    this.ipLengthType = 'MM';
+    this.ipWeightType = 'KG';
+  }
+
+  resetDropdownFilter(options: DropdownFilterOptions) {
+    options.reset();
+    this.dCurrencyFilter = '';
   }
 
   submitForm() {

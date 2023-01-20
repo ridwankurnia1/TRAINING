@@ -12,6 +12,7 @@ import { PalletTypeComponent } from './pallet-type.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { ButtonModule } from 'primeng/button';
     DropdownModule,
     RadioButtonModule,
     CheckboxModule,
-    ButtonModule
+    ButtonModule,
+    CalendarModule
   ],
   declarations: [PalletTypeComponent]
 })

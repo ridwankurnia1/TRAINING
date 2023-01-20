@@ -5,7 +5,7 @@ namespace TRAINING.API.ViewModel
         public string Company { get; set; }
         public string Branch { get; set; }
         public string PalletType { get; set; }
-        public string PalletTypeDesc { get; set; }
+        public string PalletName { get; set; }
         public string PalletApp { get; set; }
         public decimal PalletLength { get; set; }
         public string LengthUm { get; set; }

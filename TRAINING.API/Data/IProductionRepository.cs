@@ -14,7 +14,7 @@ namespace TRAINING.API.Data
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
         Task<IEnumerable<MDF0>> GetListMDF0();
-        Task<PagedList<MDF0>> GetListDefectPaging(Params prm);
+        Task<PagedList<MDF0>> GetListDefectPaging(InventoryParams prm);
         Task<MDF0> Get1MDF0(int ddtrid); //get nilai dari MDF0 berdasarkan ddtrid
         Task<MDF0> GetNameMDF0(string ddchus); //get nilai dari MDF0 berdasarkan nama
         Task<IEnumerable<MDF0>> FindListMDF0();

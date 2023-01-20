@@ -260,7 +260,7 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.Company, opt => opt.MapFrom(src => src.HSCONO))
             .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.HSBRNO))
             .ForMember(des => des.PalletType, opt => opt.MapFrom(src => src.HSPETY))
-            .ForMember(des => des.PalletTypeDesc, opt => opt.MapFrom(src => src.HSPENA))
+            .ForMember(des => des.PalletName, opt => opt.MapFrom(src => src.HSPENA))
             .ForMember(des => des.PalletApp, opt => opt.MapFrom(src => src.HSPLAP))
             .ForMember(des => des.PalletLength, opt => opt.MapFrom(src => src.HSPELN))
             .ForMember(des => des.LengthUm, opt => opt.MapFrom(src => src.HSLNUM))
@@ -293,65 +293,98 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.ChangedUser, opt => opt.MapFrom(src => src.HSCHUS));
 
             // DTO to RAW
-             CreateMap<PalletTypeDto, IPTY>()
-            .ForMember(des => des.HSCONO, opt => opt.MapFrom(src => src.Company))
-            .ForMember(des => des.HSBRNO, opt => opt.MapFrom(src => src.Branch))
-            .ForMember(des => des.HSPETY, opt => opt.MapFrom(src => src.PalletType))
-            .ForMember(des => des.HSPENA, opt => opt.MapFrom(src => src.PalletTypeDesc))
-            .ForMember(des => des.HSPLAP, opt => opt.MapFrom(src => src.PalletApp))
-            .ForMember(des => des.HSPELN, opt => opt.MapFrom(src => src.PalletLength))
-            .ForMember(des => des.HSLNUM, opt => opt.MapFrom(src => src.LengthUm))
-            .ForMember(des => des.HSPEWD, opt => opt.MapFrom(src => src.PalletWidth))
-            .ForMember(des => des.HSWDUM, opt => opt.MapFrom(src => src.WidthUm))
-            .ForMember(des => des.HSPEHG, opt => opt.MapFrom(src => src.PalletHeight))
-            .ForMember(des => des.HSHGUM, opt => opt.MapFrom(src => src.HeightUm))
-            .ForMember(des => des.HSPEWG, opt => opt.MapFrom(src => src.PalletWeight))
-            .ForMember(des => des.HSWGUM, opt => opt.MapFrom(src => src.WeightUm))
-            .ForMember(des => des.HSCLNO, opt => opt.MapFrom(src => src.PalletColor))
-            .ForMember(des => des.HSCYNO, opt => opt.MapFrom(src => src.PalletCurrency))
-            .ForMember(des => des.HSUNPR, opt => opt.MapFrom(src => src.PalletPrice))
-            .ForMember(des => des.HSCNNO, opt => opt.MapFrom(src => src.CNCode))
-            .ForMember(des => des.HSREMA, opt => opt.MapFrom(src => src.Remark))
-            .ForMember(des => des.HSRETY, opt => opt.MapFrom(src => src.PalletCodification))
-            .ForMember(des => des.HSMATY, opt => opt.MapFrom(src => src.MaterialType))
-            .ForMember(des => des.HSFL01, opt => opt.MapFrom(src => src.Flag1))
-            // .ForMember(des => des.HSPKFL, opt => opt.MapFrom(src => src.PackingFlag))
-            .ForMember(des => des.HSCIFL, opt => opt.MapFrom(src => src.CarryInFlag))
-            .ForMember(des => des.HSCOFL, opt => opt.MapFrom(src => src.CarryOutFlag))
-            // .ForMember(des => des.HSROFL, opt => opt.MapFrom(src => src.RunOutFlag))
-            .ForMember(des => des.HSSYST, opt => opt.MapFrom(src => src.SystemFlag))
-            .ForMember(des => des.HSSTAT, opt => opt.MapFrom(src => src.StatFlag))
-            .ForMember(des => des.HSRCST, opt => opt.MapFrom(src => src.RecordStatus))
-            .ForMember(des => des.HSCRDT, opt => opt.MapFrom(src => src.CreatedDate))
-            .ForMember(des => des.HSCRTM, opt => opt.MapFrom(src => src.CreatedTime))
-            .ForMember(des => des.HSCRUS, opt => opt.MapFrom(src => src.CreatedUser))
-            .ForMember(des => des.HSCHDT, opt => opt.MapFrom(src => src.ChangedDate))
-            .ForMember(des => des.HSCHTM, opt => opt.MapFrom(src => src.ChangedTime))
-            .ForMember(des => des.HSCHUS, opt => opt.MapFrom(src => src.ChangedUser));
+            CreateMap<PalletTypeDto, IPTY>()
+           .ForMember(des => des.HSCONO, opt => opt.MapFrom(src => src.Company))
+           .ForMember(des => des.HSBRNO, opt => opt.MapFrom(src => src.Branch))
+           .ForMember(des => des.HSPETY, opt => opt.MapFrom(src => src.PalletType))
+           .ForMember(des => des.HSPENA, opt => opt.MapFrom(src => src.PalletName))
+           .ForMember(des => des.HSPLAP, opt => opt.MapFrom(src => src.PalletApp))
+           .ForMember(des => des.HSPELN, opt => opt.MapFrom(src => src.PalletLength))
+           .ForMember(des => des.HSLNUM, opt => opt.MapFrom(src => src.LengthUm))
+           .ForMember(des => des.HSPEWD, opt => opt.MapFrom(src => src.PalletWidth))
+           .ForMember(des => des.HSWDUM, opt => opt.MapFrom(src => src.WidthUm))
+           .ForMember(des => des.HSPEHG, opt => opt.MapFrom(src => src.PalletHeight))
+           .ForMember(des => des.HSHGUM, opt => opt.MapFrom(src => src.HeightUm))
+           .ForMember(des => des.HSPEWG, opt => opt.MapFrom(src => src.PalletWeight))
+           .ForMember(des => des.HSWGUM, opt => opt.MapFrom(src => src.WeightUm))
+           .ForMember(des => des.HSCLNO, opt => opt.MapFrom(src => src.PalletColor))
+           .ForMember(des => des.HSCYNO, opt => opt.MapFrom(src => src.PalletCurrency))
+           .ForMember(des => des.HSUNPR, opt => opt.MapFrom(src => src.PalletPrice))
+           .ForMember(des => des.HSCNNO, opt => opt.MapFrom(src => src.CNCode))
+           .ForMember(des => des.HSREMA, opt => opt.MapFrom(src => src.Remark))
+           .ForMember(des => des.HSRETY, opt => opt.MapFrom(src => src.PalletCodification))
+           .ForMember(des => des.HSMATY, opt => opt.MapFrom(src => src.MaterialType))
+           .ForMember(des => des.HSFL01, opt => opt.MapFrom(src => src.Flag1))
+           // .ForMember(des => des.HSPKFL, opt => opt.MapFrom(src => src.PackingFlag))
+           .ForMember(des => des.HSCIFL, opt => opt.MapFrom(src => src.CarryInFlag))
+           .ForMember(des => des.HSCOFL, opt => opt.MapFrom(src => src.CarryOutFlag))
+           // .ForMember(des => des.HSROFL, opt => opt.MapFrom(src => src.RunOutFlag))
+           .ForMember(des => des.HSSYST, opt => opt.MapFrom(src => src.SystemFlag))
+           .ForMember(des => des.HSSTAT, opt => opt.MapFrom(src => src.StatFlag))
+           .ForMember(des => des.HSRCST, opt => opt.MapFrom(src => src.RecordStatus))
+           .ForMember(des => des.HSCRDT, opt => opt.MapFrom(src => src.CreatedDate))
+           .ForMember(des => des.HSCRTM, opt => opt.MapFrom(src => src.CreatedTime))
+           .ForMember(des => des.HSCRUS, opt => opt.MapFrom(src => src.CreatedUser))
+           .ForMember(des => des.HSCHDT, opt => opt.MapFrom(src => src.ChangedDate))
+           .ForMember(des => des.HSCHTM, opt => opt.MapFrom(src => src.ChangedTime))
+           .ForMember(des => des.HSCHUS, opt => opt.MapFrom(src => src.ChangedUser));
 
 
-                //buat step 3 disini
-                CreateMap<MDF0, Mdf0Dto>()
-                .ForMember(des => des.TransactionId, opt => opt.MapFrom(src => src.DDTRID))
-                .ForMember(des => des.DefectGroup, opt => opt.MapFrom(src => src.DDDFGR))
-                .ForMember(des => des.Remark, opt => opt.MapFrom(src => src.DDREMA))
-                .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.DDRCST))
-                .ForMember(des => des.CreateTime, opt => opt.MapFrom(src => src.DDCRTM))
-                .ForMember(des => des.CreateUser, opt => opt.MapFrom(src => src.DDCRUS))
-                .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DDCHTM))
-                .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DDCHUS))
-                .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DDRCST == 0 ? "Inactive" : "Active" ));
+            //buat step 3 disini
+            CreateMap<MDF0, Mdf0Dto>()
+            .ForMember(des => des.TransactionId, opt => opt.MapFrom(src => src.DDTRID))
+            .ForMember(des => des.DefectGroup, opt => opt.MapFrom(src => src.DDDFGR))
+            .ForMember(des => des.Remark, opt => opt.MapFrom(src => src.DDREMA))
+            .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.DDRCST))
+            .ForMember(des => des.CreateTime, opt => opt.MapFrom(src => src.DDCRTM))
+            .ForMember(des => des.CreateUser, opt => opt.MapFrom(src => src.DDCRUS))
+            .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DDCHTM))
+            .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DDCHUS))
+            .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DDRCST == 0 ? "Inactive" : "Active"));
 
-                CreateMap<Mdf0Dto, MDF0>()
-                .ForMember(des => des.DDTRID, opt => opt.MapFrom(src => src.TransactionId))
-                .ForMember(des => des.DDDFGR, opt => opt.MapFrom(src => src.DefectGroup))
-                .ForMember(des => des.DDREMA, opt => opt.MapFrom(src => src.Remark))
-                .ForMember(des => des.DDRCST, opt => opt.MapFrom(src => src.RecordStatus))
-                .ForMember(des => des.DDCRTM, opt => opt.MapFrom(src => src.CreateTime))
-                .ForMember(des => des.DDCRUS, opt => opt.MapFrom(src => src.CreateUser))
-                .ForMember(des => des.DDCHTM, opt => opt.MapFrom(src => src.ChangeTime))
-                .ForMember(des => des.DDCHUS, opt => opt.MapFrom(src => src.ChangeUser));
+            CreateMap<Mdf0Dto, MDF0>()
+            .ForMember(des => des.DDTRID, opt => opt.MapFrom(src => src.TransactionId))
+            .ForMember(des => des.DDDFGR, opt => opt.MapFrom(src => src.DefectGroup))
+            .ForMember(des => des.DDREMA, opt => opt.MapFrom(src => src.Remark))
+            .ForMember(des => des.DDRCST, opt => opt.MapFrom(src => src.RecordStatus))
+            .ForMember(des => des.DDCRTM, opt => opt.MapFrom(src => src.CreateTime))
+            .ForMember(des => des.DDCRUS, opt => opt.MapFrom(src => src.CreateUser))
+            .ForMember(des => des.DDCHTM, opt => opt.MapFrom(src => src.ChangeTime))
+            .ForMember(des => des.DDCHUS, opt => opt.MapFrom(src => src.ChangeUser));
 
+            CreateMap<ZVAR, DefinitionVarDto>()
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.ZRVANA))
+            .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVAVL));
+
+            CreateMap<DefinitionVarDto, ZVAR>()
+            .ForMember(des => des.ZRVANA, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.ZRVAVL, opt => opt.MapFrom(src => src.Value));
+
+            CreateMap<GCT2, GlobalCommonText2>()
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.CBKYNA))
+            .ForMember(des => des.Value, opt => opt.MapFrom(src => src.CBKYNO));
+            // .ForMember(des => des.Type, opt => opt.MapFrom(src => src.CBTBNO));
+
+            CreateMap<GlobalCommonText2, GCT2>()
+            .ForMember(des => des.CBKYNA, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.CBKYNO, opt => opt.MapFrom(src => src.Value));
+            // .ForMember(des => des.CBTBNO, opt => opt.MapFrom(src => src.Type));
+
+            CreateMap<GCUR, CurrencyDefinitionDto>()
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.GGCYNA))
+            .ForMember(des => des.Value, opt => opt.MapFrom(src => src.GGCYNO));
+
+            CreateMap<CurrencyDefinitionDto, GCUR>()
+            .ForMember(des => des.GGCYNA, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.GGCYNO, opt => opt.MapFrom(src => src.Value));
+
+            CreateMap<IUOM, MeasurementDefinitionDto>()
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.HUUMNA))
+            .ForMember(des => des.Value, opt => opt.MapFrom(src => src.HUUMNO));
+
+            CreateMap<MeasurementDefinitionDto, IUOM>()
+            .ForMember(des => des.HUUMNA, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.HUUMNO, opt => opt.MapFrom(src => src.Value));
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

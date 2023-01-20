@@ -31,7 +31,11 @@ namespace TRAINING.API.Controllers
             var list = await _repository.GetAllPalletTypes(param);
             if (list.Count == 0)
             {
-                return NotFound("Tidak ada data");
+                return NotFound(new
+                {
+                    Code = 404,
+                    Message = "Tidak ada data"
+                });
             }
             var result = _mapper.Map<IEnumerable<PalletTypeDto>>(list);
 
@@ -147,6 +151,79 @@ namespace TRAINING.API.Controllers
             }
 
             throw new System.Exception("Gagal menghapus data");
+        }
+
+        [HttpGet("plap")]
+        public async Task<IActionResult> GetPalletApp()
+        {
+            var res = await _repository.GetPalletAppDefinition();
+
+            if (res == null || res.Count == 0)
+            {
+                return NotFound(new
+                {
+                    code = 404,
+                    message = "Tidak ada data"
+                });
+            }
+
+            return Ok(_mapper.Map<IList<DefinitionVarDto>>(res));
+        }
+
+        [HttpGet("gct2")]
+        public async Task<IActionResult> GetCommonText2([FromQuery]string type)
+        {
+            var res = await _repository.GetCommonnText2(type);
+
+            if (res == null || res.Count == 0)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    statusCode = 404,
+                    message = "Tidak ada data"
+                });
+            }
+
+            return Ok(_mapper.Map<IList<GlobalCommonText2>>(res));
+        }
+
+        [HttpGet("currencies")]
+        public async Task<IActionResult> GetCurrencies()
+        {
+            var res = await _repository.GetCurrencyDefinition();
+            if (res == null || res.Count == 0)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    statusCode = 404,
+                    message = "Tidak ada data"
+                });
+            }
+
+            return Ok(_mapper.Map<IList<CurrencyDefinitionDto>>(res));
+        }
+
+        [HttpGet("measurements")]
+        public async Task<IActionResult> GetMeasurements()
+        {
+            var res = await _repository.GetMeasurements();
+            if (res == null || res.Count == 0)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    statusCode = 404,
+                    message = "Tidak ada data"
+                });
+            }
+
+            return Ok(_mapper.Map<IList<MeasurementDefinitionDto>>(res));
+        }
+
+        private class ErrorResponse
+        {
+            public int statusCode { get; set; }
+            public int errorCode { get; set; }
+            public string message { get; set; }
         }
     }
 }

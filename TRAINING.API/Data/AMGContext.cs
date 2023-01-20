@@ -14,6 +14,10 @@ namespace TRAINING.API.Data
         public DbSet<ZUSR> ZUSR { get; set; }
         public DbSet<IPTY> IPTY { get; set; }
         public DbSet<MDF0> MDF0 { get; set; }
+        public DbSet<GCT2> GCT2 { get; set; }
+        public DbSet<GCUR> GCUR { get; set; }
+        public DbSet<IUOM> IUOM { get; set; }
+        public DbSet<ZVAR> ZVAR { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -30,6 +34,10 @@ namespace TRAINING.API.Data
                 .HasForeignKey(p => new { p.EMDENO });
             builder.Entity<IPTY>().HasKey(k => new { k.HSCONO, k.HSBRNO, k.HSPETY });
             builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
+            builder.Entity<GCT2>().HasKey(k => new {k.CBKYNO});
+            builder.Entity<GCUR>().HasKey(k => new {k.GGCYNO});
+            builder.Entity<IUOM>().HasKey(k => new {k.HUUMNO});
+            builder.Entity<ZVAR>().HasKey(k => new {k.ZRVANA});
         }
     }
 }
