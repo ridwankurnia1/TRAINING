@@ -41,7 +41,7 @@ namespace TRAINING.API
             .AddJsonOptions(o =>
             {
                 // ignore null field when serialized
-                // o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
+                o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
             });
             services.AddCors();
             services.AddPooledDbContextFactory<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")).LogTo(Console.WriteLine));

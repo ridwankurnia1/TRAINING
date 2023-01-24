@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { PalletType } from 'src/app/_model/PalletType';
 import { PalletTypeService } from 'src/app/_service/pallet-type.service';
 import { UIService } from 'src/app/_service/ui.service';
@@ -10,7 +10,10 @@ import {
 } from '@angular/forms';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
+import { ExcelService } from 'src/app/_service/excel.service';
 import { DropdownFilterOptions } from 'primeng/dropdown';
+import { ConfirmationService, Message, MessageService } from 'primeng/api';
+import moment from 'moment';
 
 @Component({
   selector: 'app-pallet-type',
@@ -30,18 +33,21 @@ export class PalletTypeComponent implements OnInit {
   isFormValid: Boolean = false;
   isCollapsed = true;
   isLoading: Boolean;
+  isUpdating: Boolean = false;
+  isExporting: Boolean = false;
 
   // table variables
-
   // filters
   globalSearch: String;
   typeFilter: String;
   appFilter: String;
   materialFilter: String;
   nameFilter: String;
+  statusFilter: Boolean;
   // dropdown type filter
   dAppFilterable = [];
   dMaterialFilterable = [];
+  dStatusFilterable = [];
   dCurrencyFilter = '';
   dColorFilter = '';
 
@@ -63,7 +69,10 @@ export class PalletTypeComponent implements OnInit {
   ipHeight: number;
   ipHeightType: String = '';
   ipPrice: Number;
-  ipStatus: Boolean;
+  ipStatus: Number;
+  ipFl1: Number;
+  ipCarryIn: Number;
+  ipCarryOut: Number;
   ipRemark: String;
 
   // dropdown variables
@@ -77,17 +86,26 @@ export class PalletTypeComponent implements OnInit {
   itemsPerPage: any;
   pagination: Pagination;
 
+  // element ref
+  @ViewChild('matySorter') materialSorter: ElementRef;
+
+  // export vars
+  kopSheet: any[];
+  headerSheet: any[];
+  exportables: PalletType[];
+
   constructor(
-    private modalService: BsModalService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     private palletService: PalletTypeService,
     private fb: UntypedFormBuilder,
-    private ui: UIService
+    private ui: UIService,
+    private excel: ExcelService
   ) {}
 
   ngOnInit() {
+    this.resetTable();
     this.initForm();
-    this.initDropdowns();
-    this.initTable();
   }
 
   loadData(event: any) {
@@ -100,13 +118,22 @@ export class PalletTypeComponent implements OnInit {
       searchName: this.nameFilter,
       searchApp: this.appFilter,
       searchMaterial: this.materialFilter,
+      searchStatus: this.statusFilter,
       // searchColor: this.colorFilter,
       // searchLength: this.lengthFilter,
       // searchWidth: this.widthFilter,
       // searchRemark: this.remarkFilter,
     };
 
-    console.info(this.param);
+    if (event.sortField) {
+      let sortString = event.sortField;
+
+      if (event.sortOrder < 1) {
+        sortString = '-' + sortString;
+      }
+
+      this.param['sortString'] = sortString;
+    }
 
     this.getData();
   }
@@ -119,50 +146,92 @@ export class PalletTypeComponent implements OnInit {
         this.pagination.itemsPerPage,
         this.param
       )
-      .subscribe((res: PaginatedResult<PalletType[]>) => {
-        this.pallets = res.result;
-        this.pagination = res.pagination;
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
+      .subscribe(
+        (res: PaginatedResult<PalletType[]>) => {
+          this.pallets = res.result;
+          this.pagination = res.pagination;
+          this.isLoading = false;
+        },
+        (e) => {
+          this.isLoading = false;
+          console.error(e);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Cannot find any data with current filter(s)',
+          });
+        }
+      );
   }
 
-  initTable() {
+  resetTable(table?: any) {
+    this.param = {};
+    this.typeFilter = '';
+    this.nameFilter = '';
+    this.materialFilter = '';
+    this.appFilter = '';
+    this.statusFilter = null;
+
     this.pagination = {
       currentPage: 1,
       itemsPerPage: 10,
       totalItems: 0,
       totalPages: 1,
     };
+
+    if (table) {
+      /* table.first = 0;
+      table.sortField = undefined;
+      table.sortOrder = 1; */
+      table.rows = 10;
+      table.reset();
+    }
+
+    this.getData();
   }
 
-  resetTable() {
-    this.pagination.currentPage = 1;
-    this.pagination.itemsPerPage = 10;
+  resetForm() {
+    this.formGroup.reset();
+
+    this.ipType = '';
+    this.ipApp = '';
+    this.ipColor = '';
+    this.ipCodification = null;
+    this.ipCurrency = '';
+    this.ipHeight = null;
+    this.ipWeight = null;
+    this.ipLength = null;
+    this.ipPrice = null;
+    this.ipRemark = null;
+
+    this.initForm();
   }
 
   initForm() {
     this.formGroup = this.fb.group({
-      type: ['', Validators.required],
-      name: ['', Validators.required],
-      codification: [1, Validators.required],
-      app: ['', Validators.required],
+      palletType: ['', Validators.required],
+      palletName: ['', Validators.required],
+      palletCodification: [1, Validators.required],
+      palletApp: ['', Validators.required],
       materialType: ['', Validators.required],
-      color: ['', Validators.required],
-      currency: ['', Validators.required],
-      length: [0, Validators.min(1)],
-      lengthType: ['MM', Validators.required],
-      width: [0, Validators.min(1)],
-      widthType: ['MM', Validators.required],
-      height: [0, Validators.min(1)],
-      heightType: ['MM', Validators.required],
-      weight: [0, Validators.min(1)],
-      weightType: ['KG', Validators.required],
-      price: [0, Validators.min(1)],
-      recordStatus: [0],
-      remark: ['', Validators.required],
+      palletColor: ['', Validators.required],
+      palletCurrency: ['', Validators.required],
+      palletLength: [0],
+      lengthUm: ['MM', Validators.required],
+      palletWidth: [0],
+      widthUm: ['MM', Validators.required],
+      palletHeight: [0],
+      heightUm: ['MM', Validators.required],
+      palletWeight: [0],
+      weightUm: ['KG', Validators.required],
+      palletPrice: [0],
+      recordStatus: [false],
+      flag1: [false],
+      carryInFlag: [false],
+      carryOutFlag: [false],
+      remark: [''],
     });
+
+    this.initDropdowns();
   }
 
   initDropdowns() {
@@ -188,6 +257,11 @@ export class PalletTypeComponent implements OnInit {
       this.dMeasure = res;
     });
 
+    this.dStatusFilterable = [
+      { name: 'ACTIVE', value: 1 },
+      { name: 'INACTIVE', value: 2 },
+    ];
+
     this.ipHeightType = 'MM';
     this.ipWidthType = 'MM';
     this.ipLengthType = 'MM';
@@ -196,24 +270,229 @@ export class PalletTypeComponent implements OnInit {
 
   resetDropdownFilter(options: DropdownFilterOptions) {
     options.reset();
-    this.dCurrencyFilter = '';
   }
 
   submitForm() {
     this.isSubmitting = true;
     if (this.formGroup.invalid) {
       this.ui.validateFormEntry(this.formGroup);
+      this.isSubmitting = false;
       return;
     }
-    this.palletService.create(this.formGroup.value);
-    console.info(this.formGroup.value);
-    // this.formGroup.reset();
-    this.toggleForm();
-    this.getData();
+
+    this.confirmationService.confirm({
+      message: 'Submitting data requires confirmation, confirm saving data ?',
+      accept: () => {
+        this.formGroup.get('palletType').enable();
+
+        if (this.isUpdating) {
+          this.palletService.update(this.formGroup.value).subscribe(
+            () => {
+              this.isSubmitting = false;
+              this.afterSubmit();
+
+              this.showMessage({
+                severity: 'success',
+                summary: 'Data updated successfully!',
+              });
+            },
+            (e) => {
+              console.error(e);
+              this.isSubmitting = false;
+              this.showMessage({
+                severity: 'error',
+                summary:
+                  'There was a problem with your request, please try again',
+              });
+            }
+          );
+        } else {
+          this.palletService.create(this.formGroup.value).subscribe(
+            () => {
+              this.afterSubmit();
+              this.isSubmitting = false;
+
+              this.showMessage({
+                severity: 'success',
+                summary: 'Data created successfully!',
+              });
+            },
+            (e) => {
+              this.isSubmitting = false;
+              console.error(e);
+              this.showMessage({
+                severity: 'error',
+                summary:
+                  'There was a problem with your request, please try again',
+              });
+            }
+          );
+        }
+      },
+      reject: () => {
+        this.isSubmitting = false;
+      },
+    });
   }
 
-  toggleForm() {
+  afterSubmit() {
+    this.toggleForm();
+    this.resetForm();
+    this.resetTable();
+  }
+
+  toggleForm(data?: PalletType) {
     this.isCollapsed = !this.isCollapsed;
-    // this.modalRef = this.modalService.show(template);
+
+    if (data) {
+      // set values
+      this.isUpdating = true;
+      this.formGroup.patchValue(data);
+
+      if (data.recordStatus == 1) {
+        this.formGroup.get('recordStatus').setValue(true);
+      }
+
+      if (data.flag1 == 1) {
+        this.formGroup.get('flag1').setValue(true);
+      }
+
+      if (data.carryInFlag == 1) {
+        this.formGroup.get('carryInFlag').setValue(true);
+      }
+
+      if (data.carryOutFlag == 1) {
+        this.formGroup.get('carryOutFlag').setValue(true);
+      }
+
+      this.formGroup.get('palletType').disable();
+    } else {
+      this.formGroup.get('palletType').enable();
+      this.resetForm();
+      this.isUpdating = false;
+    }
+  }
+
+  getItem(data?: any) {
+    this.palletService.single(data.palletType).subscribe((result) => {
+      this.toggleForm(result);
+    });
+  }
+
+  onItemSelected(event) {
+    /* this.palletService.single(event.data.palletType).subscribe((data) => {
+      this.ipType = data.palletType
+    }) */
+  }
+
+  deleteItem(data) {
+    this.confirmationService.confirm({
+      message: 'Are you sure wants to delete ' + data.palletType + ' ?',
+      accept: () => {
+        this.isLoading = true;
+        this.palletService.delete(data.palletType).subscribe(
+          () => {
+            this.isLoading = false;
+            this.resetTable();
+            this.getData();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Data deleted',
+              detail: data.palletType + ' deleted successfully',
+            });
+          },
+          (e) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Cannot delete data',
+              detail: e.toString(),
+            });
+          }
+        );
+      },
+    });
+  }
+
+  showMessage(message: Message) {
+    message.life = 5000;
+    this.messageService.add(message);
+  }
+
+  export() {
+    this.isExporting = true;
+    // init export variables
+    this.kopSheet = [
+      { A1: 'PT Asahimas Flat Glass Tbk' },
+      { A1: 'DATA PALLET TYPE' },
+      {
+        A1:
+          'Export Time : ' +
+          moment
+            .utc(new Date(), 'MM-DD-YYYY')
+            .local()
+            .format('DD-MM-YYYY hh:mm:ss'),
+      },
+      { A1: '' },
+    ];
+
+    this.headerSheet = [
+      {
+        A1: 'PALLET TYPE',
+        A2: 'PALLET DESCRIPTION',
+        A3: 'PALLET APP',
+        A9: 'MATERIAL TYPE',
+        A8: 'PALLET COLOR',
+        A4: 'LENGTH',
+        A5: 'WIDTH',
+        A6: 'HEIGHT',
+        A7: 'WEIGHT',
+        A10: 'RECORD STATUS',
+      },
+    ];
+
+    console.info(this.param);
+
+    this.palletService.export(this.param).subscribe(
+      (res) => {
+        const v1 = res.map((item) => {
+          let status;
+
+          if (item.recordStatus == 1) {
+            status = 'ACTIVE';
+          } else {
+            status = 'INACTIVE';
+          }
+
+          return {
+            h1: item.palletType,
+            h2: item.palletName,
+            h3: item.palletApp,
+            h4: item.materialType,
+            h5: item.palletColor,
+            h6: item.palletLength,
+            h7: item.palletWidth,
+            h8: item.palletHeight,
+            h9: item.palletWeight,
+            h10: status,
+          };
+        });
+
+        this.excel.exportAsExcelFile(
+          this.kopSheet,
+          this.headerSheet,
+          v1,
+          'DATA PALLET TYPE'
+        );
+        this.isExporting = false;
+      },
+      (e) => {
+        this.showMessage({
+          severity: 'error',
+          summary:
+            "There was a problem during request or current filter doesn't match any data, please try again",
+        });
+        this.isExporting = false;
+      }
+    );
   }
 }

@@ -2,6 +2,7 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpParams,
+  HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
@@ -21,7 +22,123 @@ export class PalletTypeService {
   constructor(private http: HttpClient) {}
 
   create(pallet: PalletType) {
-    this.pallets.push(pallet);
+    // fix checkbox array value
+    let data = pallet;
+
+    if (data.recordStatus) {
+      data.recordStatus = 1;
+    } else {
+      data.recordStatus = 0;
+    }
+
+    if (data.flag1) {
+      data.flag1 = 1;
+    } else {
+      data.flag1 = 0;
+    }
+
+    if (data.carryInFlag) {
+      data.carryInFlag = 1;
+    } else {
+      data.carryInFlag = 0;
+    }
+
+    if (data.carryOutFlag) {
+      data.carryOutFlag = 1;
+    } else {
+      data.carryOutFlag = 0;
+    }
+
+    return this.http.post(this.baseUrl, data);
+  }
+
+  update(pallet: PalletType) {
+    // fix checkbox array value
+    let data = pallet;
+
+    if (data.recordStatus) {
+      data.recordStatus = 1;
+    } else {
+      data.recordStatus = 0;
+    }
+
+    if (data.flag1) {
+      data.flag1 = 1;
+    } else {
+      data.flag1 = 0;
+    }
+
+    if (data.carryInFlag) {
+      data.carryInFlag = 1;
+    } else {
+      data.carryInFlag = 0;
+    }
+
+    if (data.carryOutFlag) {
+      data.carryOutFlag = 1;
+    } else {
+      data.carryOutFlag = 0;
+    }
+
+    return this.http.put(this.baseUrl + pallet.palletType, data);
+  }
+
+  delete(type: string) {
+    return this.http.delete(this.baseUrl + type);
+  }
+
+  single(palletType: string): Observable<PalletType> {
+    return this.http
+      .get(this.baseUrl + 'find-type/' + palletType, { observe: 'response' })
+      .pipe(
+        map((res) => {
+          return res.body;
+        }),
+        catchError((e: HttpErrorResponse) => {
+          return throwError(e);
+        })
+      );
+  }
+
+  export(params?): Observable<PalletType[]> {
+    let httpParam = new HttpParams();
+
+    if (params) {
+      if (params.searchType) {
+        httpParam = httpParam.append('ptp', params.searchType);
+      }
+
+      if (params.searchApp) {
+        httpParam = httpParam.append('atp', params.searchApp);
+      }
+
+      if (params.searchMaterial) {
+        httpParam = httpParam.append('mtp', params.searchMaterial);
+      }
+
+      if (params.searchStatus) {
+        let status = params.searchStatus;
+        if (status == 2) {
+          status = 0;
+        }
+        httpParam = httpParam.append('stp', status);
+      }
+
+      if (params.sortString) {
+        httpParam = httpParam.append('srt', params.sortString);
+      }
+    }
+
+    return this.http
+      .get<PalletType[]>(this.baseUrl + 'export', {
+        observe: 'response',
+        params: httpParam,
+      })
+      .pipe(
+        map((res) => {
+          return res.body;
+        })
+      );
   }
 
   all(page?, perPage?, params?): Observable<PaginatedResult<PalletType[]>> {
@@ -52,28 +169,16 @@ export class PalletTypeService {
         httpParam = httpParam.append('mtp', params.searchMaterial);
       }
 
-      if (params.searchColor) {
-        httpParam = httpParam.append('col', params.searchColor);
+      if (params.searchStatus) {
+        let status = params.searchStatus;
+        if (status == 2) {
+          status = 0;
+        }
+        httpParam = httpParam.append('stp', status);
       }
 
-      if (params.searchLength) {
-        httpParam = httpParam.append('plt', params.searchLength);
-      }
-
-      if (params.serchLengthDirection) {
-        httpParam = httpParam.append('pltd', params.serchLengthDirection);
-      }
-
-      if (params.searchWidth) {
-        httpParam = httpParam.append('pwt', params.searchWidth);
-      }
-
-      if (params.searchWidthDirection) {
-        httpParam = httpParam.append('pwtd', params.searchWidthDirection);
-      }
-
-      if (params.searchRemark) {
-        httpParam = httpParam.append('prm', params.searchRemark);
+      if (params.sortString) {
+        httpParam = httpParam.append('srt', params.sortString);
       }
     }
 
@@ -93,31 +198,18 @@ export class PalletTypeService {
           }
 
           return paginatedResult;
-        }),
-        catchError((exception: HttpErrorResponse) => {
-          let message = exception.error.message;
-          /* if (exception.error instanceof ErrorEvent) {
-            // client side error
-            message = exception.error.message;
-          }else{
-            // server side error
-          } */
-          window.alert(message);
-          return throwError(exception);
         })
       );
   }
 
   getPalletApp(): Observable<Dropdown2[]> {
     let list = <any>[];
-    return this.http
-      .get(this.baseUrl + 'plap', { observe: 'response' })
-      .pipe(
-        map((res) => {
-          list = res.body;
-          return list;
-        })
-      );
+    return this.http.get(this.baseUrl + 'plap', { observe: 'response' }).pipe(
+      map((res) => {
+        list = res.body;
+        return list;
+      })
+    );
   }
 
   getMeasurements(): Observable<Dropdown2[]> {

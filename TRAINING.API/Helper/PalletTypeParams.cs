@@ -16,7 +16,7 @@ namespace TRAINING.API.Helper
         public string? pltd { get; set; } // pallet length direction/terms query
         public decimal? pwt { get; set; } // pallet width query
         public string? pwtd { get; set; } // pallet width direction/terms query
-
-        // column sorting soon
+        public decimal? stp { get; set; } // pallet status query
+        public string? srt { get; set; } // column sorting
     }
 }

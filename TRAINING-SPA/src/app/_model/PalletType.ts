@@ -2,7 +2,7 @@ export interface PalletType {
   company?: String;
   branch?: String;
   palletType?: String;
-  PalletTypeDesc?: String;
+  palletName?: String;
   palletApp?: String;
   palletLength?: Number;
   lengthUm?: String;

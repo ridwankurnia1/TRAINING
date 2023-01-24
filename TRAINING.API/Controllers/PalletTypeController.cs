@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TRAINING.API.Data;
 using TRAINING.API.Helper;
@@ -17,6 +20,7 @@ namespace TRAINING.API.Controllers
         private readonly IPalletTypeRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<PalletTypeController> _logger;
+        private readonly String ExceptionMessage = "Kesalahan Server/Permintaan tidak dapat diproses";
 
         public PalletTypeController(IPalletTypeRepository repository, IMapper mapper, ILogger<PalletTypeController> logger)
         {
@@ -28,7 +32,7 @@ namespace TRAINING.API.Controllers
         [HttpGet()]
         public async Task<IActionResult> All([FromQuery] PalletTypeParams param)
         {
-            var list = await _repository.GetAllPalletTypes(param);
+            var list = await _repository.All(param);
             if (list.Count == 0)
             {
                 return NotFound(new
@@ -44,14 +48,25 @@ namespace TRAINING.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("export")]
+        public async Task<IActionResult> Exportable([FromQuery] PalletTypeParams param)
+        {
+            var list = await _repository.Exportable(param);
+            if (list.Count == 0)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    ErrorCode = 404,
+                    Message = "Tidak ada data",
+                });
+            }
+
+            return Ok(_mapper.Map<IList<PalletTypeDto>>(list));
+        }
+
         [HttpGet("find/{user}")]
         public async Task<IActionResult> GetByUser(string user)
         {
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             var data = await _repository.FindByUser(user);
 
             if (data == null)
@@ -65,11 +80,6 @@ namespace TRAINING.API.Controllers
         [HttpGet("find-type/{type}")]
         public async Task<IActionResult> GetByType(string type)
         {
-            if (type == null)
-            {
-                return NotFound();
-            }
-
             var data = await _repository.FindByType(type);
 
             if (data == null)
@@ -85,6 +95,8 @@ namespace TRAINING.API.Controllers
         {
             var data = requestData;
 
+            data.Company = "AMG";
+            data.Branch = "CKP";
             data.CreatedDate = CommonMethod.DateToNumeric(System.DateTime.Now);
             data.CreatedTime = CommonMethod.TimeToNumeric(System.DateTime.Now);
             data.ChangedDate = CommonMethod.DateToNumeric(System.DateTime.Now);
@@ -95,6 +107,11 @@ namespace TRAINING.API.Controllers
                 data.CreatedUser = "TEST";
             }
 
+            if (data.ChangedUser == null)
+            {
+                data.ChangedUser = "TEST";
+            }
+
             _repository.Add(_mapper.Map<IPTY>(data));
 
             if (await _repository.SaveAll())
@@ -102,45 +119,59 @@ namespace TRAINING.API.Controllers
                 return NoContent();
             }
 
-            throw new System.Exception("Gagal menyimpan data");
+            throw new UnknownException(ExceptionMessage);
         }
 
         [HttpPut("{type}")]
         public async Task<IActionResult> Update(string type, PalletTypeDto requestData)
         {
-            if (type == null)
+            var data = await _repository.Query()
+            .Select(c => new IPTY { HSCONO = c.HSCONO, HSBRNO = c.HSBRNO, HSPETY = c.HSPETY })
+            .FirstOrDefaultAsync(c => c.HSPETY == type);
+
+            if (data == null)
             {
-                return NotFound();
+                return NotFound(new ErrorResponse
+                {
+                    Message = "Data tidak ditemukan"
+                });
             }
 
-            var data = requestData;
+            requestData.Company = data.HSCONO;
+            requestData.Branch = data.HSBRNO;
+            requestData.CreatedDate = CommonMethod.DateToNumeric(System.DateTime.Now);
+            requestData.CreatedTime = CommonMethod.TimeToNumeric(System.DateTime.Now);
+            requestData.ChangedDate = CommonMethod.DateToNumeric(System.DateTime.Now);
+            requestData.ChangedTime = CommonMethod.TimeToNumeric(System.DateTime.Now);
 
-            if (data.ChangedUser == null)
+            if (requestData.ChangedUser == null)
             {
-                data.ChangedUser = "TESTING";
+                requestData.ChangedUser = "TEST";
             }
+
+
+            data = _mapper.Map<IPTY>(requestData);
 
             if (await _repository.Update(type, data))
             {
                 return NoContent();
             }
 
-            throw new System.Exception("Gagal mengubah data");
+            throw new UnknownException(ExceptionMessage);
         }
 
         [HttpDelete("{type}")]
         public async Task<IActionResult> Delete(string type)
         {
-            if (type == null)
-            {
-                return NotFound();
-            }
-
             var data = await _repository.FindByType(type);
 
             if (data == null)
             {
-                return NotFound();
+                return NotFound(new ErrorResponse
+                {
+                    StatusCode = 400,
+                    Message = "Tidak ada data"
+                });
             }
 
             _repository.Delete(data);
@@ -150,7 +181,7 @@ namespace TRAINING.API.Controllers
                 return NoContent();
             }
 
-            throw new System.Exception("Gagal menghapus data");
+            throw new UnknownException(ExceptionMessage);
         }
 
         [HttpGet("plap")]
@@ -160,10 +191,10 @@ namespace TRAINING.API.Controllers
 
             if (res == null || res.Count == 0)
             {
-                return NotFound(new
+                return NotFound(new ErrorResponse
                 {
-                    code = 404,
-                    message = "Tidak ada data"
+                    StatusCode = 404,
+                    Message = "Tidak ada data"
                 });
             }
 
@@ -171,7 +202,7 @@ namespace TRAINING.API.Controllers
         }
 
         [HttpGet("gct2")]
-        public async Task<IActionResult> GetCommonText2([FromQuery]string type)
+        public async Task<IActionResult> GetCommonText2([FromQuery] string type)
         {
             var res = await _repository.GetCommonnText2(type);
 
@@ -179,8 +210,8 @@ namespace TRAINING.API.Controllers
             {
                 return NotFound(new ErrorResponse
                 {
-                    statusCode = 404,
-                    message = "Tidak ada data"
+                    StatusCode = 404,
+                    Message = "Tidak ada data"
                 });
             }
 
@@ -195,8 +226,8 @@ namespace TRAINING.API.Controllers
             {
                 return NotFound(new ErrorResponse
                 {
-                    statusCode = 404,
-                    message = "Tidak ada data"
+                    StatusCode = 404,
+                    Message = "Tidak ada data"
                 });
             }
 
@@ -211,8 +242,8 @@ namespace TRAINING.API.Controllers
             {
                 return NotFound(new ErrorResponse
                 {
-                    statusCode = 404,
-                    message = "Tidak ada data"
+                    StatusCode = 404,
+                    Message = "Tidak ada data"
                 });
             }
 
@@ -221,9 +252,27 @@ namespace TRAINING.API.Controllers
 
         private class ErrorResponse
         {
-            public int statusCode { get; set; }
-            public int errorCode { get; set; }
-            public string message { get; set; }
+            public int StatusCode { get; set; } = 400;
+            public int ErrorCode { get; set; }
+            public string Message { get; set; }
+        }
+
+        private class SuccessResponse
+        {
+            public int StatusCode { get; set; } = 200;
+            public string Message { get; set; } = "Success";
+            public Object Data { get; set; }
+        }
+
+        [System.Serializable]
+        public class UnknownException : System.Exception
+        {
+            public UnknownException() { }
+            public UnknownException(string message) : base(message) { }
+            public UnknownException(string message, System.Exception inner) : base(message, inner) { }
+            protected UnknownException(
+                System.Runtime.Serialization.SerializationInfo info,
+                System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
         }
     }
 }

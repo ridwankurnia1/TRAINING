@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import {TableModule} from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import {CheckboxModule} from 'primeng/checkbox'
+import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -13,6 +13,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+// import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -27,8 +31,11 @@ import { CalendarModule } from 'primeng/calendar';
     RadioButtonModule,
     CheckboxModule,
     ButtonModule,
-    CalendarModule
+    CalendarModule,
+    InputNumberModule,
+    ConfirmDialogModule,
+    ToastModule,
   ],
-  declarations: [PalletTypeComponent]
+  declarations: [PalletTypeComponent],
 })
-export class PalletTypeModule { }
+export class PalletTypeModule {}
