@@ -253,7 +253,8 @@ namespace TRAINING.API.Data
             // "FROM IPTY AS I INNER JOIN GCT2 AS G ON G.CBKYNO = I.HSCLNO WHERE G.CBTBNO = 'CLNO' " +
             // $"AND I.HSCONO = '{Company}' AND I.HSBRNO = '{Branch}'";
             var query = from i in _context.IPTY
-                        join g in _context.GCT2 on i.HSCLNO equals g.CBKYNO
+                        join g in _context.GCT2.Where(c => c.CBTBNO.Equals("CLNO")) on i.HSCLNO equals g.CBKYNO
+                        into ig from g in ig.DefaultIfEmpty()
                         select new IPTY
                         {
                             HSPETY = i.HSPETY,
@@ -291,62 +292,76 @@ namespace TRAINING.API.Data
             if (!string.IsNullOrEmpty(param.ptp))
             {
                 // queryRawString = queryRawString + $"AND I.HSPETY = '{param.ptp}' ";
+                query = query.Where(c => c.HSPETY.Contains(param.ptp));
             }
 
             if (!string.IsNullOrEmpty(param.atp))
             {
                 // queryRawString = queryRawString + $"AND I.HSPLAP = '{param.atp}' ";
+                query = query.Where(c => c.HSPLAP.Contains(param.atp));
             }
 
             if (!string.IsNullOrEmpty(param.mtp))
             {
                 // queryRawString = queryRawString + $"AND I.HSMATY = '{param.mtp}' ";
+                query = query.Where(c => c.HSMATY.Contains(param.mtp));
             }
 
             if (param.stp != null)
             {
                 // queryRawString = queryRawString + $"AND I.HSRCST = {param.stp} ";
+                query = query.Where(c => c.HSRCST == param.stp);
             }
 
             // sort column
-            /* if (param.srt != null)
+            if (param.srt != null)
             {
                 switch (param.srt)
                 {
                     case "plap":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPLAP ";
+                        query = query.OrderBy(c => c.HSPLAP);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPLAP ";
                         break;
                     case "-plap":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPLAP DESC ";
+                        query = query.OrderByDescending(c => c.HSPLAP);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPLAP DESC ";
                         break;
                     case "maty":
-                        queryRawString = queryRawString + $"ORDER BY I.HSMATY ";
+                        query = query.OrderBy(c => c.HSMATY);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSMATY ";
                         break;
                     case "-maty":
-                        queryRawString = queryRawString + $"ORDER BY I.HSMATY DESC ";
+                        query = query.OrderByDescending(c => c.HSMATY);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSMATY DESC ";
                         break;
                     case "pety":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPETY ";
+                        query = query.OrderBy(c => c.HSPETY);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPETY ";
                         break;
                     case "-pety":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPETY DESC ";
+                        query = query.OrderByDescending(c => c.HSPETY);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPETY DESC ";
                         break;
                     case "pena":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPENA ";
+                        query = query.OrderBy(c => c.HSPENA);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPENA ";
                         break;
                     case "-pena":
-                        queryRawString = queryRawString + $"ORDER BY I.HSPENA DESC ";
+                        query = query.OrderByDescending(c => c.HSPENA);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSPENA DESC ";
                         break;
                     case "unpr":
-                        queryRawString = queryRawString + $"ORDER BY I.HSUNPR ";
+                        query = query.OrderBy(c => c.HSUNPR);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSUNPR ";
                         break;
                     case "-unpr":
-                        queryRawString = queryRawString + $"ORDER BY I.HSUNPR DESC ";
+                        query = query.OrderByDescending(c => c.HSUNPR);
+                        // queryRawString = queryRawString + $"ORDER BY I.HSUNPR DESC ";
                         break;
                     default:
                         break;
                 }
-            } */
+            }
 
             return await query.ToListAsync();
         }

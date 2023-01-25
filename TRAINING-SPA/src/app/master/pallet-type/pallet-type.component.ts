@@ -87,7 +87,7 @@ export class PalletTypeComponent implements OnInit {
   pagination: Pagination;
 
   // element ref
-  @ViewChild('matySorter') materialSorter: ElementRef;
+  // @ViewChild('matySorter') materialSorter: ElementRef;
 
   // export vars
   kopSheet: any[];
@@ -450,29 +450,21 @@ export class PalletTypeComponent implements OnInit {
       },
     ];
 
-    console.info(this.param);
-
     this.palletService.export(this.param).subscribe(
       (res) => {
         const v1 = res.map((item) => {
-          let status;
-
-          if (item.recordStatus == 1) {
-            status = 'ACTIVE';
-          } else {
-            status = 'INACTIVE';
-          }
+          let status = item.recordStatus == 1 ? 'ACTIVE' : 'INACTIVE';
 
           return {
             h1: item.palletType,
             h2: item.palletName,
-            h3: item.palletApp,
-            h4: item.materialType,
-            h5: item.palletColor,
-            h6: item.palletLength,
-            h7: item.palletWidth,
-            h8: item.palletHeight,
-            h9: item.palletWeight,
+            h3: item.palletApp ?? '-',
+            h4: item.materialType ?? '-',
+            h5: item.palletColor ?? '-',
+            h6: item.palletLength ?? '-',
+            h7: item.palletWidth ?? '-',
+            h8: item.palletHeight ?? '-',
+            h9: item.palletWeight ?? '-',
             h10: status,
           };
         });
