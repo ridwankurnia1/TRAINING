@@ -15,11 +15,17 @@ import { AuthGuard } from './_guards/auth.guard';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { EmployeeComponent } from './master/employee/employee.component';
 import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
+import { WarehouseComponent } from './master/warehouse/warehouse.component';
 
 const routes: Routes = [
   {
     path: '',
     component: QuestionnaireComponent
+  },
+  {
+    path: 'warehouse',
+    loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),
+    component: WarehouseComponent
   },
   {
     path: 'pallet-type',

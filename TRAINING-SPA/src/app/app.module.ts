@@ -56,7 +56,7 @@ export function tokenGetter(): string {
     TaplistComponent,
     PartNumberComponent,
     DefectGroupComponent,
-    DefectGroupSecondComponent
+    DefectGroupSecondComponent,
    ],
   imports: [
     AutoCompleteModule,

@@ -385,6 +385,33 @@ namespace TRAINING.API.Helper
             CreateMap<MeasurementDefinitionDto, IUOM>()
             .ForMember(des => des.HUUMNA, opt => opt.MapFrom(src => src.Name))
             .ForMember(des => des.HUUMNO, opt => opt.MapFrom(src => src.Value));
+
+            CreateMap<IWGRX, WarehouseGroupDto>()
+            .ForMember(des => des.Code, opt => opt.MapFrom(src => src.HVWHGR))
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.HVGRNA))
+            .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.HVBRNO))
+            .ForMember(des => des.Remark, opt => opt.MapFrom(src => src.HVREMA))
+            .ForMember(des => des.System, opt => opt.MapFrom(src => src.HVSYST))
+            .ForMember(des => des.Status, opt => opt.MapFrom(src => src.HVSTAT))
+            .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.HVRCST))
+            .ForMember(des => des.CreatedTime, opt => opt.MapFrom(src => src.HVCRTM))
+            .ForMember(des => des.CreatedUser, opt => opt.MapFrom(src => src.HVCRUS))
+            .ForMember(des => des.ChangedTime, opt => opt.MapFrom(src => src.HVCHTM))
+            .ForMember(des => des.ChangedUser, opt => opt.MapFrom(src => src.HVCHUS));
+
+            CreateMap<WarehouseGroupDto, IWGRX>()
+            .ForMember(des => des.HVWHGR, opt => opt.MapFrom(src => src.Code))
+            .ForMember(des => des.HVGRNA, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.HVBRNO, opt => opt.MapFrom(src => src.Branch))
+            .ForMember(des => des.HVREMA, opt => opt.MapFrom(src => src.Remark))
+            .ForMember(des => des.HVSYST, opt => opt.MapFrom(src => src.System))
+            .ForMember(des => des.HVSTAT, opt => opt.MapFrom(src => src.Status))
+            .ForMember(des => des.HVRCST, opt => opt.MapFrom(src => src.RecordStatus))
+            .ForMember(des => des.HVCRTM, opt => opt.MapFrom(src => src.CreatedTime))
+            .ForMember(des => des.HVCRUS, opt => opt.MapFrom(src => src.CreatedUser))
+            .ForMember(des => des.HVCHTM, opt => opt.MapFrom(src => src.ChangedTime))
+            .ForMember(des => des.HVCHUS, opt => opt.MapFrom(src => src.ChangedUser));
+
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

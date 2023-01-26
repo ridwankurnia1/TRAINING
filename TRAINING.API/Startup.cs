@@ -37,12 +37,12 @@ namespace TRAINING.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-            .AddJsonOptions(o =>
+            services.AddControllers();
+            /* .AddJsonOptions(o =>
             {
                 // ignore null field when serialized
                 o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault;
-            });
+            }); */
             services.AddCors();
             services.AddPooledDbContextFactory<AMGContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AMGConnection")).LogTo(Console.WriteLine));
             services.AddDbContext<ECSContext>(x => x.UseSqlServer(Configuration.GetConnectionString("ECSConnection")));
@@ -72,7 +72,8 @@ namespace TRAINING.API
             services.AddScoped<ISalesRepository, SalesRepository>();
             services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
             services.AddScoped<IPalletTypeRepository, PalletTypeRepository>();
-             services.AddScoped<IProductionRepository, ProductionRepository>();
+            services.AddScoped<IProductionRepository, ProductionRepository>();
+            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
             // services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

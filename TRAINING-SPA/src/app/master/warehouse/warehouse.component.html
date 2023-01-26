@@ -1,0 +1,229 @@
+<div class="container-fluid mt-3">
+  <p-tabView>
+    <p-tabPanel header="Warehouse Group">
+      <p-table [value]="groupData" [responsive]="true">
+        <ng-template pTemplate="caption">
+          <div class="row d-flex justify-content-between">
+            <div class="col-4">
+              <button class="btn btn-primary mr-2" (click)="toggleForm()">
+                <i class="pi pi-plus mr-2"></i>Add
+              </button>
+              <button class="btn btn-success mr-2">
+                <i class="pi pi-refresh mr-2"></i>Refresh
+              </button>
+              <button class="btn btn-secondary mr-2">
+                <i class="pi pi-file-excel mr-2"></i>Download
+              </button>
+            </div>
+            <div class="col-2 text-end">
+              <input type="text" class="form-control" placeholder="Search" />
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-item>
+          <tr>
+            <th style="width: 13%">Code</th>
+            <th style="width: 27%">Name</th>
+            <th style="width: 27%">Remark</th>
+            <th style="width: 10%">Record Status</th>
+            <th style="width: 13%" colspan="2"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.remark }}</td>
+            <td>
+              <div *ngIf="item.recordStatus == 1; else inactive">
+                <i
+                  class="pi pi-circle-fill mr-2"
+                  style="color: rgb(8, 216, 8); font-size: 14px"
+                ></i>
+                ACTIVE
+              </div>
+              <ng-template #inactive>
+                <div>
+                  <i
+                    class="pi pi-circle mr-2"
+                    style="color: red; font-size: 14px"
+                  ></i>
+                  INACTIVE
+                </div>
+              </ng-template>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-warning"
+                (click)="updateGroupItem(item.code)"
+              >
+                <i class="pi pi-pencil mr-2"></i>Update
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="deleteGroupItem(item.code)"
+              >
+                <i class="pi pi-times mr-2"></i>Delete
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary"> your summary template </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Warehouse Data"> your content </p-tabPanel>
+  </p-tabView>
+</div>
+
+<p-dialog
+  header="Create Warehouse Group"
+  [(visible)]="isFormVisible"
+  [modal]="true"
+  [responsive]="true"
+  [draggable]="true"
+  style="min-width: 200px"
+>
+  <div class="container" style="width: 500px">
+    <div class="row">
+      <div class="col">
+        <form (ngSubmit)="submitWgForm()" [formGroup]="whFormGroup">
+          <div class="mb-3">
+            <label for="">Code</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="code"
+              class="form-control"
+              style="width: 100%"
+              [ngClass]="{
+                'is-invalid':
+                  whFormGroup.get('code').touched &&
+                  whFormGroup.get('code').errors
+              }"
+            />
+            <div class="invalid-feedback">Invalid Code</div>
+          </div>
+          <div class="mb-3">
+            <label for="">Name</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="name"
+              class="form-control"
+              style="width: 100%"
+              [ngClass]="{
+                'is-invalid':
+                  whFormGroup.get('name').touched &&
+                  whFormGroup.get('name').errors
+              }"
+            />
+            <div class="invalid-feedback">
+              Invalid Code, max. of 2 Characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="">System</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="system"
+              class="form-control"
+              style="width: 100%"
+              [ngClass]="{
+                'is-invalid':
+                  whFormGroup.get('system').touched &&
+                  whFormGroup.get('system').errors
+              }"
+            />
+            <div class="invalid-feedback">
+              Invalid Code, max. of 2 Characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="">Status</label>
+            <input
+              type="text"
+              pInputText
+              formControlName="status"
+              class="form-control"
+              style="width: 100%"
+              [ngClass]="{
+                'is-invalid':
+                  whFormGroup.get('status').touched &&
+                  whFormGroup.get('status').errors
+              }"
+            />
+            <div class="invalid-feedback">
+              Invalid Code, max. of 2 Characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="remark">Remark</label>
+            <textarea
+              id="remark"
+              rows="3"
+              pInputTextarea
+              formControlName="remark"
+              style="width: 100%"
+            ></textarea>
+            <div class="invalid-feedback">
+              Invalid Code, max. of 2 Characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <p-checkbox
+              name="recordStatus"
+              formControlName="recordStatus"
+              value="1"
+              label="Record Status"
+              [(ngModel)]="ipRecordStatus"
+            ></p-checkbox>
+          </div>
+          <div class="mb-3 row d-flex justify-content-end">
+            <div class="col-4 text-end">
+              <button
+                type="submit"
+                class="btn"
+                [disabled]="isSubmitting || !whFormGroup.valid"
+                [class]="!isSubmitting ? 'btn-primary' : 'btn-secondary'"
+                *ngIf="!isUpdating; else updateBtn"
+              >
+                <i
+                  class="mr-2"
+                  [class]="
+                    !isSubmitting ? 'pi pi-save' : 'pi pi-spin pi-spinner'
+                  "
+                ></i
+                >Save
+              </button>
+
+              <ng-template #updateBtn>
+                <button
+                  type="submit"
+                  class="btn"
+                  [disabled]="isSubmitting || !whFormGroup.valid"
+                  [class]="!isSubmitting ? 'btn-success' : 'btn-secondary'"
+                >
+                  <i
+                    class="mr-2"
+                    [class]="
+                      !isSubmitting ? 'pi pi-pencil' : 'pi pi-spin pi-spinner'
+                    "
+                  ></i
+                  >Update
+                </button>
+              </ng-template>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <small>double check your input before saving</small>
+  </p-footer>
+</p-dialog>
