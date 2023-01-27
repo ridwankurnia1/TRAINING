@@ -19,6 +19,7 @@ namespace TRAINING.API.Data
         public DbSet<IUOM> IUOM { get; set; }
         public DbSet<ZVAR> ZVAR { get; set; }
         public DbSet<IWGRX> IWGRX { get; set; }
+        public DbSet<IWHSX> IWHSX { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -40,6 +41,7 @@ namespace TRAINING.API.Data
             builder.Entity<IUOM>().HasKey(k => new { k.HUUMNO });
             builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
             builder.Entity<IWGRX>().HasKey(k => new { k.HVWHGR });
+            builder.Entity<IWHSX>().HasKey(k => new { k.HWWHNO });
         }
     }
 }

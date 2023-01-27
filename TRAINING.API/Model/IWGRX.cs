@@ -1,6 +1,6 @@
 using System;
 
-namespace TRAINING.API
+namespace TRAINING.API.Model
 {
     public class IWGRX
     {

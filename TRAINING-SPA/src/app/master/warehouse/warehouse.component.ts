@@ -4,6 +4,9 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { Dropdown2 } from 'src/app/_model/Dropdown2';
+import { Pagination } from 'src/app/_model/Pagination';
+import { Warehouse } from 'src/app/_model/Warehouse';
 import { WarehouseGroup } from 'src/app/_model/WarehouseGroup';
 import { UIService } from 'src/app/_service/ui.service';
 import { WarehouseService } from 'src/app/_service/warehouse.service';
@@ -14,15 +17,31 @@ import { WarehouseService } from 'src/app/_service/warehouse.service';
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent implements OnInit {
+  warehouseData: Warehouse[];
   groupData: WarehouseGroup[];
+  warehouseType: Dropdown2[];
 
-  whFormGroup: UntypedFormGroup;
+  formGroup2: UntypedFormGroup;
+  formGroup: UntypedFormGroup;
   ipRecordStatus: Boolean;
+  ipWhGroup: string;
+  ipFday: Number = 0;
+
+  pagination: Pagination;
+  itemsPerPage: any;
+
+  pageMetadata = {};
+  globalSearch: String;
 
   isLoading = false;
+  isLoading2 = false;
   isFormVisible = false;
+  isGroupFormVisible = false;
   isUpdating = false;
   isSubmitting = false;
+  isUpdating2 = false;
+  isSubmitting2 = false;
+  fDayCollapsed = true;
 
   constructor(
     private warehouse: WarehouseService,
@@ -33,10 +52,12 @@ export class WarehouseComponent implements OnInit {
   ngOnInit() {
     this.getAllGroup();
     this.initForm();
+    this.initWhForm();
+    this.initWarehouseTable();
   }
 
   initForm() {
-    this.whFormGroup = this.fb.group({
+    this.formGroup = this.fb.group({
       code: ['', [Validators.required, Validators.maxLength(2)]],
       name: ['', Validators.required],
       remark: [''],
@@ -44,6 +65,80 @@ export class WarehouseComponent implements OnInit {
       status: [''],
       recordStatus: [false],
     });
+  }
+
+  initWhForm() {
+    this.formGroup2 = this.fb.group({
+      code: ['', [Validators.required, Validators.maxLength(10)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      nickname: [''],
+      group: ['', Validators.required],
+      type: ['', Validators.required],
+      /* address: [''],
+      departmentCode: [''], */
+      documentCode: ['', Validators.required],
+      /* profitCode: [''],
+      costCenter: [''], */
+      remark: [''],
+      fifoFlag: [false],
+      fifoDays: [0, [Validators.min(0), Validators.max(256)]],
+      stocktakingFlag: [false],
+      carryOutFlag: [false],
+      policeNumber: [false],
+      transferModelFlag: [false],
+      recordStatus: [false],
+    });
+
+    this.initDropdown();
+  }
+
+  initDropdown() {
+    this.warehouse.allType().subscribe((res) => {
+      this.warehouseType = res;
+    });
+  }
+
+  initWarehouseTable(table?: any) {
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    };
+
+    if (table) {
+      table.reset();
+    }
+
+    this.globalSearch = '';
+
+    this.pageMetadata = {};
+  }
+
+  warehouseTableChanged(event: any) {
+    this.pagination.currentPage = event.first / event.rows + 1;
+    this.pagination.itemsPerPage = event.rows;
+
+    this.pageMetadata = {
+      searchGlobal: this.globalSearch,
+    };
+
+    this.getAll();
+  }
+
+  getAll() {
+    this.isLoading2 = true;
+    this.warehouse
+      .all(
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage,
+        this.pageMetadata
+      )
+      .subscribe((res) => {
+        this.warehouseData = res.result;
+        this.pagination = res.pagination;
+        this.isLoading2 = false;
+      });
   }
 
   getAllGroup() {
@@ -62,7 +157,7 @@ export class WarehouseComponent implements OnInit {
   updateGroupItem(code: string) {
     this.warehouse.singleGroup(code).subscribe(
       (res) => {
-        this.toggleForm(res);
+        this.toggleGroupForm(res);
       },
       (e) => {}
     );
@@ -79,40 +174,129 @@ export class WarehouseComponent implements OnInit {
 
   submitWgForm() {
     this.isSubmitting = true;
-    if (this.whFormGroup.invalid) {
-      this.ui.validateFormEntry(this.whFormGroup);
+    if (this.formGroup.invalid) {
+      this.ui.validateFormEntry(this.formGroup);
       this.isSubmitting = false;
       return;
     }
 
-    this.warehouse.createGroup(this.whFormGroup.value).subscribe(
-      () => {
-        this.isSubmitting = false;
+    if (this.isUpdating) {
+      this.warehouse.updateGroup(this.formGroup.value).subscribe(
+        () => {
+          this.isSubmitting = false;
 
-        this.toggleForm();
-        this.whFormGroup.reset();
-        this.getAllGroup();
-      },
-      (e) => {
-        this.isSubmitting = false;
-      }
-    );
+          this.toggleGroupForm();
+          this.formGroup.reset();
+          this.getAllGroup();
+        },
+        (e) => {
+          this.isSubmitting = false;
+        }
+      );
+    } else {
+      this.warehouse.createGroup(this.formGroup.value).subscribe(
+        () => {
+          this.isSubmitting = false;
+
+          this.toggleGroupForm();
+          this.formGroup.reset();
+          this.getAllGroup();
+        },
+        (e) => {
+          this.isSubmitting = false;
+        }
+      );
+    }
   }
 
-  toggleForm(data?: any) {
-    this.isFormVisible = !this.isFormVisible;
+  toggleGroupForm(data?: any) {
+    this.isGroupFormVisible = !this.isGroupFormVisible;
 
     if (data) {
       console.info(data);
       this.isUpdating = true;
-      this.whFormGroup.reset();
-      this.whFormGroup.patchValue(data);
-      this.whFormGroup.controls['recordStatus'].setValue(
-        data.recordStatus == 1
-      );
+      this.formGroup.patchValue(data);
+      this.formGroup.controls['recordStatus'].setValue(data.recordStatus == 1);
     } else {
       this.isUpdating = false;
-      this.whFormGroup.reset();
+      this.formGroup.reset();
     }
+  }
+
+  submitForm() {
+    this.isSubmitting2 = true;
+    if (this.formGroup2.invalid) {
+      this.ui.validateFormEntry(this.formGroup2);
+      this.isSubmitting2 = false;
+      return;
+    }
+
+    if (this.isUpdating2) {
+      this.formGroup2.controls['code'].enable();
+      // update
+      this.warehouse.update(this.formGroup2.value).subscribe(
+        () => {
+          this.isSubmitting2 = false;
+          this.toggleForm();
+          this.getAll();
+        },
+        () => {
+          this.isSubmitting2 = false;
+        }
+      );
+    } else {
+      // create
+      this.warehouse.create(this.formGroup2.value).subscribe(
+        (e) => {
+          this.isSubmitting2 = false;
+          this.toggleForm();
+          this.getAll();
+          this.fDayCollapsed = true;
+        },
+        (e) => {
+          this.isSubmitting2 = false;
+        }
+      );
+    }
+  }
+
+  toggleForm(data?: any) {
+    this.isFormVisible = !this.isFormVisible;
+    this.fDayCollapsed = true;
+
+    if (data) {
+      this.formGroup2.reset();
+      this.isUpdating2 = true;
+      this.formGroup2.patchValue(data);
+      this.formGroup2.controls['fifoFlag'].setValue(data.fifoFlag == 1);
+      this.formGroup2.controls['carryOutFlag'].setValue(data.carryOutFlag == 1);
+      this.formGroup2.controls['policeNumber'].setValue(data.policeNumber == 1);
+      this.formGroup2.controls['stocktakingFlag'].setValue(
+        data.stocktakingFlag == 1
+      );
+      this.formGroup2.controls['transferModelFlag'].setValue(
+        data.transferModelFlag == 1
+      );
+      this.formGroup2.controls['recordStatus'].setValue(data.recordStatus == 1);
+
+      this.fDayCollapsed = data.fifoDays == 0 || data.fifoFlag != 1;
+      this.formGroup2.controls['code'].disable();
+    } else {
+      this.isUpdating2 = false;
+      this.formGroup2.reset();
+      this.formGroup2.controls['code'].enable();
+    }
+  }
+
+  updateItem(code: string) {
+    this.warehouse.single(code).subscribe((res) => {
+      this.toggleForm(res);
+    });
+  }
+
+  deleteItem(code: string) {
+    this.warehouse.delete(code).subscribe(() => {
+      this.getAll();
+    });
   }
 }

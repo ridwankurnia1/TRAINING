@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TRAINING.API.Data;
+using TRAINING.API.Helper;
+using TRAINING.API.Model;
 using TRAINING.API.ViewModel;
 
 namespace TRAINING.API.Controllers
@@ -20,15 +22,93 @@ namespace TRAINING.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> All([FromQuery] WarehouseParams warehouseParams)
+        {
+            var list = await _repository.All(warehouseParams);
+
+            var result = _mapper.Map<IList<WarehouseDto>>(list);
+
+            Response.AddPagination(list.CurrentPage, list.PageSize, list.TotalCount, list.TotalPages);
+
+            return Ok(result);
+        }
+
+        [HttpGet("{code}")]
+        public async Task<IActionResult> Single(string code)
+        {
+            var data = await _repository.Single(code);
+
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<WarehouseDto>(data));
+        }
+
+        [HttpPost()]
+        public async Task<IActionResult> Create([FromBody] WarehouseDto requestData)
+        {
+            if (requestData == null)
+            {
+                return BadRequest(requestData);
+            }
+            requestData.Branch = "CKP";
+            requestData.CreatedTime = System.DateTime.Now;
+            requestData.CreatedUser = "TEST";
+            requestData.ChangedTime = System.DateTime.Now;
+            requestData.ChangedUser = "TEST";
+
+            var create = await _repository.Create(_mapper.Map<IWHSX>(requestData));
+
+            if (!create)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{code}")]
+        public async Task<IActionResult> Update(string code, [FromBody] WarehouseDto requestData)
+        {
+            requestData.Branch = "CKP";
+            requestData.CreatedTime = System.DateTime.Now;
+            requestData.CreatedUser = "TEST";
+            requestData.ChangedTime = System.DateTime.Now;
+            requestData.ChangedUser = "TEST";
+
+            var update = await _repository.Update(_mapper.Map<IWHSX>(requestData));
+
+            if (!update)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{code}")]
+        public async Task<IActionResult> Delete(string code)
+        {
+            var delete = await _repository.Delete(code);
+
+            if (!delete)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet("type")]
+        public async Task<IActionResult> AllType() => Ok(_mapper.Map<IList<GlobalCommonText2>>(await _repository.AllType()));
+
         [HttpGet("group")]
         public async Task<IActionResult> AllGroup()
         {
             var list = await _repository.AllGroup();
-
-            if (list.Count == 0)
-            {
-                return NotFound("Tidak ada data");
-            }
 
             return Ok(_mapper.Map<IList<WarehouseGroupDto>>(list));
         }

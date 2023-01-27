@@ -5,5 +5,6 @@ namespace TRAINING.API.Model
         public string CBKYNO { get; set; }
         public string CBKYNA { get; set; }
         public string CBTBNO { get; set; }
+        public decimal CBRCST { get; set; }
     }
 }

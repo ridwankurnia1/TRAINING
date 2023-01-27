@@ -10,6 +10,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { BrowserModule } from '@angular/platform-browser';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   imports: [
@@ -19,10 +21,12 @@ import { BrowserModule } from '@angular/platform-browser';
     TableModule,
     ButtonModule,
     DialogModule,
+    DropdownModule,
     ReactiveFormsModule,
     InputTextModule,
     InputNumberModule,
-    CheckboxModule
+    CheckboxModule,
+    CollapseModule
   ],
   declarations: [WarehouseComponent],
 })
