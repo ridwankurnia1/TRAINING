@@ -35,6 +35,7 @@ import { PartNumberComponent } from './master/part-number/part-number.component'
 import { GraphQLModule } from './graphql.module';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
+import { ToastModule } from 'primeng/toast';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -57,7 +58,7 @@ export function tokenGetter(): string {
     PartNumberComponent,
     DefectGroupComponent,
     DefectGroupSecondComponent,
-   ],
+  ],
   imports: [
     AutoCompleteModule,
     BrowserModule,
@@ -69,26 +70,24 @@ export function tokenGetter(): string {
     TableModule,
     ButtonModule,
     ConfirmDialogModule,
+    ToastModule,
     DropdownModule,
     RadioButtonModule,
     GraphQLModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
-    ToastrModule.forRoot({ positionClass: 'toast-bottom-right'}),
+    ToastrModule.forRoot({ positionClass: 'toast-bottom-right' }),
     BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter,
         allowedDomains: ['localhost:5000'],
-        disallowedRoutes: ['localhost:5000/api/auth']
-      }
-    })
+        disallowedRoutes: ['localhost:5000/api/auth'],
+      },
+    }),
   ],
-  providers: [
-    ConfirmationService,
-    MessageService
-  ],
-  bootstrap: [AppComponent]
+  providers: [ConfirmationService, MessageService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

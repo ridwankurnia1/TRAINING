@@ -478,9 +478,13 @@
           </div>
         </div>
         <div class="mb-3 row" [collapse]="fDayCollapsed" [isAnimated]="true">
-          <label for="" class="col-2 col-form-label"> FIFO Days </label>
+          <label for="" class="col-2 col-form-label">FIFO Days</label>
           <div class="col-4">
-            <p-inputNumber formControlName="fifoDays" [min]="0" [max]="256"></p-inputNumber>
+            <p-inputNumber
+              formControlName="fifoDays"
+              [min]="0"
+              [max]="256"
+            ></p-inputNumber>
             <div class="invalid-feedback">Error</div>
           </div>
         </div>
@@ -549,7 +553,12 @@
     </div>
     <div class="mb-3 row">
       <div class="col-4">
-        <button type="submit" class="btn btn-danger me-2" (click)="toggleForm()" [disabled]="isSubmitting2">
+        <button
+          type="submit"
+          class="btn btn-danger me-2"
+          (click)="toggleForm()"
+          [disabled]="isSubmitting2"
+        >
           <i class="me-2 pi pi-times"></i>Cancel
         </button>
         <button
@@ -586,3 +595,11 @@
     </div>
   </form>
 </div>
+
+<p-confirmDialog
+  header="Confirmation"
+  acceptButtonStyleClass="btn btn-primary"
+  rejectButtonStyleClass="btn btn-danger"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+<p-toast></p-toast>

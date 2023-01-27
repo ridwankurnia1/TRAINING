@@ -4,6 +4,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
 import { Pagination } from 'src/app/_model/Pagination';
 import { Warehouse } from 'src/app/_model/Warehouse';
@@ -46,7 +47,9 @@ export class WarehouseComponent implements OnInit {
   constructor(
     private warehouse: WarehouseService,
     private ui: UIService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private message: MessageService,
+    private confirm: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -180,33 +183,56 @@ export class WarehouseComponent implements OnInit {
       return;
     }
 
-    if (this.isUpdating) {
-      this.warehouse.updateGroup(this.formGroup.value).subscribe(
-        () => {
-          this.isSubmitting = false;
+    this.confirm.confirm({
+      message:
+        'Saving data requires confirmation, are you sure the inputs was correct ?',
+      accept: () => {
+        if (this.isUpdating) {
+          this.warehouse.updateGroup(this.formGroup.value).subscribe(
+            () => {
+              this.isSubmitting = false;
 
-          this.toggleGroupForm();
-          this.formGroup.reset();
-          this.getAllGroup();
-        },
-        (e) => {
-          this.isSubmitting = false;
-        }
-      );
-    } else {
-      this.warehouse.createGroup(this.formGroup.value).subscribe(
-        () => {
-          this.isSubmitting = false;
+              this.toggleGroupForm();
+              this.formGroup.reset();
+              this.getAllGroup();
+              
+              this.message.add({
+                severity: 'success',
+                summary: 'Data updated!',
+              });
+            },
+            (e) => {
+              this.message.add({
+                severity: 'error',
+                summary: 'Cannot save data',
+              });
+              this.isSubmitting = false;
+            }
+          );
+        } else {
+          this.warehouse.createGroup(this.formGroup.value).subscribe(
+            () => {
+              this.isSubmitting = false;
 
-          this.toggleGroupForm();
-          this.formGroup.reset();
-          this.getAllGroup();
-        },
-        (e) => {
-          this.isSubmitting = false;
+              this.toggleGroupForm();
+              this.formGroup.reset();
+              this.getAllGroup();
+
+              this.message.add({
+                severity: 'success',
+                summary: 'Data created!',
+              });
+            },
+            (e) => {
+              this.isSubmitting = false;
+            }
+          );
         }
-      );
-    }
+      },
+      reject: () => {
+        this.isSubmitting = false;
+      },
+    });
   }
 
   toggleGroupForm(data?: any) {
@@ -231,33 +257,58 @@ export class WarehouseComponent implements OnInit {
       return;
     }
 
-    if (this.isUpdating2) {
-      this.formGroup2.controls['code'].enable();
-      // update
-      this.warehouse.update(this.formGroup2.value).subscribe(
-        () => {
-          this.isSubmitting2 = false;
-          this.toggleForm();
-          this.getAll();
-        },
-        () => {
-          this.isSubmitting2 = false;
+    this.confirm.confirm({
+      message:
+        'Saving data requires confirmation, are you sure the inputs was correct ?',
+      accept: () => {
+        if (this.isUpdating2) {
+          this.formGroup2.controls['code'].enable();
+          // update
+          this.warehouse.update(this.formGroup2.value).subscribe(
+            () => {
+              this.isSubmitting2 = false;
+              this.toggleForm();
+              this.getAll();
+              this.message.add({
+                severity: 'success',
+                summary: 'Data updated!',
+              });
+            },
+            () => {
+              this.message.add({
+                severity: 'error',
+                summary: 'Cannot save data',
+              });
+              this.isSubmitting2 = false;
+            }
+          );
+        } else {
+          // create
+          this.warehouse.create(this.formGroup2.value).subscribe(
+            (e) => {
+              this.isSubmitting2 = false;
+              this.toggleForm();
+              this.getAll();
+              this.fDayCollapsed = true;
+              this.message.add({
+                severity: 'success',
+                summary: 'Data created!',
+              });
+            },
+            (e) => {
+              this.message.add({
+                severity: 'error',
+                summary: 'Cannot save data',
+              });
+              this.isSubmitting2 = false;
+            }
+          );
         }
-      );
-    } else {
-      // create
-      this.warehouse.create(this.formGroup2.value).subscribe(
-        (e) => {
-          this.isSubmitting2 = false;
-          this.toggleForm();
-          this.getAll();
-          this.fDayCollapsed = true;
-        },
-        (e) => {
-          this.isSubmitting2 = false;
-        }
-      );
-    }
+      },
+      reject: () => {
+        this.isSubmitting2 = false;
+      },
+    });
   }
 
   toggleForm(data?: any) {
@@ -295,8 +346,28 @@ export class WarehouseComponent implements OnInit {
   }
 
   deleteItem(code: string) {
-    this.warehouse.delete(code).subscribe(() => {
-      this.getAll();
+    this.confirm.confirm({
+      message: 'Are you sure wants to delete ' + code + ' ?',
+      accept: () => {
+        this.warehouse.delete(code).subscribe(
+          () => {
+            this.getAll();
+            this.message.add({
+              severity: 'success',
+              summary: 'Item deleted successfully!',
+            });
+          },
+          (e) => {
+            console.error(e);
+            this.message.add({
+              severity: 'error',
+              summary: 'There was a problem during request, please try again',
+            });
+          }
+        );
+      },
+      reject: () => {},
+      rejectButtonStyleClass: 'btn btn-danger',
     });
   }
 }

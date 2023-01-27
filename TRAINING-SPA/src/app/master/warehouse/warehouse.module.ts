@@ -12,6 +12,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { BrowserModule } from '@angular/platform-browser';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { DropdownModule } from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   imports: [
@@ -26,7 +28,9 @@ import { DropdownModule } from 'primeng/dropdown';
     InputTextModule,
     InputNumberModule,
     CheckboxModule,
-    CollapseModule
+    CollapseModule,
+    ConfirmDialogModule,
+    ToastModule,
   ],
   declarations: [WarehouseComponent],
 })
