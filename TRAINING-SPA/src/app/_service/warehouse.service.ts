@@ -8,9 +8,7 @@ import { PaginatedResult } from '../_model/Pagination';
 import { Warehouse } from '../_model/Warehouse';
 import { WarehouseGroup } from '../_model/WarehouseGroup';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class WarehouseService {
   baseUrl = environment.apiUrl + 'warehouse/';
   constructor(private http: HttpClient) {}
@@ -18,13 +16,15 @@ export class WarehouseService {
   all(page?, perPage?, params?): Observable<PaginatedResult<Warehouse[]>> {
     let httpParams = new HttpParams();
 
-    if (page && perPage) {
-      httpParams.append('PageNumber', page);
-      httpParams.append('PageSize', perPage);
+    if (page != null && perPage != null) {
+      httpParams = httpParams.append('PageNumber', page);
+      httpParams = httpParams.append('PageSize', perPage);
     }
 
     if (params) {
-      // sort and search params
+      if (params.searchGlobal) {
+        httpParams = httpParams.append('ws', params.searchGlobal);
+      }
     }
 
     return this.http
@@ -94,16 +94,33 @@ export class WarehouseService {
     return this.http.delete<void>(this.baseUrl + code);
   }
 
-  allType(): Observable<Dropdown2[]> {
-    return this.http.get<Dropdown2[]>(this.baseUrl + 'type');
+  export(params?): Observable<Warehouse[]> {
+    let httpParams = new HttpParams();
+
+    if (params) {
+      // search and sort
+    }
+
+    return this.http.get<Warehouse[]>(this.baseUrl + 'export', {
+      observe: 'body',
+      params: httpParams,
+    });
   }
 
-  allGroup(): Observable<WarehouseGroup[]> {
-    return this.http.get(this.baseUrl + 'group', { observe: 'response' }).pipe(
-      map((res: HttpResponse<WarehouseGroup[]>) => {
-        return res.body;
-      })
-    );
+  allGroup(search?: string): Observable<WarehouseGroup[]> {
+    let httpParams = new HttpParams();
+
+    if (search) {
+      httpParams = httpParams.append('gs', search);
+    }
+
+    return this.http
+      .get<WarehouseGroup[]>(this.baseUrl + 'group', { params: httpParams })
+      .pipe(
+        map((res) => {
+          return res;
+        })
+      );
   }
 
   singleGroup(code: string): Observable<WarehouseGroup> {
@@ -174,5 +191,9 @@ export class WarehouseService {
     }
 
     return res;
+  }
+
+  allType(): Observable<Dropdown2[]> {
+    return this.http.get<Dropdown2[]>(this.baseUrl + 'type');
   }
 }

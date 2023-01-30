@@ -8,15 +8,17 @@ namespace TRAINING.API.Data
 {
     public interface IWarehouseRepository
     {
+        AMGContext GetContext();
         IQueryable<IWHSX> Query();
         Task<PagedList<IWHSX>> All(WarehouseParams warehouseParams);
         Task<IWHSX> Single(string code);
         Task<bool> Create(IWHSX data);
         Task<bool> Update(IWHSX data);
         Task<bool> Delete(string code);
+        Task<IList<IWHSX>> Export(WarehouseParams warehouseParams);
         Task<IList<GCT2>> AllType();
         IQueryable<IWGRX> QueryGroup();
-        Task<IList<IWGRX>> AllGroup();
+        Task<IList<IWGRX>> AllGroup(WarehouseParams warehouseParams);
         Task<IWGRX> SingleGroup(string code);
         Task<bool> CreateGroup(IWGRX data);
         Task<bool> UpdateGroup(IWGRX data);

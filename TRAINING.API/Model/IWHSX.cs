@@ -30,5 +30,6 @@ namespace TRAINING.API.Model
         public string HWCRUS { get; set; }
         public DateTime HWCHTM { get; set; }
         public string HWCHUS { get; set; }
+        public IWGRX IWGRX { get; set; }
     }
 }

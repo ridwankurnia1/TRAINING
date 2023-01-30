@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import moment from 'moment';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
 import { Pagination } from 'src/app/_model/Pagination';
 import { Warehouse } from 'src/app/_model/Warehouse';
 import { WarehouseGroup } from 'src/app/_model/WarehouseGroup';
+import { ExcelService } from 'src/app/_service/excel.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { WarehouseService } from 'src/app/_service/warehouse.service';
 
@@ -16,6 +19,7 @@ import { WarehouseService } from 'src/app/_service/warehouse.service';
   selector: 'app-warehouse',
   templateUrl: './warehouse.component.html',
   styleUrls: ['./warehouse.component.css'],
+  providers: [WarehouseService],
 })
 export class WarehouseComponent implements OnInit {
   warehouseData: Warehouse[];
@@ -32,8 +36,10 @@ export class WarehouseComponent implements OnInit {
   itemsPerPage: any;
 
   pageMetadata = {};
-  globalSearch: String;
+  groupSearch: string = '';
+  warehouseSearch: String = '';
 
+  // TODO : try a better variable naming
   isLoading = false;
   isLoading2 = false;
   isFormVisible = false;
@@ -43,19 +49,26 @@ export class WarehouseComponent implements OnInit {
   isUpdating2 = false;
   isSubmitting2 = false;
   fDayCollapsed = true;
+  isExporting = false;
+  isExporting2 = false;
+
+  // elements
+  modalRef?: BsModalRef;
 
   constructor(
     private warehouse: WarehouseService,
     private ui: UIService,
     private fb: UntypedFormBuilder,
     private message: MessageService,
-    private confirm: ConfirmationService
+    private confirm: ConfirmationService,
+    private excel: ExcelService,
+    private modal: BsModalService
   ) {}
 
   ngOnInit() {
-    this.getAllGroup();
     this.initForm();
     this.initWhForm();
+    this.initGroupTable();
     this.initWarehouseTable();
   }
 
@@ -113,9 +126,15 @@ export class WarehouseComponent implements OnInit {
       table.reset();
     }
 
-    this.globalSearch = '';
+    this.warehouseSearch = '';
 
     this.pageMetadata = {};
+  }
+
+  initGroupTable() {
+    this.groupSearch = '';
+
+    this.getAllGroup();
   }
 
   warehouseTableChanged(event: any) {
@@ -123,7 +142,7 @@ export class WarehouseComponent implements OnInit {
     this.pagination.itemsPerPage = event.rows;
 
     this.pageMetadata = {
-      searchGlobal: this.globalSearch,
+      searchGlobal: this.warehouseSearch,
     };
 
     this.getAll();
@@ -146,7 +165,7 @@ export class WarehouseComponent implements OnInit {
 
   getAllGroup() {
     this.isLoading = true;
-    this.warehouse.allGroup().subscribe(
+    this.warehouse.allGroup(this.groupSearch).subscribe(
       (res) => {
         this.groupData = res;
         this.isLoading = false;
@@ -154,15 +173,6 @@ export class WarehouseComponent implements OnInit {
       (e) => {
         this.isLoading = false;
       }
-    );
-  }
-
-  updateGroupItem(code: string) {
-    this.warehouse.singleGroup(code).subscribe(
-      (res) => {
-        this.toggleGroupForm(res);
-      },
-      (e) => {}
     );
   }
 
@@ -192,10 +202,10 @@ export class WarehouseComponent implements OnInit {
             () => {
               this.isSubmitting = false;
 
-              this.toggleGroupForm();
+              this.modalRef?.hide();
               this.formGroup.reset();
               this.getAllGroup();
-              
+
               this.message.add({
                 severity: 'success',
                 summary: 'Data updated!',
@@ -214,7 +224,7 @@ export class WarehouseComponent implements OnInit {
             () => {
               this.isSubmitting = false;
 
-              this.toggleGroupForm();
+              this.modalRef?.hide();
               this.formGroup.reset();
               this.getAllGroup();
 
@@ -235,18 +245,21 @@ export class WarehouseComponent implements OnInit {
     });
   }
 
-  toggleGroupForm(data?: any) {
-    this.isGroupFormVisible = !this.isGroupFormVisible;
-
-    if (data) {
-      console.info(data);
-      this.isUpdating = true;
-      this.formGroup.patchValue(data);
-      this.formGroup.controls['recordStatus'].setValue(data.recordStatus == 1);
+  openGroupForm(code?: string, element?: TemplateRef<any>) {
+    if (code) {
+      this.warehouse.singleGroup(code).subscribe((data) => {
+        this.isUpdating = true;
+        this.formGroup.patchValue(data);
+        this.formGroup.controls['recordStatus'].setValue(
+          data.recordStatus == 1
+        );
+      });
     } else {
       this.isUpdating = false;
       this.formGroup.reset();
     }
+
+    this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
   }
 
   submitForm() {
@@ -368,6 +381,112 @@ export class WarehouseComponent implements OnInit {
       },
       reject: () => {},
       rejectButtonStyleClass: 'btn btn-danger',
+    });
+  }
+
+  export() {
+    this.isExporting2 = true;
+    let kopSheet = [
+      { A1: 'PT Asahimas Flat Glass Tbk' },
+      { A1: 'DATA WAREHOUSE' },
+      {
+        A1:
+          'Export Time : ' +
+          moment
+            .utc(new Date(), 'MM-DD-YYYY')
+            .local()
+            .format('DD-MM-YYYY hh:mm:ss'),
+      },
+      { A1: '' },
+    ];
+
+    let headerSheet = [
+      {
+        A1: 'CODE',
+        A2: 'NAME',
+        A3: 'NICKNAME',
+        A4: 'GROUP',
+        A5: 'DOC. BY WAREHOUSE',
+        A6: 'FIFO FLAG',
+        A7: 'FIFO DAYS',
+        A8: 'RECORD STATUS',
+      },
+    ];
+
+    this.warehouse.export(this.pageMetadata).subscribe((res) => {
+      var filtered = res.map((item) => {
+        let status = item.recordStatus == 1 ? 'ACTIVE' : 'INACTIVE';
+        let fifo = item.fifoFlag == 1 ? 'ACTIVE' : 'INACTIVE';
+
+        return {
+          a1: item.code,
+          a2: item.name,
+          a3: item.nickname,
+          a4: item.group,
+          a5: item.documentCode,
+          a6: fifo,
+          a7: item.fifoDays,
+          a8: status,
+        };
+      });
+
+      this.excel.exportAsExcelFile(
+        kopSheet,
+        headerSheet,
+        filtered,
+        'DATA WAREHOUSE'
+      );
+
+      this.isExporting2 = false;
+    });
+  }
+
+  exportGroup() {
+    this.isExporting = true;
+    let kopSheet = [
+      { A1: 'PT Asahimas Flat Glass Tbk' },
+      { A1: 'DATA WAREHOUSE GROUP' },
+      {
+        A1:
+          'Export Time : ' +
+          moment
+            .utc(new Date(), 'MM-DD-YYYY')
+            .local()
+            .format('DD-MM-YYYY hh:mm:ss'),
+      },
+      { A1: '' },
+    ];
+
+    let headerSheet = [
+      {
+        A1: 'CODE',
+        A2: 'NAME',
+        A3: 'REMARK',
+        A4: 'RECORD STATUS',
+      },
+    ];
+
+    // TODO : replace pageMetadata with corresponding meta data variable
+    this.warehouse.allGroup(this.groupSearch).subscribe((res) => {
+      var filtered = res.map((item) => {
+        let status = item.recordStatus == 1 ? 'ACTIVE' : 'INACTIVE';
+
+        return {
+          a1: item.code,
+          a2: item.name,
+          a3: item.remark,
+          a4: status,
+        };
+      });
+
+      this.excel.exportAsExcelFile(
+        kopSheet,
+        headerSheet,
+        filtered,
+        'DATA WAREHOUSE GROUP'
+      );
+
+      this.isExporting = false;
     });
   }
 }

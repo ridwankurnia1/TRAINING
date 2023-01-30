@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,9 +23,55 @@ namespace TRAINING.API.Data
             return _context.IWHSX.AsQueryable();
         }
 
+        public AMGContext GetContext() => _context;
+
         public async Task<PagedList<IWHSX>> All(WarehouseParams warehouseParams)
         {
-            var query = Query().AsNoTracking();
+            var query = from a in _context.IWHSX
+                        join b in _context.IWGRX on a.HWWHGR equals b.HVWHGR
+                        into ab
+                        from b in ab.DefaultIfEmpty()
+                        select new IWHSX
+                        {
+                            HWWHNO = a.HWWHNO,
+                            HWWHNA = a.HWWHNA,
+                            HWNICK = a.HWNICK,
+                            HWWHGR = b.HVGRNA,
+                            HWDFWH = a.HWDFWH,
+                            HWFIFO = a.HWFIFO,
+                            HWFDAY = a.HWFDAY,
+                            HWRCST = a.HWRCST,
+                            HWCHTM = a.HWCHTM
+                        };
+
+            if (!string.IsNullOrEmpty(warehouseParams.ws))
+            {
+                // identify input
+                // use ToUpper() to ignore case sensitive
+                switch (warehouseParams.ws.ToUpper())
+                {
+                    // state search
+                    case "ACTIVE":
+                        query = query.Where(c => c.HWRCST == 1 || c.HWFIFO == 1);
+                        break;
+                    case "INACTIVE":
+                        query = query.Where(c => c.HWRCST == 0 || c.HWFIFO == 0);
+                        break;
+                    default:
+                        // string search
+                        query = query.Where(c => c.HWWHNO.Contains(warehouseParams.ws) ||
+                            c.HWWHNO.Contains(warehouseParams.ws) ||
+                            c.HWWHNA.Contains(warehouseParams.ws) ||
+                            c.HWNICK.Contains(warehouseParams.ws) ||
+                            c.HWWHGR.Contains(warehouseParams.ws) ||
+                            c.HWDFWH.Contains(warehouseParams.ws)
+                         );
+                        break;
+                }
+            }
+
+            query = query.AsNoTracking().OrderBy(c => c.HWCHTM);
+
             return await PagedList<IWHSX>.CreateAsync(query, warehouseParams.PageNumber, warehouseParams.PageSize);
         }
 
@@ -53,7 +100,7 @@ namespace TRAINING.API.Data
             {
                 return false;
             }
-            
+
             _context.Remove(data);
             return await _context.SaveChangesAsync() > 0;
         }
@@ -63,9 +110,33 @@ namespace TRAINING.API.Data
             return _context.IWGRX.AsQueryable();
         }
 
-        public async Task<IList<IWGRX>> AllGroup()
+        public async Task<IList<IWGRX>> AllGroup(WarehouseParams warehouseParams)
         {
-            return await _context.IWGRX.AsNoTracking().ToListAsync();
+            var query = QueryGroup();
+
+            if (!string.IsNullOrEmpty(warehouseParams.gs))
+            {
+                // identify input
+                // use ToUpper() to ignore case sensitive
+                switch (warehouseParams.gs.ToUpper())
+                {
+                    // state search
+                    case "ACTIVE":
+                        query = query.Where(c => c.HVRCST == 1);
+                        break;
+                    case "INACTIVE":
+                        query = query.Where(c => c.HVRCST == 0);
+                        break;
+                    default:
+                        // string search
+                        query = query.Where(c => c.HVWHGR.Contains(warehouseParams.gs) ||
+                            c.HVGRNA.Contains(warehouseParams.gs) || c.HVREMA.Contains(warehouseParams.gs)
+                         );
+                        break;
+                }
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
 
         public async Task<IWGRX> SingleGroup(string code)
@@ -93,7 +164,57 @@ namespace TRAINING.API.Data
 
         public async Task<IList<GCT2>> AllType()
         {
-            return await _context.GCT2.Where(c=> c.CBTBNO == "WHTY" && c.CBRCST == 1).ToListAsync();
+            return await _context.GCT2.Where(c => c.CBTBNO == "WHTY" && c.CBRCST == 1).ToListAsync();
+        }
+
+        public async Task<IList<IWHSX>> Export(WarehouseParams warehouseParams)
+        {
+            var query = from a in _context.IWHSX
+                        join b in _context.IWGRX on a.HWWHGR equals b.HVWHGR
+                        into ab
+                        from b in ab.DefaultIfEmpty()
+                        select new IWHSX
+                        {
+                            HWWHNO = a.HWWHNO,
+                            HWWHNA = a.HWWHNA,
+                            HWNICK = a.HWNICK,
+                            HWWHGR = b.HVGRNA,
+                            HWDFWH = a.HWDFWH,
+                            HWFIFO = a.HWFIFO,
+                            HWFDAY = a.HWFDAY,
+                            HWRCST = a.HWRCST,
+                            HWCHTM = a.HWCHTM
+                        };
+
+            if (!string.IsNullOrEmpty(warehouseParams.ws))
+            {
+                // identify input
+                // use ToUpper() to ignore case sensitive
+                switch (warehouseParams.ws.ToUpper())
+                {
+                    // state search
+                    case "ACTIVE":
+                        query = query.Where(c => c.HWRCST == 1 || c.HWFIFO == 1);
+                        break;
+                    case "INACTIVE":
+                        query = query.Where(c => c.HWRCST == 0 || c.HWFIFO == 0);
+                        break;
+                    default:
+                        // string search
+                        query = query.Where(c => c.HWWHNO.Contains(warehouseParams.ws) ||
+                            c.HWWHNO.Contains(warehouseParams.ws) ||
+                            c.HWWHNA.Contains(warehouseParams.ws) ||
+                            c.HWNICK.Contains(warehouseParams.ws) ||
+                            c.HWWHGR.Contains(warehouseParams.ws) ||
+                            c.HWDFWH.Contains(warehouseParams.ws)
+                         );
+                        break;
+                }
+            }
+
+            query = query.AsNoTracking().OrderBy(c => c.HWCHTM);
+
+            return await query.ToListAsync();
         }
     }
 }

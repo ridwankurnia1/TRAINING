@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TRAINING.API.Data;
 using TRAINING.API.Helper;
 using TRAINING.API.Model;
@@ -106,9 +109,9 @@ namespace TRAINING.API.Controllers
         public async Task<IActionResult> AllType() => Ok(_mapper.Map<IList<GlobalCommonText2>>(await _repository.AllType()));
 
         [HttpGet("group")]
-        public async Task<IActionResult> AllGroup()
+        public async Task<IActionResult> AllGroup(WarehouseParams warehouseParams)
         {
-            var list = await _repository.AllGroup();
+            var list = await _repository.AllGroup(warehouseParams);
 
             return Ok(_mapper.Map<IList<WarehouseGroupDto>>(list));
         }
@@ -194,6 +197,75 @@ namespace TRAINING.API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("export")]
+        public async Task<IActionResult> Export(WarehouseParams warehouseParams) => Ok(_mapper.Map<IList<WarehouseDto>>(await _repository.Export(warehouseParams)));
+
+        [HttpGet("seeds")]
+        public async Task<IActionResult> Seeds([FromQuery] bool clear)
+        {
+            if (clear)
+            {
+                _repository.GetContext().Database.ExecuteSqlRaw("TRUNCATE TABLE IWGRX");
+                _repository.GetContext().Database.ExecuteSqlRaw("TRUNCATE TABLE IWHSX");
+            }
+
+            if (_repository.Query().Any() && _repository.QueryGroup().Any())
+            {
+                return BadRequest();
+            }
+
+            string[] whg = new string[10];
+
+            for (int i = 0; i < 10; i++)
+            {
+                var entity = new IWGRX
+                {
+                    HVWHGR = Guid.NewGuid().ToString().Substring(0, 8),
+                    HVGRNA = Faker.Company.Name(),
+                    HVBRNO = "CKP",
+                    HVREMA = Faker.Lorem.Sentence(),
+                    HVRCST = Faker.RandomNumber.Next(1),
+                    HVCRTM = DateTime.Now,
+                    HVCRUS = "TEST",
+                    HVCHTM = DateTime.Now,
+                    HVCHUS = "TEST"
+                };
+
+                _repository.GetContext().IWGRX.Add(entity);
+                whg[i] = entity.HVWHGR;
+            }
+
+            foreach (var name in whg)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    var hwnick = Faker.Lorem.GetFirstWord();
+                    var hwdfwh = Faker.Lorem.GetFirstWord();
+
+                    _repository.GetContext().IWHSX.Add(new IWHSX
+                    {
+                        HWWHNO = Guid.NewGuid().ToString().Substring(0, 8),
+                        HWBRNO = "CKP",
+                        HWWHNA = Faker.Company.Name(),
+                        HWNICK = hwnick.Substring(0, hwnick.Length > 9 ? 9 : hwnick.Length),
+                        HWWHGR = name,
+                        HWDFWH = hwdfwh.Substring(0, hwdfwh.Length > 9 ? 9 : hwdfwh.Length),
+                        HWFDAY = Faker.RandomNumber.Next(0, 100),
+                        HWFIFO = Faker.RandomNumber.Next(0, 1),
+                        HWRCST = Faker.RandomNumber.Next(0, 1),
+                        HWCRTM = DateTime.Now,
+                        HWCRUS = "TEST",
+                        HWCHTM = DateTime.Now,
+                        HWCHUS = "TEST"
+                    });
+                }
+            }
+
+            await _repository.GetContext().SaveChangesAsync();
+
+            return Ok(await _repository.Query().Select(c => new IWHSX { HWWHNO = c.HWWHNO }).CountAsync());
         }
 
     }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using TRAINING.API.Model;
 
@@ -42,6 +44,49 @@ namespace TRAINING.API.Data
             builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
             builder.Entity<IWGRX>().HasKey(k => new { k.HVWHGR });
             builder.Entity<IWHSX>().HasKey(k => new { k.HWWHNO });
+            builder.Entity<IWHSX>().HasOne(p => p.IWGRX).WithOne(x => x.IWHSX).HasForeignKey<IWHSX>(p => new { p.HWWHGR });
+
+            // SeedWarehouse(builder);
+        }
+
+        private void SeedWarehouse(ModelBuilder builder)
+        {
+            var whgList = new List<IWGRX>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                whgList.Add(new IWGRX
+                {
+                    HVWHGR = Guid.NewGuid().ToString().Substring(0, 9),
+                    HVGRNA = Faker.Company.Name(),
+                    HVBRNO = "CKP",
+                    HVREMA = Faker.Lorem.Paragraph(3),
+                    HVRCST = Faker.RandomNumber.Next(1)
+                });
+            }
+
+            var whList = new List<IWHSX>();
+
+            foreach (var whg in whgList)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    whList.Add(new IWHSX
+                    {
+                        HWWHNO = Guid.NewGuid().ToString().Substring(0, 9),
+                        HWWHNA = Faker.Company.Name(),
+                        HWNICK = Faker.Lorem.GetFirstWord().ToLower(),
+                        HWWHGR = whg.HVGRNA,
+                        HWDFWH = Faker.Country.Name().ToLower(),
+                        HWFDAY = Faker.RandomNumber.Next(0, 100),
+                        HWFIFO = Faker.RandomNumber.Next(0, 1),
+                        HWRCST = Faker.RandomNumber.Next(0, 1)
+                    });
+                }
+            }
+
+            builder.Entity<IWGRX>().HasData(whgList);
+            builder.Entity<IWHSX>().HasData(whList);
         }
     }
 }

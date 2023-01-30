@@ -100,7 +100,7 @@ export class PalletTypeService {
       );
   }
 
-  export(params?): Observable<PalletType[]> {
+  export(params?: { searchType?: any; searchApp?: any; searchMaterial?: any; searchStatus?: any; sortString?: any; }): Observable<PalletType[]> {
     let httpParam = new HttpParams();
 
     if (params) {
@@ -141,7 +141,7 @@ export class PalletTypeService {
       );
   }
 
-  all(page?, perPage?, params?): Observable<PaginatedResult<PalletType[]>> {
+  all(page?: string | number | boolean, perPage?: string | number | boolean, params?: { searchString?: any; searchType?: any; searchApp?: any; searchMaterial?: any; searchStatus?: any; sortString?: any; }): Observable<PaginatedResult<PalletType[]>> {
     const paginatedResult: PaginatedResult<PalletType[]> = new PaginatedResult<
       PalletType[]
     >();
