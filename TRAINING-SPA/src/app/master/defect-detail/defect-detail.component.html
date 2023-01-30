@@ -20,7 +20,7 @@
         </div>
 
         <div class="col-md-3 col-12 me-2">
-          <select class="form-control" [(ngModel)]="selectedStatus" (change)="dt1.filterGlobal($event.target.value, 'contains')">
+          <select class="form-control" [(ngModel)]="selectedStatus" (change)="loadItems()">
             <option value="">All Status</option>
             <option *ngFor="let item of status" [value]="item.value">{{item.label}}</option>
           </select>

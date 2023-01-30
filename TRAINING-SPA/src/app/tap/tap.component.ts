@@ -57,7 +57,7 @@ export class TapComponent implements OnInit {
         this.toastr.error(err.error);
       }
     });
-    
+
     this.id = docId;
     const prm = {
       id: this.id

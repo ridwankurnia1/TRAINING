@@ -9,6 +9,7 @@ import { UIService } from 'src/app/_service/ui.service';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Dropdown } from 'src/app/_model/Dropdown';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-defect-group-second',
@@ -34,6 +35,7 @@ export class DefectGroupSecondComponent implements OnInit {
   statusDropdown = 'Inactive';
   status: Dropdown[] = [];
   selectedStatus = '';
+  param: any;
 
 
 
@@ -258,6 +260,89 @@ export class DefectGroupSecondComponent implements OnInit {
     }});
     return;
   }
+
+  download(): void {
+    this.loading = true;
+    // this.param.dept = this.selectedDefect;
+    // this.param.status = this.selectedStatus;
+    // this.param.xls = '1';
+    const itemPerPage = 100;
+
+    // const idx1 = this..findIndex(x => x.value === this.selectedDefect);
+    // const idx2 = this.status.findIndex(x => x.value === this.selectedStatus);
+    // let defectName = 'All Defect';
+    // let status = 'All Status';
+    // if (idx1 >= 0) {
+    //   defectName = this.defectName[idx1].label;
+    // }
+    // if (idx2 >= 0) {
+    //   status = this.status[idx2].label;
+    // }
+    const parameter = [
+      {
+        l1: 'Defect Name',
+        v1: 'All Defect',
+        v2: '',
+        v3: ''
+      },
+      {
+        l1: 'Status',
+        v1: 'All Status',
+        v2: '',
+        v3: ''
+      },
+    ];
+
+    const header = [{
+      h01: 'Transaction Id',
+      h02: 'Defect Group',
+      h03: 'Remark',
+      h04: 'Record Status',
+      h05: 'Create Time',
+      h06: 'Create User',
+      h07: 'Change Time',
+      h08: 'Change User',
+      h09: 'Record Status Text',
+    }];
+
+    let startCell = '';
+    let index = 1;
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(parameter, { skipHeader: true });
+    index = parameter.length + 2;
+    startCell = 'A' + index.toString();
+    XLSX.utils.sheet_add_json(worksheet, header, { origin: startCell, skipHeader: true });
+
+    index++;
+
+    const loop = (page: number) => {
+      this.productionService.getMDF0(
+        page,
+        itemPerPage,
+        this.param
+      ).subscribe((resp: PaginatedResult<DefectGroup[]>) => {
+        resp.result.forEach(element => {});
+
+        startCell = 'A' + index.toString();
+        XLSX.utils.sheet_add_json(worksheet, resp.result, { origin: startCell, skipHeader: true });
+        index += resp.result.length;
+
+        if (resp.pagination.currentPage < resp.pagination.totalPages) {
+          loop(resp.pagination.currentPage + 1);
+        } else {
+          const workbook: XLSX.WorkBook = {Sheets: {Sheet1: worksheet}, SheetNames: ['Sheet1'] };
+          XLSX.writeFile(workbook, 'Defect Group.xlsx');
+          this.loading = false;
+        }
+      },
+      error => {
+        this.toastr.error(error.error);
+        this.loading = false;
+      });
+    };
+
+    loop(1);
+  }
+
   closeClick(): void{
     this.defectGroupForm.reset();
   }
