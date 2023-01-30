@@ -6,17 +6,13 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
-import { GqlPagination } from 'src/app/_model/GqlPagination';
-
-
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { EmployeeService } from 'src/app/_service/employee.service';
 import {ProductionService} from 'src/app/_service/production.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { Mdf0 } from 'src/app/_model/Mdf0';
 import { DefectGroup } from 'src/app/_model/DefectGroup';
-import { RESOURCE_CACHE_PROVIDER } from '@angular/platform-browser-dynamic';
-import { EditableColumn } from 'primeng/table';
+
 
 
 @Component({
@@ -149,7 +145,7 @@ export class DefectGroupComponent implements OnInit {
     if (event.filters) {
       this.params = {};
       if (event.filters.status) {
-        this.params['status'] = {};
+
         this.params.status[event.filters.status.matchMode] = Number(event.filters.status.value);
       }
     }

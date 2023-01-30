@@ -107,17 +107,44 @@ namespace TRAINING.API.Data
         public async Task<PagedList<MDF0>> GetListDefectPaging(Params prm)
         {
             var query = _context.MDF0.OrderBy(x => x.DDTRID).AsQueryable();
+            
 
             if(!string.IsNullOrEmpty(prm.filter))
             {
-                query = query.Where(x => x.DDDFGR.Contains(prm.filter));
+                // if (prm.filter == "1")
+                //     query.Where(x => x.DDRCST == 1);
+                // if (prm.filter == "0")
+                //     query.Where(x => x.DDRCST == 0);
+
+                query = query.Where(x => x.DDDFGR.Contains(prm.filter) || 
+                x.DDREMA.Contains(prm.filter)
+                );
+                
             }
 
-            if(!string.IsNullOrEmpty(prm.remark))
+            if (prm.status == "1")
             {
-                query = query.Where(x => x.DDREMA.Contains(prm.remark));
+                query = query.Where(x => x.DDRCST == 1);
             }
+            if (prm.status == "0")
+            {
+                query = query.Where(x => x.DDRCST == 0);
+            }
+
+            // if(!string.IsNullOrEmpty(prm.remark))
+            // {
+            //     query = query.Where(x => x.DDREMA.Contains(prm.remark));
+            // }
             
+            // if((prm.status).Equals(null))
+            // {
+            //     query = query.Where(x => x.DDRCST == 1);
+            // }
+            // else
+            // {
+            //     query = query.Where(x => x.DDRCST == 0);
+            // }
+
             // if (!string.IsNullOrEmpty(prm.mustcheck))
             // {
             //     query = query.Where(x => x.DDRCST == 1);

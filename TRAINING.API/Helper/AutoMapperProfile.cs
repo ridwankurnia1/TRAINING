@@ -71,6 +71,9 @@ namespace TRAINING.API.Helper
             CreateMap<GOG1, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.GOOGNA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.GOOGNO));
+            CreateMap<MDF0, DropdownDto>()
+                .ForMember(des => des.Label, opt => opt.MapFrom(src => src.DDDFGR))
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.DDDFGR));
             
             CreateMap<EHAL, EmployeeDto>()
                 .ForMember(des => des.Nik, opt => opt.MapFrom(src => src.ELEMNO))
@@ -275,6 +278,44 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.DDCRUS, opt => opt.MapFrom(src => src.CreateUser))
                 .ForMember(des => des.DDCHTM, opt => opt.MapFrom(src => src.ChangeTime))
                 .ForMember(des => des.DDCHUS, opt => opt.MapFrom(src => src.ChangeUser));
+
+                CreateMap<MDF1, Mdf1Dto>()
+                .ForMember(des => des.Company, opt => opt.MapFrom(src => src.DECONO))
+                .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.DEBRNO))
+                .ForMember(des => des.DefectCode, opt => opt.MapFrom(src => src.DEDFNO))
+                .ForMember(des => des.DefectName, opt => opt.MapFrom(src => src.DEDFNA))
+                .ForMember(des => des.IdGroup, opt => opt.MapFrom(src => src.DEGRID))
+                .ForMember(des => des.DefectType, opt => opt.MapFrom(src => src.DEDPGR))
+                .ForMember(des => des.DefectGroup1, opt => opt.MapFrom(src => src.DEDFG1))
+                .ForMember(des => des.DefectGroup2, opt => opt.MapFrom(src => src.DEDFG2))
+                .ForMember(des => des.Remark, opt => opt.MapFrom(src => src.DEREMA))
+                .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.DERCST))
+                .ForMember(des => des.CreateDate, opt => opt.MapFrom(src => src.DECRDT))
+                .ForMember(des => des.CreateTime, opt => opt.MapFrom(src => src.DECRTM))
+                .ForMember(des => des.CreateUser, opt => opt.MapFrom(src => src.DECRUS))
+                .ForMember(des => des.ChangeDate, opt => opt.MapFrom(src => src.DECHDT))
+                .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DECHTM))
+                .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DECHUS))
+                .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DERCST == 0 ? "Inactive" : "Active" ));
+
+                CreateMap<Mdf1Dto, MDF1>()
+                .ForMember(des => des.DECONO, opt => opt.MapFrom(src => src.Company))
+                .ForMember(des => des.DEBRNO, opt => opt.MapFrom(src => src.Branch))
+                .ForMember(des => des.DEDFNO, opt => opt.MapFrom(src => src.DefectCode))
+                .ForMember(des => des.DEDFNA, opt => opt.MapFrom(src => src.DefectName))
+                .ForMember(des => des.DEGRID, opt => opt.MapFrom(src => src.IdGroup))
+                .ForMember(des => des.DEDPGR, opt => opt.MapFrom(src => src.DefectType))
+                .ForMember(des => des.DEDFG1, opt => opt.MapFrom(src => src.DefectGroup1))
+                .ForMember(des => des.DEDFG2, opt => opt.MapFrom(src => src.DefectGroup2))
+                .ForMember(des => des.DEREMA, opt => opt.MapFrom(src => src.Remark))
+                .ForMember(des => des.DERCST, opt => opt.MapFrom(src => src.RecordStatus))
+                .ForMember(des => des.DECRDT, opt => opt.MapFrom(src => src.CreateDate))
+                .ForMember(des => des.DECRTM, opt => opt.MapFrom(src => src.CreateTime))
+                .ForMember(des => des.DECRUS, opt => opt.MapFrom(src => src.CreateUser))
+                .ForMember(des => des.DECHDT, opt => opt.MapFrom(src => src.ChangeDate))
+                .ForMember(des => des.DECHTM, opt => opt.MapFrom(src => src.ChangeTime))
+                .ForMember(des => des.DECHUS, opt => opt.MapFrom(src => src.ChangeUser));
+
 
         }
 

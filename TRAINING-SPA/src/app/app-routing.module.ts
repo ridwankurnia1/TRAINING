@@ -15,6 +15,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { EmployeeComponent } from './master/employee/employee.component';
 import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
+import {DefectDetailComponent} from './master/defect-detail/defect-detail.component';
+import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
+
 
 const routes: Routes = [
   {
@@ -89,6 +92,14 @@ const routes: Routes = [
   {
     path: 'defectSecond',
     component: DefectGroupSecondComponent
+  },
+  {
+    path: 'defectDetail',
+    component: DefectDetailComponent
+  },
+  {
+    path: 'summaryDefect',
+    component: SummaryDefectComponent
   },
   {
     path: '**', redirectTo: ''

@@ -28,8 +28,5 @@ namespace TRAINING.API.Data
         Task<MDF0> GetDfGMDF0(string dddfgr);
 
         Task <IEnumerable<MDF0>> GetMdf0By(string DefectGroup, int transactionId);
-
-
-        
     }
 }

@@ -8,6 +8,7 @@ import { ProductionService } from 'src/app/_service/production.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Dropdown } from 'src/app/_model/Dropdown';
 
 @Component({
   selector: 'app-defect-group-second',
@@ -30,9 +31,10 @@ export class DefectGroupSecondComponent implements OnInit {
   params: any = {};
   defectGroupList: DefectGroup[];
   bsConfig: Partial<BsDatepickerConfig>;
-  param = {};
-  statusDropdown = '';
-  
+  statusDropdown = 'Inactive';
+  status: Dropdown[] = [];
+  selectedStatus = '';
+
 
 
   constructor(
@@ -51,6 +53,7 @@ export class DefectGroupSecondComponent implements OnInit {
     };
     // this.createForm();
     this.createForm();
+    this.dropdownInit();
     this.pagination = {
       currentPage: 1,
       itemsPerPage: 10,
@@ -58,6 +61,19 @@ export class DefectGroupSecondComponent implements OnInit {
       totalPages: 0,
     };
     this.loadItems();
+  }
+
+  dropdownInit(): void {
+    this.status = [];
+    this.status.push({
+      value: '1',
+      label: 'Active'
+    });
+    this.status.push({
+      value: '0',
+      label: 'Inactive'
+    });
+    console.log(this.status);
   }
 
   createForm(): void {
@@ -68,28 +84,36 @@ export class DefectGroupSecondComponent implements OnInit {
     });
   }
 
-  loadItems() {
+  loadItems(): void {
     this.loading = true;
-    this.productionService.getMDF0(this.pagination.currentPage, this.pagination.itemsPerPage, this.params)
-        .subscribe((res: PaginatedResult<DefectGroup[]>) => {
+    this.params.status = this.selectedStatus;
+    this.productionService
+      .getMDF0(
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage,
+        this.params)
+        .subscribe(
+          (res: PaginatedResult<DefectGroup[]>) => {
           this.defectGroupList = res.result;
           this.pagination = res.pagination;
           // console.log(this.itemList);
-      }, error => {        
+      }, error => {
         this.loading = false;
       }, () => {
         this.loading = false;
       });
   }
+
   pageChanged(event): void {
     this.pagination.currentPage = (event.first / event.rows) + 1;
     this.pagination.itemsPerPage = event.rows;
-    this.param = {
-      filter: event.globalFilter
+    this.params = {
+      filter: event.globalFilter,
     };
-    
+    // console.log(this.params);
     this.loadItems();
   }
+
   searchClick(search: string): void{
     const prm = {
       filter: search
@@ -101,7 +125,7 @@ export class DefectGroupSecondComponent implements OnInit {
       });
     }
 
-  edit(template: TemplateRef<any>, data: DefectGroup) {
+  edit(template: TemplateRef<any>, data: DefectGroup): void {
     if (data) {
       this.tittle = 'Edit ';
       this.isEdit = true;
@@ -127,17 +151,13 @@ export class DefectGroupSecondComponent implements OnInit {
       const dataAd = this.defectGroupForm.getRawValue();
 
       dataAd.transactionId = 0;
-      dataAd.createTime = date;
-      dataAd.createUser = 'Selena';
-      dataAd.changeTime = date;
-      dataAd.changeUser = 'Selena';
     }
     // console.log(data);
 
     this.modalRef = this.modalService.show(template, this.configModal);
   }
 
-  saveItem() {
+  saveItem(): void {
     if (this.defectGroupForm.invalid) {
       this.ui.validateFormEntry(this.defectGroupForm);
       return;
@@ -145,9 +165,9 @@ export class DefectGroupSecondComponent implements OnInit {
     if (this.isAdd){
       const date = new Date();
       this.setDate(date);
-  
+
       const data = this.defectGroupForm.getRawValue();
-  
+
       data.transactionId = 0;
       if (this.statusDropdown === 'Active'){
         data.recordStatus = 1;
@@ -158,7 +178,7 @@ export class DefectGroupSecondComponent implements OnInit {
       data.createUser = 'Selena';
       data.changeTime = date;
       data.changeUser = 'Selena';
-  
+
       this.productionService.addMDF0(data)
             .subscribe({
               next: () => {
@@ -170,44 +190,42 @@ export class DefectGroupSecondComponent implements OnInit {
               }
             });
       this.defectGroupForm.reset();
-      this.statusDropdown = 'Active';
+      this.statusDropdown = 'Inactive';
       // this.dataNotExist = true;
       }
-  
-      if (this.isEdit) {
-        const date = new Date();
-        this.setDate(date);
-        const edit = this.defectGroupForm.getRawValue();
-        if (this.statusDropdown === 'Active'){
-          edit.recordStatus = 1;
-        }else{
-          edit.recordStatus = 0;
-        }
-        edit.createTime = date;
-        edit.createUser = 'Selena';
-        edit.changeTime = date;
-        edit.changeUser = 'Selena';
-        console.log(edit);
-  
-        this.productionService.editMDF0(edit)
-        .subscribe({
-          next: () => {
-            this.toastr.success('Data Berhasil Diedit');
-            this.loadItems();
-          },
-          error: (error) => {
-            this.toastr.error('Defect Group Sudah Ada');
+    if (this.isEdit) {
+          const date = new Date();
+          this.setDate(date);
+          const edit = this.defectGroupForm.getRawValue();
+          if (this.statusDropdown === 'Active'){
+            edit.recordStatus = 1;
+          }else{
+            edit.recordStatus = 0;
           }
-        });
-  
-        this.defectGroupForm.reset();
-        this.statusDropdown = 'Active';
-      }
+          edit.createTime = date;
+          edit.createUser = 'Selena';
+          edit.changeTime = date;
+          edit.changeUser = 'Selena';
+          console.log(edit);
+
+          this.productionService.editMDF0(edit)
+          .subscribe({
+            next: () => {
+              this.toastr.success('Data Berhasil Diedit');
+              this.loadItems();
+            },
+            error: (error) => {
+              this.toastr.error('Defect Group Sudah Ada');
+            }
+          });
+
+          this.defectGroupForm.reset();
+          this.statusDropdown = 'Inactive';
+        }
     }
-    
 
 
-  saveCheck(defect) {
+  saveCheck(defect): void {
     this.productionService.addMDF0(defect).subscribe(
       () => {
         this.toastr.success('Save data success');
@@ -226,19 +244,22 @@ export class DefectGroupSecondComponent implements OnInit {
 
   deleteDat(data: DefectGroup): void {
     console.log(data);
-    // this.confirm.confirm({
-    //   message: 'Delete employee ' + data.defectGroup + ' ?',
-    //   header: 'Confirmation',
-    // accept: () => {
-        this.productionService.deleteMDF0(data.transactionId)
-          .subscribe(() => { 
-          }, () =>{
+    this.confirm.confirm({
+      message: 'Delete Defect Group ' + data.defectGroup + ' ?',
+      header: 'Confirmation',
+    accept: () => {
+    this.productionService.deleteMDF0(data.transactionId)
+          .subscribe(() => {
+          }, () => {
             this.loadItems();
             this.toastr.success('Defect Group Deleted');
           });
-      
-    // });
+
+    }});
     return;
+  }
+  closeClick(): void{
+    this.defectGroupForm.reset();
   }
 
   setDate(date: Date): void{
