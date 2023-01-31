@@ -98,7 +98,9 @@ export class WarehouseService {
     let httpParams = new HttpParams();
 
     if (params) {
-      // search and sort
+      if (params.searchGlobal) {
+        httpParams = httpParams.append('ws', params.searchGlobal);
+      }
     }
 
     return this.http.get<Warehouse[]>(this.baseUrl + 'export', {

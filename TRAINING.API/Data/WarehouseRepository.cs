@@ -18,20 +18,20 @@ namespace TRAINING.API.Data
             _context = context;
         }
 
-        public IQueryable<IWHSX> Query()
+        public IQueryable<IWHS> Query()
         {
-            return _context.IWHSX.AsQueryable();
+            return _context.IWHS.AsQueryable();
         }
 
         public AMGContext GetContext() => _context;
 
-        public async Task<PagedList<IWHSX>> All(WarehouseParams warehouseParams)
+        public async Task<PagedList<IWHS>> All(WarehouseParams warehouseParams)
         {
-            var query = from a in _context.IWHSX
-                        join b in _context.IWGRX on a.HWWHGR equals b.HVWHGR
+            var query = from a in _context.IWHS
+                        join b in _context.IWGR on a.HWWHGR equals b.HVWHGR
                         into ab
                         from b in ab.DefaultIfEmpty()
-                        select new IWHSX
+                        select new IWHS
                         {
                             HWWHNO = a.HWWHNO,
                             HWWHNA = a.HWWHNA,
@@ -41,7 +41,7 @@ namespace TRAINING.API.Data
                             HWFIFO = a.HWFIFO,
                             HWFDAY = a.HWFDAY,
                             HWRCST = a.HWRCST,
-                            HWCHTM = a.HWCHTM
+                            HWCRTT = a.HWCRTT
                         };
 
             if (!string.IsNullOrEmpty(warehouseParams.ws))
@@ -70,23 +70,23 @@ namespace TRAINING.API.Data
                 }
             }
 
-            query = query.AsNoTracking().OrderBy(c => c.HWCHTM);
+            query = query.AsNoTracking().OrderBy(c => c.HWCRTT);
 
-            return await PagedList<IWHSX>.CreateAsync(query, warehouseParams.PageNumber, warehouseParams.PageSize);
+            return await PagedList<IWHS>.CreateAsync(query, warehouseParams.PageNumber, warehouseParams.PageSize);
         }
 
-        public async Task<IWHSX> Single(string code)
+        public async Task<IWHS> Single(string code)
         {
             return await Query().AsNoTracking().FirstOrDefaultAsync(c => c.HWWHNO == code);
         }
 
-        public async Task<bool> Create(IWHSX data)
+        public async Task<bool> Create(IWHS data)
         {
             _context.Add(data);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Update(IWHSX data)
+        public async Task<bool> Update(IWHS data)
         {
             _context.Update(data);
             return await _context.SaveChangesAsync() > 0;
@@ -105,12 +105,12 @@ namespace TRAINING.API.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public IQueryable<IWGRX> QueryGroup()
+        public IQueryable<IWGR> QueryGroup()
         {
-            return _context.IWGRX.AsQueryable();
+            return _context.IWGR.AsQueryable();
         }
 
-        public async Task<IList<IWGRX>> AllGroup(WarehouseParams warehouseParams)
+        public async Task<IList<IWGR>> AllGroup(WarehouseParams warehouseParams)
         {
             var query = QueryGroup();
 
@@ -139,24 +139,24 @@ namespace TRAINING.API.Data
             return await query.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IWGRX> SingleGroup(string code)
+        public async Task<IWGR> SingleGroup(string code)
         {
-            return await _context.IWGRX.AsNoTracking().FirstOrDefaultAsync(c => c.HVWHGR == code);
+            return await _context.IWGR.AsNoTracking().FirstOrDefaultAsync(c => c.HVWHGR == code);
         }
 
-        public async Task<bool> CreateGroup(IWGRX data)
+        public async Task<bool> CreateGroup(IWGR data)
         {
             _context.Add(data);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateGroup(IWGRX data)
+        public async Task<bool> UpdateGroup(IWGR data)
         {
             _context.Update(data);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteGroup(IWGRX data)
+        public async Task<bool> DeleteGroup(IWGR data)
         {
             _context.Remove(data);
             return await _context.SaveChangesAsync() > 0;
@@ -167,13 +167,13 @@ namespace TRAINING.API.Data
             return await _context.GCT2.Where(c => c.CBTBNO == "WHTY" && c.CBRCST == 1).ToListAsync();
         }
 
-        public async Task<IList<IWHSX>> Export(WarehouseParams warehouseParams)
+        public async Task<IList<IWHS>> Export(WarehouseParams warehouseParams)
         {
-            var query = from a in _context.IWHSX
-                        join b in _context.IWGRX on a.HWWHGR equals b.HVWHGR
+            var query = from a in _context.IWHS
+                        join b in _context.IWGR on a.HWWHGR equals b.HVWHGR
                         into ab
                         from b in ab.DefaultIfEmpty()
-                        select new IWHSX
+                        select new IWHS
                         {
                             HWWHNO = a.HWWHNO,
                             HWWHNA = a.HWWHNA,
@@ -183,7 +183,7 @@ namespace TRAINING.API.Data
                             HWFIFO = a.HWFIFO,
                             HWFDAY = a.HWFDAY,
                             HWRCST = a.HWRCST,
-                            HWCHTM = a.HWCHTM
+                            HWCHTT = a.HWCHTT
                         };
 
             if (!string.IsNullOrEmpty(warehouseParams.ws))
@@ -212,7 +212,7 @@ namespace TRAINING.API.Data
                 }
             }
 
-            query = query.AsNoTracking().OrderBy(c => c.HWCHTM);
+            query = query.AsNoTracking().OrderBy(c => c.HWCHTT);
 
             return await query.ToListAsync();
         }

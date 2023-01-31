@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-3">
+      {{ learning.title }}
+    </h5>
+    <p>{{ learning.subtitle }}</p>
+  </div>
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+  <div class="card-footer" *ngIf="footerSelector">
+    <ng-content [select]="footerSelector"></ng-content>
+  </div>
+</div>

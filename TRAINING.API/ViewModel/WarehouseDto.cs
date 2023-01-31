@@ -4,10 +4,11 @@ namespace TRAINING.API.ViewModel
 {
     public class WarehouseDto
     {
+        public string Company { get; set; } = "AMG";
         public string Code { get; set; }
         public string Name { get; set; }
         public string Nickname { get; set; }
-        public string Branch { get; set; }
+        public string Branch { get; set; } = "CKP";
         public string Address { get; set; }
         public string Type { get; set; }
         public string Group { get; set; }
@@ -27,9 +28,9 @@ namespace TRAINING.API.ViewModel
         public string System { get; set; }
         public string Status { get; set; }
         public decimal RecordStatus { get; set; }
-        public DateTime CreatedTime { get; set; }
+        public DateTime? CreatedTime { get; set; }
         public string CreatedUser { get; set; }
-        public DateTime ChangedTime { get; set; }
+        public DateTime? ChangedTime { get; set; }
         public string ChangedUser { get; set; }
     }
 }

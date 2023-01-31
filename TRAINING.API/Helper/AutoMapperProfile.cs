@@ -386,7 +386,8 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.HUUMNA, opt => opt.MapFrom(src => src.Name))
             .ForMember(des => des.HUUMNO, opt => opt.MapFrom(src => src.Value));
 
-            CreateMap<IWGRX, WarehouseGroupDto>()
+            CreateMap<IWGR, WarehouseGroupDto>()
+            .ForMember(des => des.Company, opt => opt.MapFrom(src => src.HVCONO))
             .ForMember(des => des.Code, opt => opt.MapFrom(src => src.HVWHGR))
             .ForMember(des => des.Name, opt => opt.MapFrom(src => src.HVGRNA))
             .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.HVBRNO))
@@ -394,12 +395,13 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.System, opt => opt.MapFrom(src => src.HVSYST))
             .ForMember(des => des.Status, opt => opt.MapFrom(src => src.HVSTAT))
             .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.HVRCST))
-            .ForMember(des => des.CreatedTime, opt => opt.MapFrom(src => src.HVCRTM))
+            .ForMember(des => des.CreatedTime, opt => opt.MapFrom(src => src.HVCRTT))
             .ForMember(des => des.CreatedUser, opt => opt.MapFrom(src => src.HVCRUS))
-            .ForMember(des => des.ChangedTime, opt => opt.MapFrom(src => src.HVCHTM))
+            .ForMember(des => des.ChangedTime, opt => opt.MapFrom(src => src.HVCHTT))
             .ForMember(des => des.ChangedUser, opt => opt.MapFrom(src => src.HVCHUS));
 
-            CreateMap<WarehouseGroupDto, IWGRX>()
+            CreateMap<WarehouseGroupDto, IWGR>()
+            .ForMember(des => des.HVCONO, opt => opt.MapFrom(src => src.Company))
             .ForMember(des => des.HVWHGR, opt => opt.MapFrom(src => src.Code))
             .ForMember(des => des.HVGRNA, opt => opt.MapFrom(src => src.Name))
             .ForMember(des => des.HVBRNO, opt => opt.MapFrom(src => src.Branch))
@@ -407,12 +409,12 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.HVSYST, opt => opt.MapFrom(src => src.System))
             .ForMember(des => des.HVSTAT, opt => opt.MapFrom(src => src.Status))
             .ForMember(des => des.HVRCST, opt => opt.MapFrom(src => src.RecordStatus))
-            .ForMember(des => des.HVCRTM, opt => opt.MapFrom(src => src.CreatedTime))
+            .ForMember(des => des.HVCRTT, opt => opt.MapFrom(src => src.CreatedTime))
             .ForMember(des => des.HVCRUS, opt => opt.MapFrom(src => src.CreatedUser))
-            .ForMember(des => des.HVCHTM, opt => opt.MapFrom(src => src.ChangedTime))
+            .ForMember(des => des.HVCHTT, opt => opt.MapFrom(src => src.ChangedTime))
             .ForMember(des => des.HVCHUS, opt => opt.MapFrom(src => src.ChangedUser));
 
-            CreateMap<IWHSX, WarehouseDto>()
+            CreateMap<IWHS, WarehouseDto>()
             .ForMember(des => des.Code, opt => opt.MapFrom(src => src.HWWHNO))
             .ForMember(des => des.Name, opt => opt.MapFrom(src => src.HWWHNA))
             .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.HWBRNO))
@@ -436,12 +438,12 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.System, opt => opt.MapFrom(src => src.HWSYST))
             .ForMember(des => des.Status, opt => opt.MapFrom(src => src.HWSTAT))
             .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.HWRCST))
-            .ForMember(des => des.CreatedTime, opt => opt.MapFrom(src => src.HWCRTM))
+            .ForMember(des => des.CreatedTime, opt => opt.MapFrom(src => src.HWCRTT))
             .ForMember(des => des.CreatedUser, opt => opt.MapFrom(src => src.HWCRUS))
-            .ForMember(des => des.ChangedTime, opt => opt.MapFrom(src => src.HWCHTM))
+            .ForMember(des => des.ChangedTime, opt => opt.MapFrom(src => src.HWCHTT))
             .ForMember(des => des.ChangedUser, opt => opt.MapFrom(src => src.HWCHUS));
 
-            CreateMap<WarehouseDto, IWHSX>()
+            CreateMap<WarehouseDto, IWHS>()
             .ForMember(des => des.HWWHNO, opt => opt.MapFrom(src => src.Code))
             .ForMember(des => des.HWWHNA, opt => opt.MapFrom(src => src.Name))
             .ForMember(des => des.HWNICK, opt => opt.MapFrom(src => src.Nickname))
@@ -465,9 +467,9 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.HWSYST, opt => opt.MapFrom(src => src.System))
             .ForMember(des => des.HWSTAT, opt => opt.MapFrom(src => src.Status))
             .ForMember(des => des.HWRCST, opt => opt.MapFrom(src => src.RecordStatus))
-            .ForMember(des => des.HWCRTM, opt => opt.MapFrom(src => src.CreatedTime))
+            .ForMember(des => des.HWCRTT, opt => opt.MapFrom(src => src.CreatedTime))
             .ForMember(des => des.HWCRUS, opt => opt.MapFrom(src => src.CreatedUser))
-            .ForMember(des => des.HWCHTM, opt => opt.MapFrom(src => src.ChangedTime))
+            .ForMember(des => des.HWCHTT, opt => opt.MapFrom(src => src.ChangedTime))
             .ForMember(des => des.HWCHUS, opt => opt.MapFrom(src => src.ChangedUser));
 
         }

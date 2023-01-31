@@ -28,7 +28,6 @@ export class WarehouseComponent implements OnInit {
 
   formGroup2: UntypedFormGroup;
   formGroup: UntypedFormGroup;
-  ipRecordStatus: Boolean;
   ipWhGroup: string;
   ipFday: Number = 0;
 
@@ -66,10 +65,10 @@ export class WarehouseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.initForm();
-    this.initWhForm();
     this.initGroupTable();
     this.initWarehouseTable();
+    this.initForm();
+    this.initWhForm();
   }
 
   initForm() {
@@ -79,7 +78,7 @@ export class WarehouseComponent implements OnInit {
       remark: [''],
       system: [''],
       status: [''],
-      recordStatus: [false],
+      recordStatus: [true],
     });
   }
 
@@ -102,7 +101,7 @@ export class WarehouseComponent implements OnInit {
       carryOutFlag: [false],
       policeNumber: [false],
       transferModelFlag: [false],
-      recordStatus: [false],
+      recordStatus: [true],
     });
 
     this.initDropdown();
@@ -123,12 +122,12 @@ export class WarehouseComponent implements OnInit {
     };
 
     if (table) {
+      this.warehouseSearch = '';
+      this.pageMetadata = {};
+      table.rows = 10;
       table.reset();
+      this.getAll();
     }
-
-    this.warehouseSearch = '';
-
-    this.pageMetadata = {};
   }
 
   initGroupTable() {
@@ -177,12 +176,22 @@ export class WarehouseComponent implements OnInit {
   }
 
   deleteGroupItem(code: String) {
-    this.warehouse.deleteGroup(code).subscribe(
-      () => {
-        this.getAllGroup();
+    this.confirm.confirm({
+      message: `Are you sure wants to delete ${code} ? `,
+      accept: () => {
+        this.warehouse.deleteGroup(code).subscribe(
+          () => {
+            this.getAllGroup();
+
+            this.message.add({
+              severity: 'success',
+              summary: 'Item deleted successfuly',
+            });
+          },
+          (e) => {}
+        );
       },
-      (e) => {}
-    );
+    });
   }
 
   submitWgForm() {
@@ -198,6 +207,7 @@ export class WarehouseComponent implements OnInit {
         'Saving data requires confirmation, are you sure the inputs was correct ?',
       accept: () => {
         if (this.isUpdating) {
+          this.formGroup.controls['code'].enable();
           this.warehouse.updateGroup(this.formGroup.value).subscribe(
             () => {
               this.isSubmitting = false;
@@ -253,10 +263,14 @@ export class WarehouseComponent implements OnInit {
         this.formGroup.controls['recordStatus'].setValue(
           data.recordStatus == 1
         );
+
+        this.formGroup.controls['code'].disable();
       });
     } else {
-      this.isUpdating = false;
       this.formGroup.reset();
+      this.isUpdating = false;
+      this.formGroup.controls['recordStatus'].setValue(true);
+      this.formGroup.controls['code'].enable();
     }
 
     this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
@@ -342,13 +356,13 @@ export class WarehouseComponent implements OnInit {
         data.transferModelFlag == 1
       );
       this.formGroup2.controls['recordStatus'].setValue(data.recordStatus == 1);
-
       this.fDayCollapsed = data.fifoDays == 0 || data.fifoFlag != 1;
       this.formGroup2.controls['code'].disable();
     } else {
-      this.isUpdating2 = false;
       this.formGroup2.reset();
+      this.isUpdating2 = false;
       this.formGroup2.controls['code'].enable();
+      this.formGroup2.controls['recordStatus'].setValue(true);
     }
   }
 

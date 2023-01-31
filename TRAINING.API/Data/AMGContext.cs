@@ -20,8 +20,8 @@ namespace TRAINING.API.Data
         public DbSet<GCUR> GCUR { get; set; }
         public DbSet<IUOM> IUOM { get; set; }
         public DbSet<ZVAR> ZVAR { get; set; }
-        public DbSet<IWGRX> IWGRX { get; set; }
-        public DbSet<IWHSX> IWHSX { get; set; }
+        public DbSet<IWGR> IWGR { get; set; }
+        public DbSet<IWHS> IWHS { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -42,20 +42,19 @@ namespace TRAINING.API.Data
             builder.Entity<GCUR>().HasKey(k => new { k.GGCYNO });
             builder.Entity<IUOM>().HasKey(k => new { k.HUUMNO });
             builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
-            builder.Entity<IWGRX>().HasKey(k => new { k.HVWHGR });
-            builder.Entity<IWHSX>().HasKey(k => new { k.HWWHNO });
-            builder.Entity<IWHSX>().HasOne(p => p.IWGRX).WithOne(x => x.IWHSX).HasForeignKey<IWHSX>(p => new { p.HWWHGR });
+            builder.Entity<IWGR>().HasKey(k => new { k.HVWHGR });
+            builder.Entity<IWHS>().HasKey(k => new { k.HWWHNO });
 
             // SeedWarehouse(builder);
         }
 
         private void SeedWarehouse(ModelBuilder builder)
         {
-            var whgList = new List<IWGRX>();
+            var whgList = new List<IWGR>();
 
             for (int i = 0; i < 10; i++)
             {
-                whgList.Add(new IWGRX
+                whgList.Add(new IWGR
                 {
                     HVWHGR = Guid.NewGuid().ToString().Substring(0, 9),
                     HVGRNA = Faker.Company.Name(),
@@ -65,13 +64,13 @@ namespace TRAINING.API.Data
                 });
             }
 
-            var whList = new List<IWHSX>();
+            var whList = new List<IWHS>();
 
             foreach (var whg in whgList)
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    whList.Add(new IWHSX
+                    whList.Add(new IWHS
                     {
                         HWWHNO = Guid.NewGuid().ToString().Substring(0, 9),
                         HWWHNA = Faker.Company.Name(),
@@ -85,8 +84,8 @@ namespace TRAINING.API.Data
                 }
             }
 
-            builder.Entity<IWGRX>().HasData(whgList);
-            builder.Entity<IWHSX>().HasData(whList);
+            builder.Entity<IWGR>().HasData(whgList);
+            builder.Entity<IWHS>().HasData(whList);
         }
     }
 }

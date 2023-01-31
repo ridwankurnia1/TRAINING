@@ -16,6 +16,7 @@ import { DefectGroupComponent } from './master/defect-group/defect-group.compone
 import { EmployeeComponent } from './master/employee/employee.component';
 import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
 import { WarehouseComponent } from './master/warehouse/warehouse.component';
+import { LearningComponent } from './learning/learning.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,13 @@ const routes: Routes = [
     component: QuestionnaireComponent
   },
   {
+    path: 'learning',
+    loadChildren: () => import('./learning/learning.module').then(m => m.LearningModule),
+    component: LearningComponent
+  },
+  {
     path: 'warehouse',
+    // lazy load module
     loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),
     component: WarehouseComponent
   },

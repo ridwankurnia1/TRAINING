@@ -23,7 +23,10 @@
               >
                 <i class="pi pi-plus me-2"></i>Add
               </button>
-              <button class="btn btn-success mb-3 me-2" (click)="getAllGroup()">
+              <button
+                class="btn btn-success mb-3 me-2"
+                (click)="initGroupTable()"
+              >
                 <i class="pi pi-refresh me-2"></i>Refresh
               </button>
               <button
@@ -53,15 +56,26 @@
         </ng-template>
         <ng-template pTemplate="header" let-item>
           <tr>
-            <th style="width: 13%">Code</th>
-            <th style="width: 27%">Name</th>
-            <th style="width: 27%">Remark</th>
-            <th style="width: 10%">Record Status</th>
-            <th style="width: 13%" colspan="2"></th>
+            <th style="width: 3%"></th>
+            <th style="width: 15%">Code</th>
+            <th style="width: 30%">Name</th>
+            <th style="width: 30%">Remark</th>
+            <th style="width: 16%">Status</th>
+            <th style="width: 3%"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-item>
           <tr>
+            <td class="text-center">
+              <button
+                pButton
+                type="button"
+                class="p-button-outlined p-button-primary"
+                style="font-size: 14px"
+                icon="pi pi-pencil"
+                (click)="openGroupForm(item.code, groupForm)"
+              ></button>
+            </td>
             <td>{{ item.code }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.remark }}</td>
@@ -83,27 +97,18 @@
                 </div>
               </ng-template>
             </td>
-            <td>
+            <td class="text-center">
               <button
+                pButton
                 type="button"
-                class="btn btn-warning"
-                (click)="openGroupForm(item.code, groupForm)"
-              >
-                <i class="pi pi-pencil me-2"></i>Update
-              </button>
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-danger"
+                class="p-button-outlined p-button-danger"
+                style="font-size: 14px"
+                icon="pi pi-times"
                 (click)="deleteGroupItem(item.code)"
-              >
-                <i class="pi pi-times me-2"></i>Delete
-              </button>
+              ></button>
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="summary"> your summary template </ng-template>
       </p-table>
     </p-tabPanel>
     <p-tabPanel header="Warehouse Data">
@@ -130,7 +135,10 @@
               <button class="btn btn-primary mb-3 me-2" (click)="toggleForm()">
                 <i class="pi pi-plus me-2"></i>Add
               </button>
-              <button class="btn btn-success mb-3 me-2" (click)="getAll()">
+              <button
+                class="btn btn-success mb-3 me-2"
+                (click)="initWarehouseTable(wTable)"
+              >
                 <i class="pi pi-refresh me-2"></i>Refresh
               </button>
               <button
@@ -260,9 +268,6 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="footer" let-yourColumnArrayVaraible>
-        </ng-template>
-        <ng-template pTemplate="summary"> your summary template </ng-template>
       </p-table>
     </p-tabPanel>
   </p-tabView>
@@ -270,12 +275,12 @@
 
 <ng-template #groupForm>
   <div class="modal-header">
-    <h5 class="modal-title">Form Warehouse Group</h5>
+    <h5 class="modal-title pull-left">Form Warehouse Group</h5>
     <button
       type="button"
-      class="btn-close"
-      (click)="modalRef.hide()"
+      class="btn-close close pull-right"
       aria-label="Close"
+      (click)="modalRef.hide()"
     ></button>
   </div>
   <div class="modal-body">
@@ -288,6 +293,7 @@
               <input
                 type="text"
                 pInputText
+                [maxlength]="2"
                 formControlName="code"
                 class="form-control"
                 style="width: 100%"
@@ -297,7 +303,9 @@
                     formGroup.get('code').errors
                 }"
               />
-              <div class="invalid-feedback">Invalid Code</div>
+              <div class="invalid-feedback">
+                Invalid Code, max. of 2 Characters
+              </div>
             </div>
             <div class="mb-3">
               <label for="">Name</label>
@@ -313,45 +321,7 @@
                     formGroup.get('name').errors
                 }"
               />
-              <div class="invalid-feedback">
-                Invalid Code, max. of 2 Characters
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="">System</label>
-              <input
-                type="text"
-                pInputText
-                formControlName="system"
-                class="form-control"
-                style="width: 100%"
-                [ngClass]="{
-                  'is-invalid':
-                    formGroup.get('system').touched &&
-                    formGroup.get('system').errors
-                }"
-              />
-              <div class="invalid-feedback">
-                Invalid Code, max. of 2 Characters
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="">Status</label>
-              <input
-                type="text"
-                pInputText
-                formControlName="status"
-                class="form-control"
-                style="width: 100%"
-                [ngClass]="{
-                  'is-invalid':
-                    formGroup.get('status').touched &&
-                    formGroup.get('status').errors
-                }"
-              />
-              <div class="invalid-feedback">
-                Invalid Code, max. of 2 Characters
-              </div>
+              <div class="invalid-feedback">Name is required</div>
             </div>
             <div class="mb-3">
               <label for="remark">Remark</label>
@@ -362,9 +332,6 @@
                 formControlName="remark"
                 style="width: 100%"
               ></textarea>
-              <div class="invalid-feedback">
-                Invalid Code, max. of 2 Characters
-              </div>
             </div>
             <div class="mb-3">
               <p-checkbox
@@ -372,7 +339,6 @@
                 value="1"
                 [binary]="true"
                 label="Record Status"
-                [(ngModel)]="ipRecordStatus"
               ></p-checkbox>
             </div>
             <div class="mb-3 row d-flex justify-content-end">
@@ -610,7 +576,7 @@
           >
           <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
             <p-checkbox
-              formControlName="record mx-2Status"
+              formControlName="recordStatus"
               value="1"
               [binary]="true"
               label="Active"

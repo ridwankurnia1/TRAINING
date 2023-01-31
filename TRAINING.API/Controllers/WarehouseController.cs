@@ -57,13 +57,14 @@ namespace TRAINING.API.Controllers
             {
                 return BadRequest(requestData);
             }
+            requestData.Company = "AMG";
             requestData.Branch = "CKP";
             requestData.CreatedTime = System.DateTime.Now;
             requestData.CreatedUser = "TEST";
             requestData.ChangedTime = System.DateTime.Now;
             requestData.ChangedUser = "TEST";
 
-            var create = await _repository.Create(_mapper.Map<IWHSX>(requestData));
+            var create = await _repository.Create(_mapper.Map<IWHS>(requestData));
 
             if (!create)
             {
@@ -76,13 +77,14 @@ namespace TRAINING.API.Controllers
         [HttpPut("{code}")]
         public async Task<IActionResult> Update(string code, [FromBody] WarehouseDto requestData)
         {
+            requestData.Company = "AMG";
             requestData.Branch = "CKP";
             requestData.CreatedTime = System.DateTime.Now;
             requestData.CreatedUser = "TEST";
             requestData.ChangedTime = System.DateTime.Now;
             requestData.ChangedUser = "TEST";
 
-            var update = await _repository.Update(_mapper.Map<IWHSX>(requestData));
+            var update = await _repository.Update(_mapper.Map<IWHS>(requestData));
 
             if (!update)
             {
@@ -126,8 +128,11 @@ namespace TRAINING.API.Controllers
             data.CreatedTime = System.DateTime.Now;
             data.ChangedTime = System.DateTime.Now;
             data.Branch = "CKP";
+            data.Company = "AMG";
+            data.Status = "10";
+            data.System = "10";
 
-            var create = await _repository.CreateGroup(_mapper.Map<IWGRX>(data));
+            var create = await _repository.CreateGroup(_mapper.Map<IWGR>(data));
 
             if (!create)
             {
@@ -160,6 +165,7 @@ namespace TRAINING.API.Controllers
                 return NotFound();
             }
 
+            requestData.Company = "AMG";
             requestData.Branch = "CKP";
             requestData.CreatedUser = data.HVCRUS;
             requestData.ChangedUser = data.HVCHUS;
@@ -167,7 +173,7 @@ namespace TRAINING.API.Controllers
             requestData.CreatedTime = System.DateTime.Now;
             requestData.ChangedTime = System.DateTime.Now;
 
-            data = _mapper.Map<IWGRX>(requestData);
+            data = _mapper.Map<IWGR>(requestData);
 
             var update = await _repository.UpdateGroup(data);
 
@@ -220,20 +226,21 @@ namespace TRAINING.API.Controllers
 
             for (int i = 0; i < 10; i++)
             {
-                var entity = new IWGRX
+                var entity = new IWGR
                 {
                     HVWHGR = Guid.NewGuid().ToString().Substring(0, 8),
                     HVGRNA = Faker.Company.Name(),
+                    HVCONO = "AMG",
                     HVBRNO = "CKP",
                     HVREMA = Faker.Lorem.Sentence(),
                     HVRCST = Faker.RandomNumber.Next(1),
-                    HVCRTM = DateTime.Now,
+                    HVCRTT = DateTime.Now,
                     HVCRUS = "TEST",
-                    HVCHTM = DateTime.Now,
+                    HVCHTT = DateTime.Now,
                     HVCHUS = "TEST"
                 };
 
-                _repository.GetContext().IWGRX.Add(entity);
+                _repository.GetContext().IWGR.Add(entity);
                 whg[i] = entity.HVWHGR;
             }
 
@@ -244,10 +251,11 @@ namespace TRAINING.API.Controllers
                     var hwnick = Faker.Lorem.GetFirstWord();
                     var hwdfwh = Faker.Lorem.GetFirstWord();
 
-                    _repository.GetContext().IWHSX.Add(new IWHSX
+                    _repository.GetContext().IWHS.Add(new IWHS
                     {
                         HWWHNO = Guid.NewGuid().ToString().Substring(0, 8),
                         HWBRNO = "CKP",
+                        HWCONO = "AMG",
                         HWWHNA = Faker.Company.Name(),
                         HWNICK = hwnick.Substring(0, hwnick.Length > 9 ? 9 : hwnick.Length),
                         HWWHGR = name,
@@ -255,9 +263,9 @@ namespace TRAINING.API.Controllers
                         HWFDAY = Faker.RandomNumber.Next(0, 100),
                         HWFIFO = Faker.RandomNumber.Next(0, 1),
                         HWRCST = Faker.RandomNumber.Next(0, 1),
-                        HWCRTM = DateTime.Now,
+                        HWCRTT = DateTime.Now,
                         HWCRUS = "TEST",
-                        HWCHTM = DateTime.Now,
+                        HWCHTT = DateTime.Now,
                         HWCHUS = "TEST"
                     });
                 }
@@ -265,7 +273,7 @@ namespace TRAINING.API.Controllers
 
             await _repository.GetContext().SaveChangesAsync();
 
-            return Ok(await _repository.Query().Select(c => new IWHSX { HWWHNO = c.HWWHNO }).CountAsync());
+            return Ok(await _repository.Query().Select(c => new IWHS { HWWHNO = c.HWWHNO }).CountAsync());
         }
 
     }

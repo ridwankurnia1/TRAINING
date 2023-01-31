@@ -36,6 +36,7 @@ import { GraphQLModule } from './graphql.module';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 import { ToastModule } from 'primeng/toast';
+import { LearningComponent } from './learning/learning.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
