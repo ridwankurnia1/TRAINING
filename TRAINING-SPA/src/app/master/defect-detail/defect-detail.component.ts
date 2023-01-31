@@ -68,13 +68,12 @@ export class DefectDetailComponent implements OnInit {
 
   createForm(): void {
     this.defectDetailForm = this.fb.group({
-      defectCode: [''],
+      defectCode: ['', Validators.required],
       defectName: ['', Validators.required],
       defectType: ['', Validators.required],
-      defectGroup1: ['', Validators.required],
+      // defectGroup1: ['', Validators.required],
       defectGroup2: [''],
       remark: ['', Validators.required],
-      changeUser: ['', Validators.required],
       recordStatus: [0],
     });
   }
@@ -130,29 +129,33 @@ export class DefectDetailComponent implements OnInit {
       this.popTittle = 'Edit ';
       const date = new Date();
       this.isEdit = true;
+      // console.log(data);
       if (data.recordStatus === 1){
         this.statusDropdown = 'Active';
       }else{
         this.statusDropdown = 'Inactive';
       }
       this.defectCode = data.defectCode;
-      this.defectDetailForm.patchValue({
+      this.defectDetailForm.setValue({
         defectCode: data.defectCode,
         defectName: data.defectName,
         defectType: data.defectType,
-        defectGroup1: data.defectGroup1,
+        // defectGroup1: data.defectGroup1,
         defectGroup2: data.defectGroup2,
         remark: data.remark,
         recordStatus: data.recordStatus,
-        changeUser: data.changeUser
+        // changeUser: data.changeUser
       });
-      this.defectDetailForm.controls.changeUser.enable();
+
+      // this.defectDetailForm.controls.changeUser.enable();
+      this.defectDetailForm.controls.defectCode.disable();
     } else {
       this.popTittle = 'Add ';
       this.isEdit = false;
       const dataAd = this.defectDetailForm.getRawValue();
       console.log(this.defectName);
-      this.defectDetailForm.controls.changeUser.disable();
+      this.defectDetailForm.controls.defectCode.enable();
+      // this.defectDetailForm.controls.changeUser.disable();
     }
 
     this.modalRef = this.modalService.show(template, this.configModal);
@@ -178,9 +181,9 @@ export class DefectDetailComponent implements OnInit {
           this.toastr.success('Data Berhasil Diedit');
           this.loadItems();
         },
-        // error: (error) => {
-        //   this.toastr.error('Defect Group Sudah Ada');
-        // }
+        error: (error) => {
+          this.toastr.error('Defect Code Sudah Ada');
+        }
       });
     } else {
       const date = new Date();
@@ -199,9 +202,9 @@ export class DefectDetailComponent implements OnInit {
           this.toastr.success('Save data success');
           this.loadItems();
         },
-        // error: (error) => {
-        //   this.toastr.error('Data sudah ada');
-        // }
+        error: (error) => {
+          this.toastr.error('Defect Code Sudah Ada');
+        }
       });
     }
   }

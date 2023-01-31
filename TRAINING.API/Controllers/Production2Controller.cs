@@ -30,7 +30,7 @@ namespace TRAINING.API.Controllers
         private static Random random = new Random();
         public static string RandomString(int length)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
@@ -69,12 +69,16 @@ namespace TRAINING.API.Controllers
             var temp = await _repo.GetMDF1ById(data.DefectCode);
             if (temp != null)
                 return BadRequest("Data Sudah Ada");
+
+            var id = await _repo.GetMDF0ByName(data.DefectName); //untuk meng get Transaction Id berdasarkan defectname 
+
             
             var mdf1 = _mapper.Map<MDF1>(data);
             
             if (temp == null)
             {
-                mdf1.DEDFNO = '0' + RandomString(1);
+                mdf1.DEGRID = id.DDTRID;
+                // mdf1.DEDFNO = '0' + RandomString(1);
                 mdf1.DECRDT = CommonMethod.DateToNumeric(DateTime.Now);
                 mdf1.DECRTM = CommonMethod.TimeToNumeric(DateTime.Now);
                 mdf1.DECHDT = CommonMethod.DateToNumeric(DateTime.Now);
@@ -99,11 +103,13 @@ namespace TRAINING.API.Controllers
             // check = await _repo.GetMDF1ByName;
             var mdf1 = await _repo.GetMDF1ById(Id);
 
+            var id = await _repo.GetMDF0ByName(data.DefectName); //untuk meng get Transaction Id berdasarkan defectname 
+
             if (mdf1 == null)
                 return BadRequest("Data tidak ditemukan");
             
             mdf1.DEDFNA = data.DefectName;
-            mdf1.DEGRID = data.IdGroup;
+            mdf1.DEGRID = id.DDTRID; //mengisikan DEGRID dengan value transaction Id
             mdf1.DEDPGR = data.DefectType;
             mdf1.DEDFG1 = data.DefectGroup1;
             mdf1.DEDFG2 = data.DefectGroup2;

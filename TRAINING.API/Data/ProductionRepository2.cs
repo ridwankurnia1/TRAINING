@@ -72,6 +72,16 @@ namespace TRAINING.API.Data
         {
             return await _context.MDF0.Where(x => x.DDRCST == 1).ToListAsync();
         }
+
+        // public async Task<IEnumerable<MDF0>> GetDefectGroupIdByName()
+        // {
+        //     return await _context.MDF0.Where(x => x.DDTRID).ToListAsync();
+        // }
+        public async Task<MDF0> GetMDF0ByName(string name) //get list MDF0 berdasarkan DDTRID
+        {                      
+            return await _context.MDF0.FirstOrDefaultAsync(x => x.DDDFGR == name);
+        }
+
         
     }
 }

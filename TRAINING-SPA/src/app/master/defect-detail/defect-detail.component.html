@@ -113,6 +113,17 @@
     </div>
     <div class="modal-body">
       <form class="needs-validation" [formGroup]="defectDetailForm" >
+
+        <div class="mb-3">
+          <label for="defectCode" class="form-label">Defect Code</label>
+          <input type="text" class="form-control" formControlName="defectCode" placeholder="defectCode"          
+           [ngClass]="{'is-invalid': defectDetailForm.get('defectCode').errors && defectDetailForm.get('defectCode').touched}">
+          <div class="invalid-feedback">
+            Harap isi Defect Code
+          </div>
+        </div>
+        
+
         <div class="mb-3">
           <label for="defectName" class="form-label">Defect Name</label>
           <p-dropdown [options]="defectName" formControlName="defectName" 
@@ -130,14 +141,6 @@
            [ngClass]="{'is-invalid': defectDetailForm.get('defectType').errors && defectDetailForm.get('defectType').touched}">
           <div class="invalid-feedback">
             Harap isi Defect Type
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="defectGroup1" class="form-label">Defect Group 1</label>
-          <input type="text" class="form-control" formControlName="defectGroup1" placeholder="Defect Group1"          
-           [ngClass]="{'is-invalid': defectDetailForm.get('defectGroup1').errors && defectDetailForm.get('defectGroup1').touched}">
-          <div class="invalid-feedback">
-            Harap isi Defect Group 1
           </div>
         </div>
 
@@ -171,16 +174,6 @@
               <div class="invalid-feedback">
                 Invalid Status
               </div>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="remark" class="form-label">Change User</label>
-          <input type="text" class="form-control" formControlName="changeUser" placeholder="Change User"          
-           [ngClass]="{'is-invalid': defectDetailForm.get('changeUser').errors && defectDetailForm.get('changeUser').touched}"
-           >
-          <div class="invalid-feedback">
-            Harap isi Change User
           </div>
         </div>
 
