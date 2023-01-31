@@ -71,7 +71,7 @@ export class DefectDetailComponent implements OnInit {
       defectCode: ['', Validators.required],
       defectName: ['', Validators.required],
       defectType: ['', Validators.required],
-      // defectGroup1: ['', Validators.required],
+      defectGroup1: ['', Validators.required],
       defectGroup2: [''],
       remark: ['', Validators.required],
       recordStatus: [0],
@@ -140,7 +140,7 @@ export class DefectDetailComponent implements OnInit {
         defectCode: data.defectCode,
         defectName: data.defectName,
         defectType: data.defectType,
-        // defectGroup1: data.defectGroup1,
+        defectGroup1: data.defectGroup1,
         defectGroup2: data.defectGroup2,
         remark: data.remark,
         recordStatus: data.recordStatus,
@@ -182,7 +182,7 @@ export class DefectDetailComponent implements OnInit {
           this.loadItems();
         },
         error: (error) => {
-          this.toastr.error('Defect Code Sudah Ada');
+          this.toastr.error();
         }
       });
     } else {

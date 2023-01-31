@@ -115,6 +115,17 @@
       <form class="needs-validation" [formGroup]="defectDetailForm" >
 
         <div class="mb-3">
+          <label for="defectName" class="form-label">Defect Group 1</label>
+          <p-dropdown [options]="defectName" formControlName="defectGroup1" 
+            optionLabel="label" optionValue="value" [filter]="true"
+            [style]="{'width':'100%'}" class="d-block w-100"
+            [ngClass]="{'is-invalid': defectDetailForm.get('defectGroup1').errors && defectDetailForm.get('defectGroup1').touched}">            
+        </p-dropdown>
+        <div class="invalid-feedback">
+          Harap pilih Defect Group 1
+        </div>
+
+        <div class="mb-3">
           <label for="defectCode" class="form-label">Defect Code</label>
           <input type="text" class="form-control" formControlName="defectCode" placeholder="defectCode"          
            [ngClass]="{'is-invalid': defectDetailForm.get('defectCode').errors && defectDetailForm.get('defectCode').touched}">
@@ -122,18 +133,16 @@
             Harap isi Defect Code
           </div>
         </div>
-        
 
         <div class="mb-3">
           <label for="defectName" class="form-label">Defect Name</label>
-          <p-dropdown [options]="defectName" formControlName="defectName" 
-            optionLabel="label" optionValue="value" [filter]="true"
-            [style]="{'width':'100%'}" class="d-block w-100"
-            [ngClass]="{'is-invalid': defectDetailForm.get('defectName').errors && defectDetailForm.get('defectName').touched}">            
-        </p-dropdown>
-        <div class="invalid-feedback">
-          Harap pilih Defect Name
+          <input type="text" class="form-control" formControlName="defectName" placeholder="defectName"          
+           [ngClass]="{'is-invalid': defectDetailForm.get('defectName').errors && defectDetailForm.get('defectName').touched}">
+          <div class="invalid-feedback">
+            Harap isi Defect Name
+          </div>
         </div>
+
         </div>
         <div class="mb-3">
           <label for="defectType" class="form-label">Defect Type</label>

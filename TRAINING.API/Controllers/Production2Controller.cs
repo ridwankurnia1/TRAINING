@@ -70,7 +70,7 @@ namespace TRAINING.API.Controllers
             if (temp != null)
                 return BadRequest("Data Sudah Ada");
 
-            var id = await _repo.GetMDF0ByName(data.DefectName); //untuk meng get Transaction Id berdasarkan defectname 
+            var id = await _repo.GetMDF0ByName(data.DefectGroup1); //untuk meng get Transaction Id berdasarkan defectname 
 
             
             var mdf1 = _mapper.Map<MDF1>(data);
@@ -103,7 +103,7 @@ namespace TRAINING.API.Controllers
             // check = await _repo.GetMDF1ByName;
             var mdf1 = await _repo.GetMDF1ById(Id);
 
-            var id = await _repo.GetMDF0ByName(data.DefectName); //untuk meng get Transaction Id berdasarkan defectname 
+            var id = await _repo.GetMDF0ByName(data.DefectGroup1); //untuk meng get Transaction Id berdasarkan defectname 
 
             if (mdf1 == null)
                 return BadRequest("Data tidak ditemukan");
@@ -118,7 +118,7 @@ namespace TRAINING.API.Controllers
 
             mdf1.DECHDT = CommonMethod.DateToNumeric(DateTime.Now);
             mdf1.DECHTM = CommonMethod.TimeToNumeric(DateTime.Now);
-            mdf1.DECHUS = data.ChangeUser;
+            mdf1.DECHUS = "GUSTI";
             
             if (await _repo.SaveAll())
                 return Ok();
