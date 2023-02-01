@@ -1,27 +1,33 @@
-export interface PalletType{
-    id? : Number,
-    name? : String,
-    type? : String,
-    codification? : Number,
-    app? : String,
-    materialType? : String,
-    color? : String,
-    currency? : String,
-    recordStatus? : Number,
-    length? : Number,
-    lengthType? : String,
-    width? : Number,
-    widthType? : String,
-    height? : Number,
-    heightType? : String,
-    weight? : Number,
-    weightType? :String,
-    price? : Number,
-    remark? : String,
-    isPacking? : Number,
-    isCarryIn? : Number,
-    isCarryOut? : Number,
-    isRunOut? : Number,
-    createdTimestamp? : String,
-    updatedTimestamp? : String,
+export interface PalletType {
+  company?: String;
+  branch?: String;
+  palletType?: String;
+  palletName?: String;
+  palletApp?: String;
+  palletLength?: Number;
+  lengthUm?: String;
+  palletWidth?: Number;
+  widthUm?: String;
+  palletHeight?: Number;
+  heightUm?: String;
+  palletWeight?: Number;
+  weightUm?: String;
+  palletColor?: String;
+  palletCurrency?: String;
+  palletPrice?: Number;
+  cnCode?: String;
+  remark?: String;
+  palletCodification?: Number;
+  materialType?: String;
+  flag1?: Number;
+  carryInFlag?: Number;
+  carryOutFlag?: Number;
+  systemFlag?: String;
+  recordStatus?: Number;
+  createdDate?: Number;
+  createdTime?: Number;
+  createdUser?: String;
+  changedDate?: Number;
+  changedTime?: Number;
+  changedUser?: String;
 }

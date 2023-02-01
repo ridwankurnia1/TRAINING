@@ -104,7 +104,7 @@ namespace TRAINING.API.Data
             return await _context.MDF0.FirstOrDefaultAsync(x => x.DDDFGR == dddfgr);
         }
 
-        public async Task<PagedList<MDF0>> GetListDefectPaging(Params prm)
+        public async Task<PagedList<MDF0>> GetListDefectPaging(InventoryParams prm)
         {
             var query = _context.MDF0.OrderBy(x => x.DDTRID).AsQueryable();
             

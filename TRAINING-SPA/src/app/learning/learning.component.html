@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-4" *ngFor="let learn of learnings">
+      <!-- EXAMPLE OF CONTENT PROJECTION (MULTIPLE) -->
+      <app-learn-card [learning]="learn" [ngSwitch]="learn.name">
+        <div *ngSwitchCase="'code-version'">
+          <div>
+            <app-version [major]="major" [minor]="minor"></app-version>
+          </div>
+          <div *ngIf="learn.footer" [id]="learn.footer" class="row">
+            <div class="col">
+              <button
+                type="button"
+                (click)="versionNewMajor()"
+                class="btn btn-primary me-2"
+              >
+                New Major Version
+              </button>
+              <button
+                type="button"
+                (click)="versionNewMinor()"
+                class="btn btn-success me-2"
+              >
+                New Minor Version
+              </button>
+              <button
+                type="button"
+                (click)="versionReset()"
+                class="btn btn-danger"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </app-learn-card>
+    </div>
+  </div>
+</div>

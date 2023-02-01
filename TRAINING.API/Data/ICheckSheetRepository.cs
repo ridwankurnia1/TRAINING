@@ -16,10 +16,10 @@ namespace TRAINING.API.Data
         Task<IEnumerable<ELOH>> GetListTapHeader();
         Task<ELOG> GetTapLog(int id);
         Task<int> GetTapLogCount(DateTime dt);
-        Task<PagedList<ELOG>> GetListTapLog(Params prm);
+        Task<PagedList<ELOG>> GetListTapLog(InventoryParams prm);
         Task<EHAL> GetEmployee(string nik, string rfid);
-        Task<IEnumerable<EHAL>> GetListEmployee(Params prm);
-        Task<PagedList<EHAL>> GetListEmployeePaging(Params prm);
+        Task<IEnumerable<EHAL>> GetListEmployee(InventoryParams prm);
+        Task<PagedList<EHAL>> GetListEmployeePaging(InventoryParams prm);
         Task<IEnumerable<LebaranSummaryDto>> GetSummaryLebaran(string location);
         Task<IEnumerable<DropdownDto>> GetDepartment(string location);
     }

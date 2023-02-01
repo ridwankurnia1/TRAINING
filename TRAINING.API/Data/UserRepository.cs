@@ -44,7 +44,7 @@ namespace TRAINING.API.Data
             return await _context.MEMP.Include(x => x.GOG1).FirstOrDefaultAsync(x => x.EMRFID == rfid);
         }
 
-        public async Task<PagedList<MEMP>> GetListEmmployee(Params prm)
+        public async Task<PagedList<MEMP>> GetListEmmployee(InventoryParams prm)
         {
             var query = _context.MEMP.Include(x => x.GOG1).Where(x => x.EMRCST == 1).AsQueryable();
 

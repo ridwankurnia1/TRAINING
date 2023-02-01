@@ -12,7 +12,7 @@ namespace TRAINING.API.Data
         Task<bool> SaveAll();
 
         Task<MEMP> GetEmployee(string nik);
-        Task<PagedList<MEMP>> GetListEmmployee(Params prm);
+        Task<PagedList<MEMP>> GetListEmmployee(InventoryParams prm);
         Task<IEnumerable<GOG1>> GetOrganization();
         Task<IEnumerable<MGRD>> GetListGrade();
         // Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm);

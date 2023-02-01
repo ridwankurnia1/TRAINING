@@ -30,7 +30,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF0")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDF0([FromQuery] Params prm)
+        public async Task<IActionResult> GetListMDF0([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListMDF0();
 
@@ -40,10 +40,18 @@ namespace TRAINING.API.Controllers
         }
 
 
+        public async Task<IActionResult> GetMDF0([FromQuery] InventoryParams prm)
+        {
+            var data = await _repo.Get1MDF0(1);
+
+            //var result = _mapper.Map<IEnumerable<LebaranDto>>(data);
+            //Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
+            return Ok(data);
+        }
 
         [AllowAnonymous]
         [HttpGet("FindDatMDF0")]
-        public async Task<IActionResult> FindListMDF0([FromQuery] Params prm, MDF0 obj)
+        public async Task<IActionResult> FindListMDF0([FromQuery] InventoryParams prm, MDF0 obj)
         {
             // var data = await _repo.FindListMDF0();
             // return Ok(data);
@@ -84,7 +92,7 @@ namespace TRAINING.API.Controllers
 
         // [AllowAnonymous]
         // [HttpGet("DatMDF0")]
-        // public async Task<IActionResult> GetMDF0Name([FromQuery] Params prm, IProductionRepository repo)
+        // public async Task<IActionResult> GetMDF0Name([FromQuery] InventoryParams prm, IProductionRepository repo)
         // {
             
         //     var data = await _repo.GetListMDF0(prm);
@@ -144,7 +152,7 @@ namespace TRAINING.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("1DatMDF0")]
-        public async Task<IActionResult> Get1MDF0([FromQuery] Params prm)
+        public async Task<IActionResult> Get1MDF0([FromQuery] InventoryParams prm)
         {
             var data = await _repo.Get1MDF0(prm.id);
 
@@ -192,7 +200,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("GetMDF0ById")]
         //mencari data pada database mdf0 dengan parameter id menggunakan params
-        public async Task<IActionResult> GetMDF0ById([FromQuery] Params prm)
+        public async Task<IActionResult> GetMDF0ById([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetMDF0ByParams(prm.id);
             return Ok(data);
@@ -201,7 +209,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("GetMDF0ByName")]
         //mencari data pada database MDF0 dengan parameter nama menggunakan params
-        public async Task<IActionResult> GetMDF0ByName([FromQuery] Params prm)
+        public async Task<IActionResult> GetMDF0ByName([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetMDF0ByParamsName(prm.name);
             return Ok(data);
@@ -210,7 +218,7 @@ namespace TRAINING.API.Controllers
         // [AllowAnonymous]
         // [HttpGet("GetMDF0ByName")]
         // //mencari data pada database MDF0 dengan parameter nama menggunakan params
-        // public async Task<IActionResult> GetMDF0ByNam([FromQuery] Params prm)
+        // public async Task<IActionResult> GetMDF0ByNam([FromQuery] InventoryParams prm)
         // {
         //     var data = await _repo.GetMDF0ByParamsName(prm.name);
         //     return Ok(data);
@@ -318,7 +326,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF0Map")]
         //menampilkan semua data pada database MDF0 dengan menggunakan mapper
-        public async Task<IActionResult> GetListMDF0Map([FromQuery]Params prm)
+        public async Task<IActionResult> GetListMDF0Map([FromQuery]InventoryParams prm)
         {
             // var data = await _repo.GetListMDF0();
             var data = await _repo.GetListDefectPaging(prm);

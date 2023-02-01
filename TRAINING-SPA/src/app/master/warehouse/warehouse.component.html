@@ -1,0 +1,639 @@
+<div
+  class="container-fluid mt-3"
+  [collapse]="isFormVisible"
+  [isAnimated]="true"
+>
+  <p-tabView>
+    <p-tabPanel header="Warehouse Group">
+      <p-table
+        #gTable
+        [value]="groupData"
+        [responsive]="true"
+        [loading]="isLoading"
+        (onLazyLoad)="getAllGroup()"
+        [lazy]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="caption">
+          <div class="row d-flex justify-content-between">
+            <div class="col-xs-12 col-md-7 col-lg-10">
+              <button
+                class="btn btn-primary mb-3 me-2"
+                (click)="openGroupForm(null, groupForm)"
+              >
+                <i class="pi pi-plus me-2"></i>Add
+              </button>
+              <button
+                class="btn btn-success mb-3 me-2"
+                (click)="initGroupTable()"
+              >
+                <i class="pi pi-refresh me-2"></i>Refresh
+              </button>
+              <button
+                class="btn btn-secondary mb-3 me-2"
+                [disabled]="isExporting"
+                (click)="exportGroup()"
+              >
+                <i
+                  class="pi me-2"
+                  [class]="
+                    !isExporting ? 'pi-file-excel' : 'pi-spin pi-spinner'
+                  "
+                ></i
+                >Download
+              </button>
+            </div>
+            <div class="col-xs-12 col-md-5 col-lg-2 text-end">
+              <input
+                type="text"
+                [(ngModel)]="groupSearch"
+                (input)="gTable.filterGlobal(groupSearch, 'contains')"
+                class="form-control"
+                placeholder="Search"
+              />
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-item>
+          <tr>
+            <th style="width: 3%"></th>
+            <th style="width: 15%">Code</th>
+            <th style="width: 30%">Name</th>
+            <th style="width: 30%">Remark</th>
+            <th style="width: 16%">Status</th>
+            <th style="width: 3%"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td class="text-center">
+              <button
+                pButton
+                type="button"
+                class="p-button-outlined p-button-primary"
+                style="font-size: 14px"
+                icon="pi pi-pencil"
+                (click)="openGroupForm(item.code, groupForm)"
+              ></button>
+            </td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.remark }}</td>
+            <td>
+              <div *ngIf="item.recordStatus == 1; else inactive">
+                <i
+                  class="pi pi-circle-fill me-2"
+                  style="color: rgb(8, 216, 8); font-size: 14px"
+                ></i>
+                ACTIVE
+              </div>
+              <ng-template #inactive>
+                <div>
+                  <i
+                    class="pi pi-circle me-2"
+                    style="color: red; font-size: 14px"
+                  ></i>
+                  INACTIVE
+                </div>
+              </ng-template>
+            </td>
+            <td class="text-center">
+              <button
+                pButton
+                type="button"
+                class="p-button-outlined p-button-danger"
+                style="font-size: 14px"
+                icon="pi pi-times"
+                (click)="deleteGroupItem(item.code)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Warehouse Data">
+      <p-table
+        #wTable
+        (onLazyLoad)="warehouseTableChanged($event)"
+        [alwaysShowPaginator]="true"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [paginatorDropdownAppendTo]="itemsPerPage"
+        styleClass="p-datatable-striped"
+        [totalRecords]="pagination.totalItems"
+        [loading]="isLoading2"
+        [lazy]="true"
+        [globalFilterFields]="['code']"
+        [value]="warehouseData"
+      >
+        <ng-template pTemplate="caption">
+          <div class="row d-flex justify-content-between">
+            <div class="col-xs-12 col-md-7 col-lg-10">
+              <button class="btn btn-primary mb-3 me-2" (click)="toggleForm()">
+                <i class="pi pi-plus me-2"></i>Add
+              </button>
+              <button
+                class="btn btn-success mb-3 me-2"
+                (click)="initWarehouseTable(wTable)"
+              >
+                <i class="pi pi-refresh me-2"></i>Refresh
+              </button>
+              <button
+                class="btn btn-secondary mb-3 me-2"
+                [disabled]="isExporting2"
+                (click)="export()"
+              >
+                <i
+                  class="pi me-2"
+                  [class]="
+                    !isExporting2 ? 'pi-file-excel' : 'pi-spin pi-spinner'
+                  "
+                ></i
+                >Download
+              </button>
+            </div>
+            <div class="col-xs-12 col-md-5 col-lg-2 text-end">
+              <input
+                type="text"
+                (input)="wTable.filterGlobal(warehouseSearch, 'contains')"
+                [(ngModel)]="warehouseSearch"
+                class="form-control"
+                placeholder="Search"
+              />
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-yourColumnArrayVaraible>
+          <tr>
+            <th style="width: 2%"></th>
+            <th style="width: 10%">Code</th>
+            <th style="width: 20%">Name</th>
+            <!-- <th style="width: 15%">Address</th> -->
+            <th style="width: 15%">Nickname</th>
+            <th style="width: 10%">Group</th>
+            <th style="width: 18%">Doc By Warehouse</th>
+            <!-- <th style="width: 10%">Pallet Group</th> -->
+            <th style="width: 9%">FIFO Days</th>
+            <th style="width: 8%">FIFO Flag</th>
+            <th style="width: 8%">Status</th>
+            <th style="width: 2%"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr>
+            <td>
+              <button
+                pButton
+                type="button"
+                style="font-size: 14px"
+                class="p-button-outlined p-button-primary"
+                icon="pi pi-pencil"
+                (click)="updateItem(item.code)"
+              ></button>
+            </td>
+            <td>
+              {{ item.code }}
+            </td>
+            <td>
+              {{ item.name }}
+            </td>
+            <!-- <td>
+              {{ item.address }}
+            </td> -->
+            <td>
+              {{ item.nickname }}
+            </td>
+            <td>
+              {{ item.group }}
+            </td>
+            <td>
+              {{ item.documentCode }}
+            </td>
+            <td>
+              {{ item.fifoDays }}
+            </td>
+            <td>
+              <div *ngIf="item.fifoFlag == 1; else inactive">
+                <i
+                  class="pi pi-circle-fill me-2"
+                  style="color: rgb(8, 216, 8); font-size: 14px"
+                ></i>
+                ACTIVE
+              </div>
+              <ng-template #inactive>
+                <div>
+                  <i
+                    class="pi pi-circle me-2"
+                    style="color: red; font-size: 14px"
+                  ></i>
+                  INACTIVE
+                </div>
+              </ng-template>
+            </td>
+            <!-- <td>
+              {{ item.palletGroup }}
+            </td> -->
+            <td>
+              <div *ngIf="item.recordStatus == 1; else record">
+                <span
+                  ><i
+                    class="pi pi-circle-fill me-2"
+                    style="font-size: 12px; color: rgb(10, 248, 69)"
+                  ></i
+                  >ACTIVE</span
+                >
+              </div>
+              <ng-template #record
+                ><span
+                  ><i
+                    class="pi pi-circle me-2"
+                    style="font-size: 12px; color: rgb(238, 38, 12)"
+                  ></i
+                  >INACTIVE</span
+                ></ng-template
+              >
+            </td>
+            <td>
+              <button
+                pButton
+                type="button"
+                style="font-size: 14px"
+                class="p-button-outlined p-button-danger"
+                icon="pi pi-times"
+                (click)="deleteItem(item.code)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+  </p-tabView>
+</div>
+
+<ng-template #groupForm>
+  <div class="modal-header">
+    <h5 class="modal-title pull-left">Form Warehouse Group</h5>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <form (ngSubmit)="submitWgForm()" [formGroup]="formGroup">
+            <div class="mb-3">
+              <label for="">Code</label>
+              <input
+                type="text"
+                pInputText
+                [maxlength]="2"
+                formControlName="code"
+                class="form-control"
+                style="width: 100%"
+                [ngClass]="{
+                  'is-invalid':
+                    formGroup.get('code').touched &&
+                    formGroup.get('code').errors
+                }"
+              />
+              <div class="invalid-feedback">
+                Invalid Code, max. of 2 Characters
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="">Name</label>
+              <input
+                type="text"
+                pInputText
+                formControlName="name"
+                class="form-control"
+                style="width: 100%"
+                [ngClass]="{
+                  'is-invalid':
+                    formGroup.get('name').touched &&
+                    formGroup.get('name').errors
+                }"
+              />
+              <div class="invalid-feedback">Name is required</div>
+            </div>
+            <div class="mb-3">
+              <label for="remark">Remark</label>
+              <textarea
+                id="remark"
+                rows="3"
+                pInputTextarea
+                formControlName="remark"
+                style="width: 100%"
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <p-checkbox
+                formControlName="recordStatus"
+                value="1"
+                [binary]="true"
+                label="Record Status"
+              ></p-checkbox>
+            </div>
+            <div class="mb-3 row d-flex justify-content-end">
+              <div class="col-4 text-end">
+                <button
+                  type="submit"
+                  class="btn"
+                  [disabled]="isSubmitting || !formGroup.valid"
+                  [class]="!isSubmitting ? 'btn-primary' : 'btn-secondary'"
+                  *ngIf="!isUpdating; else updateBtn"
+                >
+                  <i
+                    class="me-2"
+                    [class]="
+                      !isSubmitting ? 'pi pi-save' : 'pi pi-spin pi-spinner'
+                    "
+                  ></i
+                  >Save
+                </button>
+
+                <ng-template #updateBtn>
+                  <button
+                    type="submit"
+                    class="btn"
+                    [disabled]="isSubmitting || !formGroup.valid"
+                    [class]="!isSubmitting ? 'btn-success' : 'btn-secondary'"
+                  >
+                    <i
+                      class="me-2"
+                      [class]="
+                        !isSubmitting ? 'pi pi-pencil' : 'pi pi-spin pi-spinner'
+                      "
+                    ></i
+                    >Update
+                  </button>
+                </ng-template>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="container mt-3" [collapse]="!isFormVisible" [isAnimated]="true">
+  <form (ngSubmit)="submitForm()" [formGroup]="formGroup2">
+    <h4 class="mb-3 mx-2">Form Warehouse</h4>
+    <div class="mb-3 row">
+      <div class="col-sm-12 col-md-7 col-lg-6">
+        <div class="mb-3 row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Code</label>
+          <div class="col-sm-12">
+            <input type="text" class="form-control" formControlName="code" />
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Name</label>
+          <div class="col-sm-12">
+            <input type="text" class="form-control" formControlName="name" />
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Nickname</label>
+          <div class="col-sm-12">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nickname"
+            />
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+        <div class="row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Warehouse Group</label>
+          <div class="col-sm-12">
+            <p-dropdown
+              [options]="groupData"
+              optionLabel="name"
+              optionValue="code"
+              formControlName="group"
+              placeholder="SELECT WAREHOUSE GROUP"
+              [showClear]="false"
+              [style]="{ width: '100%' }"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Warehouse Type</label>
+          <div class="col-sm-12">
+            <p-dropdown
+              [options]="warehouseType"
+              optionLabel="name"
+              optionValue="value"
+              formControlName="type"
+              placeholder="SELECT WAREHOUSE TYPE"
+              [showClear]="false"
+              [style]="{ width: '100%' }"
+            ></p-dropdown>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label for="" class="col-sm-12 col-form-label"
+            >Doc. Code by Warehouse</label
+          >
+          <div class="col-sm-12">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="documentCode"
+            />
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label for="" class="col-sm-12 col-form-label">Remark</label>
+          <div class="col-sm-12">
+            <textarea
+              rows="3"
+              pInputTextarea
+              formControlName="remark"
+              style="width: 100%"
+            ></textarea>
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-5 col-lg-6">
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+            >FIFO Mandatory</label
+          >
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              (onChange)="fDayCollapsed = !fDayCollapsed"
+              formControlName="fifoFlag"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+        <div
+          class="mb-3 row mx-2"
+          [class]="{ 'd-flex': !fDayCollapsed }"
+          [collapse]="fDayCollapsed"
+          [isAnimated]="true"
+        >
+          <label
+            for=""
+            class="col-xs-12 col-sm-4 col-md-12 col-lg-7 col-form-label"
+            >FIFO Days</label
+          >
+          <div class="col-xs-12 col-sm-8 col-md-12 col-lg-5">
+            <p-inputNumber
+              formControlName="fifoDays"
+              [min]="0"
+              [max]="256"
+            ></p-inputNumber>
+            <div class="invalid-feedback">Error</div>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+          >
+            Stock Stacking Consolidation
+          </label>
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              formControlName="stocktakingFlag"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+          >
+            Police Number Consolidation
+          </label>
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              formControlName="policeNumber"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+          >
+            Transfer Model Validation
+          </label>
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              formControlName="transferModelFlag"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+            >Carry Out Flag</label
+          >
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              formControlName="carryOutFlag"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+        <div class="mb-3 row mx-2">
+          <label
+            for=""
+            class="col-xs-12 col-sm-8 col-md-12 col-lg-7 col-form-label"
+            >Record Status</label
+          >
+          <div class="col-xs-12 col-sm-4 col-md-12 col-lg-5">
+            <p-checkbox
+              formControlName="recordStatus"
+              value="1"
+              [binary]="true"
+              label="Active"
+            ></p-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3 row mx-2">
+      <div class="col-sm-12 col-md-8 col-lg-4">
+        <button
+          type="submit"
+          class="btn btn-danger me-2"
+          (click)="toggleForm()"
+          [disabled]="isSubmitting2"
+        >
+          <i class="me-2 pi pi-times"></i>Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn"
+          [disabled]="isSubmitting2 || !formGroup2.valid"
+          [class]="!isSubmitting2 ? 'btn-primary' : 'btn-secondary'"
+          *ngIf="!isUpdating2; else update2Btn"
+        >
+          <i
+            class="me-2"
+            [class]="!isSubmitting ? 'pi pi-save' : 'pi pi-spin pi-spinner'"
+          ></i
+          >Save
+        </button>
+
+        <ng-template #update2Btn>
+          <button
+            type="submit"
+            class="btn"
+            [disabled]="isSubmitting2 || formGroup2.invalid"
+            [class]="!isSubmitting2 ? 'btn-success' : 'btn-secondary'"
+          >
+            <i
+              class="me-2"
+              [class]="
+                !isSubmitting2 ? 'pi pi-pencil' : 'pi pi-spin pi-spinner'
+              "
+            ></i
+            >Update
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </form>
+</div>
+
+<p-confirmDialog
+  header="Confirmation"
+  acceptButtonStyleClass="btn btn-primary"
+  rejectButtonStyleClass="btn btn-danger"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+<p-toast></p-toast>

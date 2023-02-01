@@ -21,7 +21,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -38,6 +38,8 @@ import { DefectGroupComponent } from './master/defect-group/defect-group.compone
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
 import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
+import { ToastModule } from 'primeng/toast';
+import { LearningComponent } from './learning/learning.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -74,25 +76,24 @@ export function tokenGetter(): string {
     TableModule,
     ButtonModule,
     ConfirmDialogModule,
+    ToastModule,
     DropdownModule,
     RadioButtonModule,
     GraphQLModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
-    ToastrModule.forRoot({ positionClass: 'toast-bottom-right'}),
+    ToastrModule.forRoot({ positionClass: 'toast-bottom-right' }),
     BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter,
         allowedDomains: ['localhost:5000'],
-        disallowedRoutes: ['localhost:5000/api/auth']
-      }
-    })
+        disallowedRoutes: ['localhost:5000/api/auth'],
+      },
+    }),
   ],
-  providers: [
-    ConfirmationService
-  ],
-  bootstrap: [AppComponent]
+  providers: [ConfirmationService, MessageService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

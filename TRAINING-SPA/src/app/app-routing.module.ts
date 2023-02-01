@@ -18,11 +18,24 @@ import {DefectGroupSecondComponent} from './master/defect-group-second/defect-gr
 import {DefectDetailComponent} from './master/defect-detail/defect-detail.component';
 import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
 
+import { WarehouseComponent } from './master/warehouse/warehouse.component';
+import { LearningComponent } from './learning/learning.component';
 
 const routes: Routes = [
   {
     path: '',
     component: QuestionnaireComponent
+  },
+  {
+    path: 'learning',
+    loadChildren: () => import('./learning/learning.module').then(m => m.LearningModule),
+    component: LearningComponent
+  },
+  {
+    path: 'warehouse',
+    // lazy load module
+    loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),
+    component: WarehouseComponent
   },
   {
     path: 'pallet-type',
@@ -107,7 +120,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
