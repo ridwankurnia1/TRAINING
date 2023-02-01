@@ -13,7 +13,9 @@ namespace TRAINING.API.Data
         public DbSet<XUSR> XUSR { get; set; }
         public DbSet<ZUSR> ZUSR { get; set; }
         public DbSet<MDF0> MDF0 { get; set; }
-        public DbSet<MDF1> MDF1 { get; set; }        
+        public DbSet<MDF1> MDF1 { get; set; }    
+
+        public DbSet<MDMP> MDMP {get; set;}    
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,6 +31,7 @@ namespace TRAINING.API.Data
                 .HasForeignKey(p => new { p.EMDENO });
             builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
             builder.Entity<MDF1>().HasKey(k => new { k.DECONO, k.DEBRNO ,k.DEDFNO });
+            builder.Entity<MDMP>().HasKey(k => new { k.DMCONO, k.DMBRNO ,k.DMDFTY, k.DMLPGR, k.DMDFNO });
         }
     }
 }
