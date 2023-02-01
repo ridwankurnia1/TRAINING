@@ -15,7 +15,7 @@ namespace TRAINING.API.Data
         Task<bool> SaveAll();
         Task<IEnumerable<MDF1>> GetMDF1();
         Task<MDF1> GetMDF1ById(string id);
-        Task<PagedList<MDF1>> GetListDefect2Paging(Params prm);
+        Task<PagedList<MDF1>> GetListDefect2Paging(InventoryParams prm);
         Task<IEnumerable<MDF0>> GetDefectGroup();
         Task<MDF0> GetMDF0ByName(string name);
     }

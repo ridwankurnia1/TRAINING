@@ -39,7 +39,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF1")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDF1([FromQuery] Params prm)
+        public async Task<IActionResult> GetListMDF1([FromQuery] InventoryParams prm)
         {
             var data = await _repo.GetListDefect2Paging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
@@ -51,7 +51,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF1/{Id}")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDF1ById([FromQuery] Params prm, string Id)
+        public async Task<IActionResult> GetListMDF1ById([FromQuery] InventoryParams prm, string Id)
         {
             var data = await _repo.GetMDF1ById(Id);
 
@@ -148,7 +148,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("dropdown")]
-        public async Task<IActionResult> GetDropdown([FromQuery]Params prm)
+        public async Task<IActionResult> GetDropdown([FromQuery]InventoryParams prm)
         {
             var Mdf0Drop = await _repo.GetDefectGroup();
             

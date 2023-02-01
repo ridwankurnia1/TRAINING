@@ -43,7 +43,7 @@ namespace TRAINING.API.Data
             return await _context.MDF1.FirstOrDefaultAsync(x => x.DEDFNO == id);
         }
 
-        public async Task<PagedList<MDF1>> GetListDefect2Paging(Params prm)
+        public async Task<PagedList<MDF1>> GetListDefect2Paging(InventoryParams prm)
         {
             var query = _context.MDF1.OrderBy(x => x.DEDFNO).AsQueryable();
             

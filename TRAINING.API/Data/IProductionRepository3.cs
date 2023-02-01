@@ -14,7 +14,7 @@ namespace TRAINING.API.Data
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
         Task<IEnumerable<MDMP>> GetMDMP();
-        Task<PagedList<MDMP>> GetMdmpPaging(Params prm);
+        Task<PagedList<MDMP>> GetMdmpPaging(InventoryParams prm);
         Task<MDMP> GetMdmpById(string id);
         Task<MDF1> GetMDF1ByDefectType(string defectType);
         

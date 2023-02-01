@@ -43,7 +43,7 @@ namespace TRAINING.API.Data
             return await _context.MDMP.FirstOrDefaultAsync(x => x.DMDFNO == id);
         }
 
-        public async Task<PagedList<MDMP>> GetMdmpPaging(Params prm)
+        public async Task<PagedList<MDMP>> GetMdmpPaging(InventoryParams prm)
         {
             var query = _context.MDMP.OrderBy(x => x.DMDFNO).AsQueryable();
             
