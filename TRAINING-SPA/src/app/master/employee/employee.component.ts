@@ -8,6 +8,7 @@ import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { EmployeeService } from 'src/app/_service/employee.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-employee',

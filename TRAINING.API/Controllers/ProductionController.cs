@@ -374,9 +374,6 @@ namespace TRAINING.API.Controllers
                 if (await _repo.SaveAll())
                     return Ok();
             }
-            // _repo.Add<MDF0>(data);
-            //  if (await _repo.SaveAll())
-            //     return Ok("Data Berhasil Disimpan");
 
             throw new Exception("Gagal Menyimpan Data");
         }
@@ -385,7 +382,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpPut("DatMdf0Map/{transactionId}")]
-        public async Task<IActionResult> EditEmployeeMap(int transactionId, Mdf0Dto data)
+        public async Task<IActionResult> EditMDF0Map(int transactionId, Mdf0Dto data)
         {
             // var mdf0 = _mapper.Map<MDF0>(data);
             // var mdf0 = await _repo.GetMDF0ByDdtrid(ddtrid);
@@ -397,8 +394,10 @@ namespace TRAINING.API.Controllers
             var temp = await _repo.GetDfGMDF0(data.DefectGroup);
 
             // var temp = await _repo.GetMdf0By(data.DefectGroup, data.TransactionId );
-            if (temp != null)
+            if (temp != null && mdf0.DDTRID != temp.DDTRID)
                 return BadRequest("Data Sudah Ada");
+            // if (temp.DDTRID == mdf0.DDTRID)
+            //     return BadRequest("Data Sudah Ada");
             
             // if (mdf0.DDTRID != data.TransactionId){
             
@@ -410,9 +409,9 @@ namespace TRAINING.API.Controllers
             mdf0.DDCRUS = data.CreateUser;
             mdf0.DDCHTM = DateTime.Now;
             mdf0.DDCHUS = data.ChangeUser;
-            
-            if (await _repo.SaveAll())
-                return Ok();
+                
+                if (await _repo.SaveAll())
+                    return Ok();
             // }
             
             throw new Exception("Gagal mengupdate data");

@@ -71,6 +71,10 @@ namespace TRAINING.API
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<ISalesRepository, SalesRepository>();
             services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
+            services.AddScoped<IProductionRepository, ProductionRepository>();
+            services.AddScoped<IProductionRepository2, ProductionRepository2>();
+            services.AddScoped<IProductionRepository3, ProductionRepository3>();
+            
             services.AddScoped<IPalletTypeRepository, PalletTypeRepository>();
             services.AddScoped<IProductionRepository, ProductionRepository>();
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();

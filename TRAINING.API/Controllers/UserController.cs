@@ -16,7 +16,7 @@ namespace TRAINING.API.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly ISalesRepository _salesRepo;
@@ -111,7 +111,7 @@ namespace TRAINING.API.Controllers
             
             throw new Exception("Gagal mengupdate data");
         }
-
+        
         [HttpGet("dropdown")]
         public async Task<IActionResult> GetDropdown([FromQuery]InventoryParams prm)
         {

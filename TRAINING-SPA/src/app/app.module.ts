@@ -12,6 +12,7 @@ import { EmployeeComponent } from './master/employee/employee.component';
 import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
 import { ClinicComponent } from './lebaran/clinic/clinic.component';
 
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
@@ -35,6 +36,8 @@ import { PartNumberComponent } from './master/part-number/part-number.component'
 import { GraphQLModule } from './graphql.module';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
+import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
+import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
 import { ToastModule } from 'primeng/toast';
 import { LearningComponent } from './learning/learning.component';
 import { MasterTableModule } from './shared/renderable/master-table/master-table.module';
@@ -61,7 +64,9 @@ export function tokenGetter(): string {
     PartNumberComponent,
     DefectGroupComponent,
     DefectGroupSecondComponent,
-  ],
+    DefectDetailComponent,
+    SummaryDefectComponent
+   ],
   imports: [
     AutoCompleteModule,
     BrowserModule,

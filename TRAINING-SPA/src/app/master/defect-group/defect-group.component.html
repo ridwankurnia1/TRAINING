@@ -90,12 +90,12 @@
       <ng-template pTemplate="caption">
 
         <div class="row justify-content-between">
-          <div class="col-3">            
+          <div class="col-3 flex align-items-center justify-content-center">            
             <button type="button" class="btn btn-primary" (click)="edit(null, false)" data-toggle="modal" data-target="#exampleModal">
               <i class="fa fa-plus me-2"></i>Add        
             </button>
           </div>
-          <div class="col-3">
+          <div class="col-3 flex align-items-center justify-content-center">
             <input type="text" class="form-control" placeholder="Search" formControlName="search" (input)="searchClick($event.target.value)">
           </div>
         </div>

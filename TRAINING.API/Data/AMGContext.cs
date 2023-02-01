@@ -16,6 +16,9 @@ namespace TRAINING.API.Data
         public DbSet<ZUSR> ZUSR { get; set; }
         public DbSet<IPTY> IPTY { get; set; }
         public DbSet<MDF0> MDF0 { get; set; }
+        public DbSet<MDF1> MDF1 { get; set; }    
+
+        public DbSet<MDMP> MDMP {get; set;}    
         public DbSet<GCT2> GCT2 { get; set; }
         public DbSet<GCUR> GCUR { get; set; }
         public DbSet<IUOM> IUOM { get; set; }
@@ -38,6 +41,8 @@ namespace TRAINING.API.Data
                 .HasForeignKey(p => new { p.EMDENO });
             builder.Entity<IPTY>().HasKey(k => new { k.HSCONO, k.HSBRNO, k.HSPETY });
             builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
+            builder.Entity<MDF1>().HasKey(k => new { k.DECONO, k.DEBRNO ,k.DEDFNO });
+            builder.Entity<MDMP>().HasKey(k => new { k.DMCONO, k.DMBRNO ,k.DMDFTY, k.DMLPGR, k.DMDFNO });
             builder.Entity<GCT2>().HasKey(k => new { k.CBKYNO });
             builder.Entity<GCUR>().HasKey(k => new { k.GGCYNO });
             builder.Entity<IUOM>().HasKey(k => new { k.HUUMNO });

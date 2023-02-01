@@ -1,4 +1,10 @@
-<div class="container mt-3">
+<div class="container mt-3 mb-3">
+  <!-- <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search" (input)="dt1.filterGlobal($event.target.value, 'contains')">
+    <span class="input-group-text" id="basic-addon2">
+      <i class="fa fa-search"></i>
+    </span>
+</div> -->
 
   <p-table #dt1 [value]="defectGroupList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
   styleClass="p-datatable-striped"
@@ -6,18 +12,40 @@
     [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
     [totalRecords]="pagination.totalItems" [loading]="loading">
     <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-between">
-        <div class="col-md-3 col-6">
-          <button type="button" class="btn btn-primary mb-2" (click)="edit(popup, null)">
+      <div class="row justify-content-between">
+        <div class="col-md-3 col-12">
+          <button type="button" class="btn btn-primary mb-2 me-2" (click)="edit(popup, null)">
             <i class="fa fa-plus mr-2"></i> Add
           </button>
+          <button type="button" class="btn btn-success ml-2 mb-2" (click)="download()">
+            <i class="fa fa-file mr-2"></i> Xlsx
+          </button>
         </div>        
-        <div class="col-md-3 col-6">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" (input)="searchClick($event.target.value)">
-            <span class="input-group-text" id="basic-addon2">
-              <i class="fa fa-search"></i>
-            </span>
+        <div class="col-md-5 col-12">
+          <div class="row">
+            <div class="col-12 col-md mb-3">
+              <div class="input-group">
+                <input type="text" class="form-control form-control-sm" placeholder="Search" (input)="dt1.filterGlobal($event.target.value, 'filter', 'contains')">
+                <span class="input-group-text" id="basic-addon2">
+                  <i class="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+            
+            <div class="col-md-3 col-12 mb-2">
+              <select class="form-control form-control-sm" [(ngModel)]="selectedStatus" (change)="loadItems()">
+                <option value="">All Status</option>
+                <option *ngFor="let item of status" [value]="item.value">{{item.label}}</option>
+              </select>
+            </div>
+
+            <!-- <div class="col-12 col-md mb-3" (change)="dt1.filterGlobal($event.target.value, 'contains')">
+              <select class="form-select" aria-label="Default select example">
+                <option selected value ="">All Status</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+              </select> -->
+            <!-- </div> -->
           </div>
         </div>        
       </div>
@@ -25,15 +53,10 @@
     <ng-template pTemplate="header">
         <tr>
           <th style="width: 6%; text-align: center;" rowspan="2" scope="col">Edit</th>
-          <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Defect Group</th>
-          <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Remark</th> 
-          <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Status</th>
+          <th >Defect Group</th>
+          <th >Remark</th> 
+          <th >Status</th>
           <th style="width: 6%; text-align: center;" rowspan="2" scope="col">Del</th>        
-        </tr>
-        <tr>
-          <th><input type="text" class="form-control form-control-sm" (input)="searchClick($event.target.value, 'defectGroup')"></th>
-          <th><input type="text" class="form-control form-control-sm" (input)="searchClick($event.target.value, 'defectGroup')"></th>
-          <th><input type="text" class="form-control form-control-sm" (input)="searchClick($event.target.value, 'remark')"></th> 
         </tr>
     </ng-template>
       <ng-template pTemplate="body" let-item>
@@ -53,6 +76,10 @@
             <span *ngIf="item.recordStatusText == 'Active' " class="fa fa-circle text-success me-2"></span>
             <span *ngIf="item.recordStatusText == 'Inactive' " class="fa fa-circle text-muted me-2"></span>
             {{item.recordStatusText}}
+            <!-- <div [ngSwitch]="item.recordStatusText">
+              <div *ngSwitchCase="1"><span class="fa fa-circle text-success me-2"></span>Active</div>
+              <div *ngSwitchCase="0"><span class="fa fa-circle text-muted me-2"></span>Inactive</div>
+            </div> -->
           </td>
           <td>
             <button type="button" class="btn btn-sm btn-outline-danger mr-1" 
@@ -66,14 +93,18 @@
 
 <ng-template #popup>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Edit Employee</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <h4 class="modal-title pull-left">{{tittle}}</h4>
+    <button type="button" class="close pull-right" icon="pi pi-times" aria-label="Close" (click)="modalRef.hide() + closeClick()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
+ 
+
+    
     <form class="needs-validation" [formGroup]="defectGroupForm" >
-      <div class="mb-3">
+    <div class="row">
+      <div class="form-group col-md-6 col-12 mb-2">
         <label for="defectGroup" class="form-label">Defect Group</label>
         <input type="text" class="form-control" formControlName="defectGroup" placeholder="defectGroup"
           [ngClass]="{'is-invalid': defectGroupForm.get('defectGroup').errors && defectGroupForm.get('defectGroup').touched}">
@@ -81,7 +112,7 @@
           Harap isi Defect Group
         </div>
       </div>
-      <div class="mb-3">
+      <div class="form-group col-md-6 col-12 mb-2">
         <label for="remark" class="form-label">Remark</label>
         <input type="text" class="form-control" formControlName="remark" placeholder="Remark"          
          [ngClass]="{'is-invalid': defectGroupForm.get('remark').errors && defectGroupForm.get('remark').touched}">
@@ -89,9 +120,10 @@
           Harap isi Remark
         </div>
       </div>
+    </div>
       <div class="mb-3">         
       <label class="col-sm-2 col-form-label"> Status</label>
-                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                  <a class="btn btn-secondary btn-sm dropdown-toggle mr-2" href="#" role="button" id="dropdownMenuLink" 
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{statusDropdown}}
                   </a>
@@ -103,17 +135,22 @@
                       </div>
                   </div>
         </div>
-      <div class="mb-2" style="font-size: medium; text-align: start;" >
-        <button type="button" class="btn btn-sm btn-danger mr-2" (click)="saveItem()">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-          <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
-        </button>
-        <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">            
-          <i class="fa fa-undo mr-2"></i> Cancel
-        </button>  
+      <div class="mb-3">
+          <button type="button" class="btn btn-sm btn-danger me-2" (click)="saveItem()">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+            <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide() + closeClick()">            
+            <i class="fa fa-undo mr-2"></i> Cancel
+          </button> 
+
       </div>
+      
     </form>
    
   </div>
 </ng-template>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
 </div>
+
+
