@@ -1,0 +1,92 @@
+<p-table
+  #mainTable
+  [columns]="columns"
+  [value]="value"
+  [loading]="isLoading"
+  [lazy]="true"
+  (onLazyLoad)="onChange($event)"
+  [paginator]="paginator"
+  [showCurrentPageReport]="paginator"
+  [currentPageReportTemplate]="pageReportTemplate"
+  [paginatorDropdownAppendTo]="itemsPerPage"
+  [rows]="defaultTableRow"
+  [totalRecords]="pagination.totalItems"
+  styleClass="p-datatable-striped"
+>
+  <ng-template pTemplate="caption">
+    <div class="row d-flex justify-content-between">
+      <div class="col-xs-12 col-md-7 col-lg-10">
+        <button class="btn btn-primary mb-3 me-2" (click)="onCreate()">
+          <i class="pi pi-plus me-2"></i>Add
+        </button>
+        <button class="btn btn-success mb-3 me-2" (click)="onReset(mainTable)">
+          <i class="pi pi-refresh me-2"></i>Refresh
+        </button>
+        <button
+          class="btn btn-secondary mb-3 me-2"
+          [disabled]="isExporting"
+          (click)="onExport()"
+        >
+          <i
+            class="pi me-2"
+            [class]="!isExporting ? 'pi-file-excel' : 'pi-spin pi-spinner'"
+          ></i
+          >Download
+        </button>
+      </div>
+      <div class="col-xs-12 col-md-5 col-lg-2 text-end">
+        <input
+          type="text"
+          (input)="wTable.filterGlobal(warehouseSearch, 'contains')"
+          [(ngModel)]="warehouseSearch"
+          class="form-control"
+          placeholder="Search"
+        />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 3%"></th>
+      <th *ngFor="let item of columns" [style.width]="item.width">
+        {{ item.header }}
+      </th>
+      <th style="width: 3%"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data let-columns="columns">
+    <tr>
+      <td class="text-center">
+        <button
+          pButton
+          type="button"
+          style="font-size: 14px"
+          class="p-button-outlined p-button-primary"
+          icon="pi pi-pencil"
+          (click)="onUpdate('test')"
+        ></button>
+      </td>
+      <td *ngFor="let item of columns">
+        {{ data[item.field] }}
+      </td>
+      <td class="text-center">
+        <button
+          pButton
+          type="button"
+          style="font-size: 14px"
+          class="p-button-outlined p-button-danger"
+          icon="pi pi-times"
+          (click)="onDelete('test')"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+  <!-- <ng-template pTemplate="footer" let-yourColumnArrayVaraible>
+    <tr>
+      <td *ngFor="let yourColumnVaraible of yourColumnArrayVaraible">
+        {{ yourColumnVaraible.header }}
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary"> your summary template </ng-template> -->
+</p-table>

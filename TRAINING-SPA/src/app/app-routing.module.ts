@@ -14,102 +14,117 @@ import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { EmployeeComponent } from './master/employee/employee.component';
-import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
+import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 import { WarehouseComponent } from './master/warehouse/warehouse.component';
 import { LearningComponent } from './learning/learning.component';
+import { TestingComponent } from './master/testing/testing.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: QuestionnaireComponent
+    component: QuestionnaireComponent,
   },
   {
     path: 'learning',
-    loadChildren: () => import('./learning/learning.module').then(m => m.LearningModule),
-    component: LearningComponent
+    loadChildren: () =>
+      import('./learning/learning.module').then((m) => m.LearningModule),
+    component: LearningComponent,
+  },
+  {
+    path: 'testing',
+    loadChildren: () =>
+      import('./master/testing/testing.module').then((m) => m.TestingModule),
+    component: TestingComponent,
   },
   {
     path: 'warehouse',
     // lazy load module
-    loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),
-    component: WarehouseComponent
+    loadChildren: () =>
+      import('./master/warehouse/warehouse.module').then(
+        (m) => m.WarehouseModule
+      ),
+    component: WarehouseComponent,
   },
   {
     path: 'pallet-type',
     /* runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard], */
-    loadChildren: () => import('./master/pallet-type/pallet-type.module').then(m => m.PalletTypeModule),
-    component: PalletTypeComponent
+    loadChildren: () =>
+      import('./master/pallet-type/pallet-type.module').then(
+        (m) => m.PalletTypeModule
+      ),
+    component: PalletTypeComponent,
   },
   {
     path: 'tap',
-    component: TaplistComponent
+    component: TaplistComponent,
   },
   {
     path: 'tap/:id',
-    component: TapComponent
+    component: TapComponent,
   },
   {
     path: 'security',
-    component: SecurityComponent
+    component: SecurityComponent,
   },
   {
     path: 'emp',
-    component: EmployeeComponent
+    component: EmployeeComponent,
   },
   {
     path: 'register',
     /* runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard], */
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: 'clinic',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: ClinicComponent
+    component: ClinicComponent,
   },
   {
     path: 'summary',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: SummaryComponent
+    component: SummaryComponent,
   },
   {
     path: 'summary/:id',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: DetailComponent
+    component: DetailComponent,
   },
   {
     path: 'detail',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: DetailComponent
+    component: DetailComponent,
   },
   {
     path: 'part',
-    component: PartNumberComponent
+    component: PartNumberComponent,
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'defect',
-    component: DefectGroupComponent
+    component: DefectGroupComponent,
   },
   {
     path: 'defectSecond',
-    component: DefectGroupSecondComponent
+    component: DefectGroupSecondComponent,
   },
   {
-    path: '**', redirectTo: ''
+    path: '**',
+    redirectTo: '',
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

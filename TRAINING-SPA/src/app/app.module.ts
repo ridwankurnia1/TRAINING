@@ -37,6 +37,8 @@ import { DefectGroupComponent } from './master/defect-group/defect-group.compone
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 import { ToastModule } from 'primeng/toast';
 import { LearningComponent } from './learning/learning.component';
+import { MasterTableModule } from './shared/renderable/master-table/master-table.module';
+import { TestingComponent } from './master/testing/testing.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
