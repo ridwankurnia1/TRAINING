@@ -28,7 +28,6 @@ export class VersionComponent implements OnChanges {
     }
 
     this.changeLog.push(log.join(', '));
-    console.info(this.changeLog);
   }
 
   reset() {

@@ -1,3 +1,11 @@
-<p>
-  questions works!
-</p>
+<div class="mb-3">
+  <label class="form-label">Your Name</label>
+  <input
+    type="text"
+    (input)="onInput($event)"
+    class="form-control"
+    [(ngModel)]="userName"
+    #mainInput
+  />
+</div>
+<button (click)="save()" type="button" class="btn btn-primary">Save!</button>

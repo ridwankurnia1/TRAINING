@@ -40,6 +40,8 @@ import { DefectDetailComponent } from './master/defect-detail/defect-detail.comp
 import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
 import { ToastModule } from 'primeng/toast';
 import { LearningComponent } from './learning/learning.component';
+import { MasterTableModule } from './shared/renderable/master-table/master-table.module';
+import { TestingComponent } from './master/testing/testing.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
