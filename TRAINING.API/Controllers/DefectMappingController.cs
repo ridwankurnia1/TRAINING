@@ -16,12 +16,12 @@ namespace TRAINING.API.Controllers
     [Route("api/[Controller]")]
     [ApiController]
     [Authorize]
-    public class Production3Controller : ControllerBase
+    public class DefectMappingController : ControllerBase
     {
-        private readonly IProductionRepository3 _repo;
+        private readonly IDefectMappingRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
-        public Production3Controller(IProductionRepository3 repo, IUserRepository userRepo, IMapper mapper)
+        public DefectMappingController(IDefectMappingRepository repo, IUserRepository userRepo, IMapper mapper)
         {
             _userRepo = userRepo;
             _mapper = mapper;
@@ -31,7 +31,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDMP([FromQuery] InventoryParams prm)
+        public async Task<IActionResult> GetListMDMP([FromQuery] ProductionParams prm)
         {
             var data = await _repo.GetMdmpPaging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
@@ -44,7 +44,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP/{Id}")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMmpById([FromQuery] InventoryParams prm, string Id)
+        public async Task<IActionResult> GetListMmpById([FromQuery] ProductionParams prm, string Id)
         {
             var data = await _repo.GetMdmpById(Id);
 
@@ -135,6 +135,23 @@ namespace TRAINING.API.Controllers
                 return Ok();
 
             throw new Exception("Gagal Menghapus Data");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("dropdown")]
+        public async Task<IActionResult> GetDropdown([FromQuery]ProductionParams prm)
+        {
+            var lineP = await _repo.GetLineProcessGroup();
+
+            var defT = await _repo.GetZvarDefectType();
+
+            var ddl_org = _mapper.Map<IEnumerable<DropdownDto>>(lineP);  
+            var def_Ty = _mapper.Map<IEnumerable<DropdownDto>>(defT);         
+
+            return Ok(new {
+                lineProcess = ddl_org,
+                zvarDefTy = def_Ty
+            });
         }
 
 

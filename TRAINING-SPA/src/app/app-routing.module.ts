@@ -16,7 +16,7 @@ import { DefectGroupComponent } from './master/defect-group/defect-group.compone
 import { EmployeeComponent } from './master/employee/employee.component';
 import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
 import {DefectDetailComponent} from './master/defect-detail/defect-detail.component';
-import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
+import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
 
 import { WarehouseComponent } from './master/warehouse/warehouse.component';
 import { LearningComponent } from './learning/learning.component';
@@ -125,8 +125,8 @@ const routes: Routes = [
     component: DefectDetailComponent,
   },
   {
-    path: 'summaryDefect',
-    component: SummaryDefectComponent,
+    path: 'defectMapping',
+    component: DefectMappingComponent,
   },
   {
     path: '**',

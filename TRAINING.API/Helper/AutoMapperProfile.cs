@@ -74,6 +74,14 @@ namespace TRAINING.API.Helper
             CreateMap<MDF0, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.DDDFGR))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.DDDFGR));
+            CreateMap<GCT2, DropdownDto>()
+                .ForMember(des => des.Label, opt => opt.MapFrom(src => src.CBKYNA))
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.CBKYNO));
+            
+            CreateMap<ZVAR, DropdownDto>()
+                .ForMember(des => des.Label, opt => opt.MapFrom(src => src.ZRVANA))
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVANO));
+
             
 
             CreateMap<EHAL, EmployeeDto>()

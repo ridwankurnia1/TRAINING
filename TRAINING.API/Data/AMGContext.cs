@@ -43,7 +43,7 @@ namespace TRAINING.API.Data
             builder.Entity<MDF0>().HasKey(k => new { k.DDTRID });
             builder.Entity<MDF1>().HasKey(k => new { k.DECONO, k.DEBRNO ,k.DEDFNO });
             builder.Entity<MDMP>().HasKey(k => new { k.DMCONO, k.DMBRNO ,k.DMDFTY, k.DMLPGR, k.DMDFNO });
-            builder.Entity<GCT2>().HasKey(k => new { k.CBKYNO });
+            builder.Entity<GCT2>().HasKey(k => new { k.CBCONO, k.CBBRNO, k.CBTBNO, k.CBKYNO });
             builder.Entity<GCUR>().HasKey(k => new { k.GGCYNO });
             builder.Entity<IUOM>().HasKey(k => new { k.HUUMNO });
             builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
