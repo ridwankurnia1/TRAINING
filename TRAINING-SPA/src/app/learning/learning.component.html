@@ -1,31 +1,64 @@
 <div class="container mt-4">
   <div class="row">
     <div class="col-4" *ngFor="let learn of learnings">
-      <!-- EXAMPLE OF CONTENT PROJECTION (MULTIPLE) -->
-      <app-learn-card [learning]="learn" [ngSwitch]="learn.name">
-        <div *ngSwitchCase="'code-version'">
-          <div>
-            <app-version [major]="major" [minor]="minor"></app-version>
-          </div>
-          <div *ngIf="learn.footer" [id]="learn.footer" class="row">
+      <!-- EXAMPLE OF CONTENT PROJECTION -->
+      <app-learn-card [learning]="learn" [ngSwitch]="learn.component">
+        <div [id]="learn.name" *ngSwitchCase="'version'" AppTemplateDirective>
+          <app-version [major]="major" [minor]="minor"></app-version>
+          <div class="row mt-3">
             <div class="col">
               <button
                 type="button"
                 (click)="versionNewMajor()"
                 class="btn btn-primary me-2"
               >
-                New Major Version
+                Major
               </button>
               <button
                 type="button"
                 (click)="versionNewMinor()"
                 class="btn btn-success me-2"
               >
-                New Minor Version
+                Minor
               </button>
               <button
                 type="button"
                 (click)="versionReset()"
+                class="btn btn-danger"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+        <div [id]="learn.name" *ngSwitchCase="'questions'" AppTemplateDirective>
+          <app-questions
+            [listen]="listeningQuestion"
+            (onInput)="questionOnInput($event)"
+            (onSave)="questionOnSave($event)"
+          ></app-questions>
+          <hr />
+          <p class="mb-3 mt-3">
+            Your answer will appear here :
+            <span class="fw-bold" *ngIf="questionSaved">{{ userName }}</span>
+          </p>
+          <div *ngIf="listeningQuestion">
+            listening value : <span class="fw-bold">{{ userName }}</span>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col">
+              <button
+                type="button"
+                class="btn mx-2"
+                (click)="listeningQuestion = !listeningQuestion"
+                [class]="listeningQuestion ? 'btn-secondary' : 'btn-success'"
+              >
+                {{ listeningQuestion ? "Listening" : "Listen" }}
+              </button>
+              <button
+                (click)="questionReset()"
+                type="button"
                 class="btn btn-danger"
               >
                 Reset

@@ -9,11 +9,16 @@ using System;
 
 namespace TRAINING.API.Data
 {
-    public class ProductionRepository3 : IProductionRepository3
+    public class DefectMappingRepository : IDefectMappingRepository
     {
         private readonly AMGContext _context;
 
-        public ProductionRepository3(AMGContext context)
+        private readonly string Company = "amg";
+        private readonly string Branch = "ckp";
+        private readonly string zvar = "dfty";
+        private readonly string CbtNo = "LPG2";
+
+        public DefectMappingRepository(AMGContext context)
         {
             _context = context;
         }
@@ -43,7 +48,7 @@ namespace TRAINING.API.Data
             return await _context.MDMP.FirstOrDefaultAsync(x => x.DMDFNO == id);
         }
 
-        public async Task<PagedList<MDMP>> GetMdmpPaging(Params prm)
+        public async Task<PagedList<MDMP>> GetMdmpPaging(ProductionParams prm)
         {
             var query = _context.MDMP.OrderBy(x => x.DMDFNO).AsQueryable();
             
@@ -71,6 +76,18 @@ namespace TRAINING.API.Data
         public async Task<MDF1> GetMDF1ByDefectType(string defectType) //get list MDF0 berdasarkan DDTRID
         {                      
             return await _context.MDF1.FirstOrDefaultAsync(x => x.DEDPGR == defectType);
+        }
+
+        public async Task<IEnumerable<GCT2>> GetLineProcessGroup() //get list MDF0 berdasarkan DDTRID
+        {                      
+            return await _context.GCT2.Where(x => x.CBCONO == Company && x.CBBRNO == Branch && x.CBTBNO == CbtNo && x.CBRCST == 1).ToListAsync();
+
+            // return await _context.GCT2.FirstOrDefault(x => x.CBCONO == Company && x.CBBRNO == Branch && x.CBRCST == 1);
+        }
+
+        public async Task<IEnumerable<ZVAR>> GetZvarDefectType() //get list MDF0 berdasarkan DDTRID
+        {                      
+            return await _context.ZVAR.Where(x => x.ZRCONO == Company && x.ZRVATY == zvar ).ToListAsync();
         }
     }
 }

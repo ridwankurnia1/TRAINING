@@ -33,7 +33,7 @@ import { GraphQLModule } from './graphql.module';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
 import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
-import { SummaryDefectComponent } from './master/summaryDefect/summaryDefect.component';
+import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
 import { ToastModule } from 'primeng/toast';
 
 export function tokenGetter(): string {
@@ -55,8 +55,8 @@ export function tokenGetter(): string {
     DefectGroupComponent,
     DefectGroupSecondComponent,
     DefectDetailComponent,
-    SummaryDefectComponent
-  ],
+    DefectMappingComponent
+   ],
   imports: [
     AutoCompleteModule,
     BrowserModule,

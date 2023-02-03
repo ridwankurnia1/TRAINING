@@ -73,7 +73,7 @@ namespace TRAINING.API
             services.AddScoped<ICheckSheetRepository, CheckSheetRepository>();
             services.AddScoped<IProductionRepository, ProductionRepository>();
             services.AddScoped<IProductionRepository2, ProductionRepository2>();
-            services.AddScoped<IProductionRepository3, ProductionRepository3>();
+            services.AddScoped<IDefectMappingRepository, DefectMappingRepository>();
             
             services.AddScoped<IPalletTypeRepository, PalletTypeRepository>();
             services.AddScoped<IProductionRepository, ProductionRepository>();

@@ -16,12 +16,12 @@ namespace TRAINING.API.Controllers
     [Route("api/[Controller]")]
     [ApiController]
     [Authorize]
-    public class Production3Controller : ControllerBase
+    public class DefectMappingController : ControllerBase
     {
-        private readonly IProductionRepository3 _repo;
+        private readonly IDefectMappingRepository _repo;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
-        public Production3Controller(IProductionRepository3 repo, IUserRepository userRepo, IMapper mapper)
+        public DefectMappingController(IDefectMappingRepository repo, IUserRepository userRepo, IMapper mapper)
         {
             _userRepo = userRepo;
             _mapper = mapper;
@@ -31,7 +31,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDMP([FromQuery] Params prm)
+        public async Task<IActionResult> GetListMDMP([FromQuery] ProductionParams prm)
         {
             var data = await _repo.GetMdmpPaging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
@@ -44,7 +44,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP/{Id}")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMmpById([FromQuery] Params prm, string Id)
+        public async Task<IActionResult> GetListMmpById([FromQuery] ProductionParams prm, string Id)
         {
             var data = await _repo.GetMdmpById(Id);
 
@@ -66,8 +66,11 @@ namespace TRAINING.API.Controllers
             
 
             add.DMDFNO = id.DEDFNO;
+            add.DMDPGR = id.DEDFG1;
             add.DMCRDT = CommonMethod.DateToNumeric(DateTime.Now);
             add.DMCRTM = CommonMethod.TimeToNumeric(DateTime.Now);
+            add.DMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+            add.DMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
             // // mdf1.DEDFNO = '0' + RandomString(1);
             // mdf1.DECRDT = CommonMethod.DateToNumeric(DateTime.Now);
             // mdf1.DECRTM = CommonMethod.TimeToNumeric(DateTime.Now);
@@ -81,6 +84,40 @@ namespace TRAINING.API.Controllers
             //     return Ok("Data Berhasil Disimpan");
 
             throw new Exception("Gagal Menyimpan Data");
+        }
+
+        [AllowAnonymous]
+        [HttpPut("MDMP/{Id}")]
+        public async Task<IActionResult> EditMdmp(String Id, MdmpDto data)
+        {
+            // var mdf0 = _mapper.Map<MDF0>(data);
+            // var mdf0 = await _repo.GetMDF0ByDdtrid(ddtrid);
+            // check = await _repo.GetMDF1ByName;
+            var edit = await _repo.GetMdmpById(Id);
+
+            var id = await _repo.GetMDF1ByDefectType(data.DefectType); //untuk meng get Transaction Id berdasarkan defectname 
+
+            if (edit == null)
+                return BadRequest("Data tidak ditemukan");
+            
+            // edit.DMDFTY = data.DefectType;
+            // edit.DMLPGR = data.LineProcessGroup;
+            // edit.DMDFNO = id.DEDFNO; //mengisikan DEGRID dengan value transaction Id
+            edit.DMPOSD = data.DefectPosition;
+            // edit.DMDPGR = id.DEDFG1;
+            edit.DMPOSX = data.DefectPostX;
+            edit.DMPOSY = data.DefectPostY;
+            edit.DMREMA = data.Remark;
+            edit.DMRCST = data.RecordStatus;
+            edit.DMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+            edit.DMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+            edit.DMCHUS = "GUSTI";
+            
+            if (await _repo.SaveAll())
+                return Ok();
+            // }
+            
+            throw new Exception("Gagal mengupdate data");
         }
 
         [AllowAnonymous]
@@ -98,6 +135,23 @@ namespace TRAINING.API.Controllers
                 return Ok();
 
             throw new Exception("Gagal Menghapus Data");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("dropdown")]
+        public async Task<IActionResult> GetDropdown([FromQuery]ProductionParams prm)
+        {
+            var lineP = await _repo.GetLineProcessGroup();
+
+            var defT = await _repo.GetZvarDefectType();
+
+            var ddl_org = _mapper.Map<IEnumerable<DropdownDto>>(lineP);  
+            var def_Ty = _mapper.Map<IEnumerable<DropdownDto>>(defT);         
+
+            return Ok(new {
+                lineProcess = ddl_org,
+                zvarDefTy = def_Ty
+            });
         }
 
 
