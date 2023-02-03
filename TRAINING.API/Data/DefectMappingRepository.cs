@@ -42,52 +42,76 @@ namespace TRAINING.API.Data
         {
             return await _context.MDMP.ToListAsync();
         }
-        
+
         public async Task<MDMP> GetMdmpById(string id) //get list MDMP berdasarkan DDTRID
-        {                      
+        {
             return await _context.MDMP.FirstOrDefaultAsync(x => x.DMDFNO == id);
         }
 
-        public async Task<PagedList<MDMP>> GetMdmpPaging(ProductionParams prm)
+        public async Task<PagedList<MDF1>> GetMdmpPaging(DefectMappingParams prm)
         {
-            var query = _context.MDMP.OrderBy(x => x.DMDFNO).AsQueryable();
-            
-            if(!string.IsNullOrEmpty(prm.filter))
-            {
-                query = query.Where(x => x.DMDFNO.Contains(prm.filter) ||
-                x.DMDFTY.Contains(prm.filter) ||
-                x.DMLPGR.Contains(prm.filter));
-                // if(prm.filter == "1"){
-                //     query = query.Where(x => x.DERCST == 1);
-                //     }
-            }
-            if (prm.status == "1")
-            {
-                query = query.Where(x => x.DMRCST == 1);
-            }
-            
-            if (prm.status == "0")
-            {
-                query = query.Where(x => x.DMRCST == 0);
-            }
+            var query = from a in _context.MDF1
+                        join b in _context.MDMP.Where(c => c.DMDFTY == prm.defT && c.DMLPGR == prm.lineP) on a.DEDFNO equals b.DMDFNO
+                        into ab from b in ab.DefaultIfEmpty()
+                        select new MDF1
+                        {
+                            DEDFNO = a.DEDFNO,
+                            DEDFNA = a.DEDFNA
+                        };
 
-            return await PagedList<MDMP>.CreateAsync(query, prm.PageNumber, prm.PageSize);
+            return await PagedList<MDF1>.CreateAsync(query, prm.PageNumber, prm.PageSize);
         }
+
+        // public async Task<PagedList<MDMP>> GetMdmpPaging(ProductionParams prm)
+        // {
+        //     var query = _context.MDMP.OrderBy(x => x.DMDFNO).AsQueryable();
+
+        //     if(!string.IsNullOrEmpty(prm.filter))
+        //     {
+        //         query = query.Where(x => x.DMDFNO.Contains(prm.filter) ||
+        //         x.DMDFTY.Contains(prm.filter) ||
+        //         x.DMLPGR.Contains(prm.filter));
+        //         // if(prm.filter == "1"){
+        //         //     query = query.Where(x => x.DERCST == 1);
+        //         //     }
+        //     }
+
+        //     if (!string.IsNullOrEmpty(prm.linePro))
+        //     {
+        //         query = query.Where(x => x.DMLPGR.Contains(prm.linePro));
+        //     }
+
+        //     if (!string.IsNullOrEmpty(prm.defT))
+        //     {
+        //         query = query.Where(x => x.DMDFTY.Contains(prm.defT));
+        //     }
+
+        //     return await PagedList<MDMP>.CreateAsync(query, prm.PageNumber, prm.PageSize);
+        // }
+
         public async Task<MDF1> GetMDF1ByDefectType(string defectType) //get list MDF0 berdasarkan DDTRID
-        {                      
+        {
             return await _context.MDF1.FirstOrDefaultAsync(x => x.DEDPGR == defectType);
         }
 
-        public async Task<IEnumerable<GCT2>> GetLineProcessGroup() //get list MDF0 berdasarkan DDTRID
-        {                      
-            return await _context.GCT2.Where(x => x.CBCONO == Company && x.CBBRNO == Branch && x.CBTBNO == CbtNo && x.CBRCST == 1).ToListAsync();
+        public async Task<MDF1> GetMDF1ByDefectCode(string defectCode) //get list MDF0 berdasarkan DDTRID
+        {
+            return await _context.MDF1.FirstOrDefaultAsync(x => x.DEDFNO == defectCode);
+        }
 
-            // return await _context.GCT2.FirstOrDefault(x => x.CBCONO == Company && x.CBBRNO == Branch && x.CBRCST == 1);
+        public async Task<IEnumerable<GCT2>> GetLineProcessGroup() //get list MDF0 berdasarkan DDTRID
+        {
+            return await _context.GCT2.Where(x => x.CBCONO == Company && x.CBBRNO == Branch && x.CBTBNO == CbtNo && x.CBRCST == 1).ToListAsync();
         }
 
         public async Task<IEnumerable<ZVAR>> GetZvarDefectType() //get list MDF0 berdasarkan DDTRID
-        {                      
-            return await _context.ZVAR.Where(x => x.ZRCONO == Company && x.ZRVATY == zvar ).ToListAsync();
+        {
+            return await _context.ZVAR.Where(x => x.ZRCONO == Company && x.ZRVATY == zvar).ToListAsync();
+        }
+
+        public async Task<IEnumerable<MDF1>> GetDefectCode()
+        {
+            return await _context.MDF1.Where(x => x.DERCST == 1).ToListAsync();
         }
     }
 }

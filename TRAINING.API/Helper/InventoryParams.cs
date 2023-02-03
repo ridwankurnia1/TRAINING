@@ -22,6 +22,8 @@ namespace TRAINING.API.Helper
         public string status {get; set;}
         public string remark {get; set; }
 
+        public string defName { get; set; }
+
         public int rcst { get; set; }
     }
 }

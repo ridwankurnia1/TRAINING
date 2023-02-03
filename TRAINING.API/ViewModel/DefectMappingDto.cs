@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TRAINING.API.ViewModel
 {
-    public class MdmpDto
+    public class DefectMappingDto
     {
         public string Company { get; set; }
         public string Branch { get; set; }
