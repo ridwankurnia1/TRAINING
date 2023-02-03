@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ClinicComponent } from './lebaran/clinic/clinic.component';
-import { DetailComponent } from './lebaran/detail/detail.component';
-import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
-import { RegisterComponent } from './lebaran/register/register.component';
-import { SecurityComponent } from './lebaran/security/security.component';
+
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { LoginComponent } from './login/login.component';
 import { PalletTypeComponent } from './master/pallet-type/pallet-type.component';
@@ -25,7 +21,7 @@ import { TestingComponent } from './master/testing/testing.component';
 const routes: Routes = [
   {
     path: '',
-    component: QuestionnaireComponent,
+    loadChildren: () => import('./lebaran/questionnaire/questionnaire.module').then(m => m.QuestionnaireModule),
   },
   {
     path: 'learning',
@@ -42,11 +38,7 @@ const routes: Routes = [
   {
     path: 'warehouse',
     // lazy load module
-    loadChildren: () =>
-      import('./master/warehouse/warehouse.module').then(
-        (m) => m.WarehouseModule
-      ),
-    component: WarehouseComponent,
+    loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),  
   },
   {
     path: 'pallet-type',
@@ -68,7 +60,7 @@ const routes: Routes = [
   },
   {
     path: 'security',
-    component: SecurityComponent,
+    loadChildren: () => import('./lebaran/security/security.module').then(m => m.SecurityModule),
   },
   {
     path: 'emp',
@@ -76,15 +68,13 @@ const routes: Routes = [
   },
   {
     path: 'register',
-    /* runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard], */
-    component: RegisterComponent,
+    loadChildren: () => import('./lebaran/register/register.module').then(m => m.RegisterModule),
   },
   {
     path: 'clinic',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: ClinicComponent,
+    loadChildren: () => import('./lebaran/clinic/clinic.module').then(m => m.ClinicModule),
   },
   {
     path: 'summary',
@@ -96,13 +86,13 @@ const routes: Routes = [
     path: 'summary/:id',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: DetailComponent,
+    loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
   },
   {
     path: 'detail',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: DetailComponent,
+    loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
   },
   {
     path: 'part',

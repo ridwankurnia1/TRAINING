@@ -9,9 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { EmployeeComponent } from './master/employee/employee.component';
-import { QuestionnaireComponent } from './lebaran/questionnaire/questionnaire.component';
-import { ClinicComponent } from './lebaran/clinic/clinic.component';
-
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
@@ -29,7 +26,6 @@ import { LoginComponent } from './login/login.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
 import { DetailComponent } from './lebaran/detail/detail.component';
 import { SecurityComponent } from './lebaran/security/security.component';
-import { RegisterComponent } from './lebaran/register/register.component';
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
 import { PartNumberComponent } from './master/part-number/part-number.component';
@@ -39,9 +35,6 @@ import { DefectGroupSecondComponent } from './master/defect-group-second/defect-
 import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
 import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
 import { ToastModule } from 'primeng/toast';
-import { LearningComponent } from './learning/learning.component';
-import { MasterTableModule } from './shared/renderable/master-table/master-table.module';
-import { TestingComponent } from './master/testing/testing.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -52,13 +45,10 @@ export function tokenGetter(): string {
     AppComponent,
     NavComponent,
     EmployeeComponent,
-    QuestionnaireComponent,
-    ClinicComponent,
     LoginComponent,
     SummaryComponent,
     DetailComponent,
     SecurityComponent,
-    RegisterComponent,
     TapComponent,
     TaplistComponent,
     PartNumberComponent,
