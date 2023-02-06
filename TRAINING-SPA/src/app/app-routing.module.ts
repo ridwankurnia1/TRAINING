@@ -70,12 +70,12 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./lebaran/register/register.module').then(m => m.RegisterModule),
   },
-  {
-    path: 'clinic',
-    runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./lebaran/clinic/clinic.module').then(m => m.ClinicModule),
-  },
+  // {
+  //   path: 'clinic',
+  //   runGuardsAndResolvers: 'always',
+  //   canActivate: [AuthGuard],
+  //   loadChildren: () => import('./lebaran/clinic/clinic.module').then(m => m.ClinicModule),
+  // },
   {
     path: 'summary',
     runGuardsAndResolvers: 'always',
@@ -88,12 +88,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
   },
-  {
-    path: 'detail',
-    runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
-  },
+  // {
+  //   path: 'detail',
+  //   runGuardsAndResolvers: 'always',
+  //   canActivate: [AuthGuard],
+  //   loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
+  // },
   {
     path: 'part',
     component: PartNumberComponent,

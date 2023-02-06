@@ -110,8 +110,8 @@ export class DefectMappingComponent implements OnInit {
     };
     this.loadItems();
 
-    console.log(this.selectedDefectType);
-    console.log(this.selectedLineProcess);
+    // console.log(this.selectedDefectType);
+    // console.log(this.selectedLineProcess);
   }
 
   loadDropdown(): void {
@@ -175,6 +175,7 @@ export class DefectMappingComponent implements OnInit {
         next: () => {
           this.toastr.success('Data Berhasil Diedit');
           this.loadItems();
+          this.defectMappingForm.reset();
         },
         error: (error) => {
           this.toastr.error();
@@ -190,11 +191,15 @@ export class DefectMappingComponent implements OnInit {
         next: () => {
           this.toastr.success('Save data success');
           this.loadItems();
+          this.defectMappingForm.reset();
         },
         error: (error) => {
           this.toastr.error('Defect Code Sudah Ada');
         },
       });
     }
+  }
+  closeClick(): void{
+    this.defectMappingForm.reset();
   }
 }

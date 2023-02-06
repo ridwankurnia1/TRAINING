@@ -29,9 +29,6 @@ export class DefectMappingService {
     }
 
     if (prm) {
-      if (prm.name) {
-        httpParams = httpParams.append('name', prm.name);
-      }
       if (prm.DefectTypeFilter) {
         httpParams = httpParams.append('defT', prm.DefectTypeFilter);
       }

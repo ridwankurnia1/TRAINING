@@ -3,8 +3,8 @@
   <div class="row me-2">
     <label class="col-2 col-form-label">Defect Type</label> 
     <div class="col-md-3 col-10">
-      <select class="form-control" [(ngModel)]="selectedDefectType" (change)="dt1.filterGlobal($event.target.value, 'filter', 'contains')">
-        <option value="">All</option>
+      <select class="form-control" [(ngModel)]="selectedDefectType" (change)="dt1.filterGlobal($event.target.value, 'defT', 'contains')">
+        <option value="">Select Defect Type</option>
         <option *ngFor="let item of defectType" [value]="item.value">{{item.label}}</option>
       </select>
     </div>
@@ -13,7 +13,7 @@
   <div class="row me-2 mt-2">
     <label class="col-2 col-form-label">Line Process</label> 
     <div class="col-md-3 col-10">
-      <select class="form-control" [(ngModel)]="selectedLineProcess" (change)="dt1.filterGlobal($event.target.value, 'filter', 'contains')">
+      <select class="form-control" [(ngModel)]="selectedLineProcess" (change)="dt1.filterGlobal($event.target.value, 'lineP', 'contains')">
         <option value="">Empty</option>
         <option *ngFor="let item of lineProcess" [value]="item.value">{{item.label}}</option>
       </select>

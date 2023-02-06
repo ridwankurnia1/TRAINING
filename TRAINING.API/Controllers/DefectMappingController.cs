@@ -66,7 +66,7 @@ namespace TRAINING.API.Controllers
             var add = _mapper.Map<MDMP>(data);
             
             add.DMDFNO = id.DEDFNO;
-            add.DMDPGR = id.DEDFNA;
+            add.DMDPGR = id.DEDPGR;
             add.DMCRDT = CommonMethod.DateToNumeric(DateTime.Now);
             add.DMCRTM = CommonMethod.TimeToNumeric(DateTime.Now);
             add.DMCHDT = CommonMethod.DateToNumeric(DateTime.Now);

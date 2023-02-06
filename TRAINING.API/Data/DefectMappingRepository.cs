@@ -50,14 +50,41 @@ namespace TRAINING.API.Data
 
         public async Task<PagedList<MDF1>> GetMdmpPaging(DefectMappingParams prm)
         {
-            var query = from a in _context.MDF1
-                        join b in _context.MDMP.Where(c => c.DMDFTY == prm.defT && c.DMLPGR == prm.lineP) on a.DEDFNO equals b.DMDFNO
-                        into ab from b in ab.DefaultIfEmpty()
+            var query = from b in _context.MDF1 
+                        join a in _context.MDMP 
+                        on b.DEDFNO equals a.DMDFNO
+                        where a.DMDFTY == prm.defT && a.DMLPGR == prm.lineP
                         select new MDF1
                         {
-                            DEDFNO = a.DEDFNO,
-                            DEDFNA = a.DEDFNA
+                            DEDFNO = b.DEDFNO,
+                            DEDFNA = b.DEDFNA
                         };
+
+            if (prm.lineP == null)
+            {
+            query = from b in _context.MDF1 
+                        join a in _context.MDMP 
+                        on b.DEDFNO equals a.DMDFNO
+                        where a.DMDFTY == prm.defT
+                        select new MDF1
+                        {
+                            DEDFNO = b.DEDFNO,
+                            DEDFNA = b.DEDFNA
+                        };
+            }
+
+            if (prm.defT == null)
+            {
+                query = from b in _context.MDF1 
+                        join a in _context.MDMP 
+                        on b.DEDFNO equals a.DMDFNO
+                        where a.DMLPGR == prm.lineP
+                        select new MDF1
+                        {
+                            DEDFNO = b.DEDFNO,
+                            DEDFNA = b.DEDFNA
+                        };
+            }
 
             return await PagedList<MDF1>.CreateAsync(query, prm.PageNumber, prm.PageSize);
         }
