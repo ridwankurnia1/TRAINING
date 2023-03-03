@@ -43,7 +43,7 @@ namespace TRAINING.API.Data
             return await _context.MDF1.FirstOrDefaultAsync(x => x.DEDFNO == id);
         }
 
-        public async Task<PagedList<MDF1>> GetListDefect2Paging(InventoryParams prm)
+        public async Task<PagedList<MDF1>> GetListDefect2Paging(DefectDetailParams prm)
         {
             var query = _context.MDF1.OrderBy(x => x.DEDFNO).AsQueryable();
             
@@ -64,6 +64,16 @@ namespace TRAINING.API.Data
             if (prm.status == "0")
             {
                 query = query.Where(x => x.DERCST == 0);
+            }
+
+            if (!string.IsNullOrEmpty(prm.defName))
+            {
+                query = query.Where(x => x.DEDFNA == prm.defName);
+            }
+
+            if (!string.IsNullOrEmpty(prm.defType))
+            {
+                query = query.Where(x => x.DEDPGR == prm.defType);
             }
 
             return await PagedList<MDF1>.CreateAsync(query, prm.PageNumber, prm.PageSize);

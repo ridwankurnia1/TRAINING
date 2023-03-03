@@ -27,19 +27,19 @@ namespace TRAINING.API.Controllers
             _mapper = mapper;
             _repo = repo;
         }
-        private static Random random = new Random();
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        // private static Random random = new Random();
+        // public static string RandomString(int length)
+        // {
+        //     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        //     return new string(Enumerable.Repeat(chars, length)
+        //         .Select(s => s[random.Next(s.Length)]).ToArray());
+        // }
         
 
         [AllowAnonymous]
         [HttpGet("DatMDF1")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDF1([FromQuery] InventoryParams prm)
+        public async Task<IActionResult> GetListMDF1([FromQuery] DefectDetailParams prm)
         {
             var data = await _repo.GetListDefect2Paging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
@@ -51,7 +51,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF1/{Id}")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDF1ById([FromQuery] InventoryParams prm, string Id)
+        public async Task<IActionResult> GetListMDF1ById([FromQuery] DefectDetailParams prm, string Id)
         {
             var data = await _repo.GetMDF1ById(Id);
 
@@ -148,7 +148,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("dropdown")]
-        public async Task<IActionResult> GetDropdown([FromQuery]InventoryParams prm)
+        public async Task<IActionResult> GetDropdown([FromQuery]DefectDetailParams prm)
         {
             var Mdf0Drop = await _repo.GetDefectGroup();
             

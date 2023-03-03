@@ -35,6 +35,12 @@ export class Production2Service {
       if (prm.status){
         params = params.append('status', prm.status);
       }
+      if (prm.defName){
+        params = params.append('defName', prm.defName);
+      }
+      if (prm.defType){
+        params = params.append('defType', prm.defType);
+      }
     }
 
     return this.http.get<DefectDetail[]>(this.baseUrl + 'DatMDF1', { observe: 'response', params})

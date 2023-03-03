@@ -46,8 +46,16 @@
         <tr style="font-size: small; text-align: center;" >
           <th style="width: 6%;" scope="col">Edit</th>
           <th>Company </th>  
-          <th>Defect Name</th>
-          <th>Defect Type</th>
+          <th>Defect Name
+            <span>
+              <input type="text" class="form-control form-control-sm" placeholder="Search" (input)="dt1.filterGlobal($event.target.value, 'defName', 'contains')">
+            </span>
+          </th>
+          <th>Defect Type
+            <span>
+              <input type="text" class="form-control form-control-sm" placeholder="Search" (input)="dt1.filterGlobal($event.target.value, 'defType', 'contains')">
+            </span>
+          </th>
           <th>Defect Group 1</th>
           <th>Defect Group 2</th>
           <th>Remark</th>

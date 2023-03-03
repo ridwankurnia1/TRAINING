@@ -106,6 +106,7 @@ export class DefectDetailComponent implements OnInit {
     this.pagination.itemsPerPage = event.rows;
     this.params = {
       filter: event.globalFilter,
+      // defName: event.globalFilter,
     };
     this.loadItems();
   }

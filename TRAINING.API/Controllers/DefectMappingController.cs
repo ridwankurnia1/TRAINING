@@ -31,12 +31,12 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMDMP([FromQuery] ProductionParams prm)
+        public async Task<IActionResult> GetListMDMP([FromQuery] DefectMappingParams prm)
         {
             var data = await _repo.GetMdmpPaging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
 
-            var result = _mapper.Map<IEnumerable<MdmpDto>>(data);
+            var result = _mapper.Map<IEnumerable<Mdf1Dto>>(data);
 
             return Ok(result);
         }
@@ -44,7 +44,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("MDMP/{Id}")]
         //menampilkan semua data pada database MDF0 
-        public async Task<IActionResult> GetListMmpById([FromQuery] ProductionParams prm, string Id)
+        public async Task<IActionResult> GetListMmpById([FromQuery] DefectMappingParams prm, string Id)
         {
             var data = await _repo.GetMdmpById(Id);
 
@@ -55,40 +55,34 @@ namespace TRAINING.API.Controllers
         [HttpPost("MDMP")]
         //menambahkan data ke dalam database MDF0 dengan bentuk objek dengan menggunakan mapper
         
-        public async Task<IActionResult> AddListMDF0Map(MdmpDto data)
+        public async Task<IActionResult> AddListMdmp(DefectMappingDto data)
         {
             
             // var temp = await _repo.GetMDF1ById(data.DefectCode);
 
-            var id = await _repo.GetMDF1ByDefectType(data.DefectType);
+            // var id = await _repo.GetMDF1ByDefectType(data.DefectType);
+            var id = await _repo.GetMDF1ByDefectCode(data.DefectCode);
 
             var add = _mapper.Map<MDMP>(data);
             
-
             add.DMDFNO = id.DEDFNO;
-            add.DMDPGR = id.DEDFG1;
+            add.DMDPGR = id.DEDPGR;
             add.DMCRDT = CommonMethod.DateToNumeric(DateTime.Now);
             add.DMCRTM = CommonMethod.TimeToNumeric(DateTime.Now);
             add.DMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
             add.DMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
-            // // mdf1.DEDFNO = '0' + RandomString(1);
-            // mdf1.DECRDT = CommonMethod.DateToNumeric(DateTime.Now);
-            // mdf1.DECRTM = CommonMethod.TimeToNumeric(DateTime.Now);
-            // mdf1.DECHDT = CommonMethod.DateToNumeric(DateTime.Now);
-            // mdf1.DECHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+
             _repo.Add<MDMP>(add);
             if (await _repo.SaveAll())
-                return Ok("Berhasil Menyimpan Data");
-            // _repo.Add<MDF0>(data);
-            //  if (await _repo.SaveAll())
-            //     return Ok("Data Berhasil Disimpan");
+                return Ok();
+
 
             throw new Exception("Gagal Menyimpan Data");
         }
 
         [AllowAnonymous]
         [HttpPut("MDMP/{Id}")]
-        public async Task<IActionResult> EditMdmp(String Id, MdmpDto data)
+        public async Task<IActionResult> EditMdmp(String Id, DefectMappingDto data)
         {
             // var mdf0 = _mapper.Map<MDF0>(data);
             // var mdf0 = await _repo.GetMDF0ByDdtrid(ddtrid);
@@ -100,11 +94,9 @@ namespace TRAINING.API.Controllers
             if (edit == null)
                 return BadRequest("Data tidak ditemukan");
             
-            // edit.DMDFTY = data.DefectType;
-            // edit.DMLPGR = data.LineProcessGroup;
-            // edit.DMDFNO = id.DEDFNO; //mengisikan DEGRID dengan value transaction Id
+
             edit.DMPOSD = data.DefectPosition;
-            // edit.DMDPGR = id.DEDFG1;
+
             edit.DMPOSX = data.DefectPostX;
             edit.DMPOSY = data.DefectPostY;
             edit.DMREMA = data.Remark;
@@ -145,12 +137,16 @@ namespace TRAINING.API.Controllers
 
             var defT = await _repo.GetZvarDefectType();
 
+            var defC = await _repo.GetDefectCode();
+
             var ddl_org = _mapper.Map<IEnumerable<DropdownDto>>(lineP);  
-            var def_Ty = _mapper.Map<IEnumerable<DropdownDto>>(defT);         
+            var def_Ty = _mapper.Map<IEnumerable<DropdownDto>>(defT); 
+            var def_Co = _mapper.Map<IEnumerable<DropdownDto>>(defC);         
 
             return Ok(new {
                 lineProcess = ddl_org,
-                zvarDefTy = def_Ty
+                zvarDefTy = def_Ty,
+                defectCode = def_Co,
             });
         }
 

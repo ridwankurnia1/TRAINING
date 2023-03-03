@@ -80,7 +80,12 @@ namespace TRAINING.API.Helper
             
             CreateMap<ZVAR, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.ZRVANA))
-                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVANO));
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVAVL));
+            
+            CreateMap<MDF1, DropdownDto>()
+                .ForMember(des => des.Label, opt => opt.MapFrom(src => src.DEDFNA))
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.DEDFNO));
+
 
             
 
@@ -521,7 +526,7 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.DECHTM, opt => opt.MapFrom(src => src.ChangeTime))
             .ForMember(des => des.DECHUS, opt => opt.MapFrom(src => src.ChangeUser));
 
-            CreateMap<MDMP, MdmpDto>()
+            CreateMap<MDMP, DefectMappingDto>()
                 .ForMember(des => des.Company, opt => opt.MapFrom(src => src.DMCONO))
                 .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.DMBRNO))
                 .ForMember(des => des.DefectType, opt => opt.MapFrom(src => src.DMDFTY))
@@ -541,7 +546,7 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DMCHUS))
                 .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DMRCST == 0 ? "Inactive" : "Active" ));
                 
-            CreateMap<MdmpDto, MDMP>()
+            CreateMap<DefectMappingDto, MDMP>()
                 .ForMember(des => des.DMCONO, opt => opt.MapFrom(src => src.Company))
                 .ForMember(des => des.DMBRNO, opt => opt.MapFrom(src => src.Branch))
                 .ForMember(des => des.DMDFTY, opt => opt.MapFrom(src => src.DefectType))

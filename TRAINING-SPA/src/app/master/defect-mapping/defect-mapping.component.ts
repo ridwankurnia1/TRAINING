@@ -3,7 +3,14 @@ import { DefectMapping } from 'src/app/_model/DefectMapping';
 import { DefectMappingService } from 'src/app/_service/defect-mapping.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
-import {FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -11,20 +18,23 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { ThisReceiver } from '@angular/compiler';
 import * as XLSX from 'xlsx';
+import { DefectDetail } from 'src/app/_model/DefectDetail';
 
 @Component({
   selector: 'app-defect-mapping',
   templateUrl: './defect-mapping.component.html',
-  styleUrls: ['./defect-mapping.component.css']
+  styleUrls: ['./defect-mapping.component.css'],
 })
 export class DefectMappingComponent implements OnInit {
   defectMappingForm: FormGroup;
   loading = true;
   defectMappingList: DefectMapping[];
+  defectDetailList: DefectDetail[];
   pagination: Pagination;
   params: any = {};
   lineProcess: Dropdown[] = [];
   defectType: Dropdown[] = [];
+  defectCode: Dropdown[] = [];
   isEdit = false;
   modalRef: BsModalRef;
   configModal = {
@@ -33,7 +43,10 @@ export class DefectMappingComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
   selectedDefectType = '';
   selectedLineProcess = '';
+  selectedDefectCode = '';
   popTittle: any;
+  defT: string;
+  lineP: string;
 
   constructor(
     private defectMappingService: DefectMappingService,
@@ -42,7 +55,7 @@ export class DefectMappingComponent implements OnInit {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private confirm: ConfirmationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.bsConfig = {
@@ -50,9 +63,11 @@ export class DefectMappingComponent implements OnInit {
       dateInputFormat: 'DD-MM-YYYY',
     };
     this.createForm();
-    this.loadDropdown();
-    // this.selectedDefectType = '';
-    // this.selectedLineProcess = '';
+    if (this.selectedDefectType !== '' || this.selectedLineProcess !== '') {
+      this.loadItems();
+    }
+    this.selectedDefectType = '';
+    this.selectedLineProcess = '';
 
     this.pagination = {
       currentPage: 1,
@@ -60,11 +75,10 @@ export class DefectMappingComponent implements OnInit {
       totalItems: 0,
       totalPages: 0,
     };
-    this.loadItems();
+    this.loadDropdown();
   }
   loadItems(): void {
     this.loading = true;
-    // this.params.status = this.selectedStatus;
     this.defectMappingService
       .getDefectMapping(
         this.pagination.currentPage,
@@ -74,8 +88,9 @@ export class DefectMappingComponent implements OnInit {
       .subscribe(
         (res: PaginatedResult<DefectMapping[]>) => {
           this.defectMappingList = res.result;
+          this.defectDetailList = res.result;
           this.pagination = res.pagination;
-          // console.log(this.itemList);
+          console.log(this.defectDetailList);
         },
         (error) => {
           this.loading = false;
@@ -90,8 +105,13 @@ export class DefectMappingComponent implements OnInit {
     this.pagination.itemsPerPage = event.rows;
     this.params = {
       filter: event.globalFilter,
+      DefectTypeFilter: this.selectedDefectType,
+      LineProcessFilter: this.selectedLineProcess,
     };
     this.loadItems();
+
+    // console.log(this.selectedDefectType);
+    // console.log(this.selectedLineProcess);
   }
 
   loadDropdown(): void {
@@ -102,13 +122,17 @@ export class DefectMappingComponent implements OnInit {
     this.defectMappingService.getDropdown(this.params).subscribe((res) => {
       this.defectType = res.zvarDefTy;
     });
+
+    this.defectMappingService.getDropdown(this.params).subscribe((res) => {
+      this.defectCode = res.defectCode;
+    });
   }
 
   createForm(): void {
     this.defectMappingForm = this.fb.group({
       defectType: ['', Validators.required],
       lineProcessGroup: ['', Validators.required],
-      defectCode: ['', Validators.required]
+      defectCode: ['', Validators.required],
     });
   }
 
@@ -125,16 +149,57 @@ export class DefectMappingComponent implements OnInit {
       });
 
       // this.defectDetailForm.controls.changeUser.enable();
-
     } else {
       this.popTittle = 'Add Defect Mapping ';
       this.isEdit = false;
       const dataAd = this.defectMappingForm.getRawValue();
+      console.log(this.defectType);
 
       // this.defectDetailForm.controls.defectCode.enable();
       // // this.defectDetailForm.controls.changeUser.disable();
     }
 
     this.modalRef = this.modalService.show(template, this.configModal);
+  }
+
+  save(): void {
+    if (this.defectMappingForm.invalid) {
+      this.ui.validateFormEntry(this.defectMappingForm);
+      return;
+    }
+    const data = this.defectMappingForm.getRawValue();
+    console.log(data);
+    if (this.isEdit) {
+      console.log(data);
+      this.defectMappingService.editDefectMapping(data).subscribe({
+        next: () => {
+          this.toastr.success('Data Berhasil Diedit');
+          this.loadItems();
+          this.defectMappingForm.reset();
+        },
+        error: (error) => {
+          this.toastr.error();
+        },
+      });
+    } else {
+      const date = new Date();
+      data.company = 'AMG';
+      data.branch = 'CKP';
+      data.createUser = 'PRIGUSTI A';
+
+      this.defectMappingService.addDefectMapping(data).subscribe({
+        next: () => {
+          this.toastr.success('Save data success');
+          this.loadItems();
+          this.defectMappingForm.reset();
+        },
+        error: (error) => {
+          this.toastr.error('Defect Code Sudah Ada');
+        },
+      });
+    }
+  }
+  closeClick(): void{
+    this.defectMappingForm.reset();
   }
 }

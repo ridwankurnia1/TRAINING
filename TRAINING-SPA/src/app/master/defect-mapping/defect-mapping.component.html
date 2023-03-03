@@ -3,8 +3,8 @@
   <div class="row me-2">
     <label class="col-2 col-form-label">Defect Type</label> 
     <div class="col-md-3 col-10">
-      <select class="form-control" [(ngModel)]="selectedDefectType" (change)="dt1.filterGlobal($event.target.value, 'contains')">
-        <option value="">All</option>
+      <select class="form-control" [(ngModel)]="selectedDefectType" (change)="dt1.filterGlobal($event.target.value, 'defT', 'contains')">
+        <option value="">Select Defect Type</option>
         <option *ngFor="let item of defectType" [value]="item.value">{{item.label}}</option>
       </select>
     </div>
@@ -13,14 +13,14 @@
   <div class="row me-2 mt-2">
     <label class="col-2 col-form-label">Line Process</label> 
     <div class="col-md-3 col-10">
-      <select class="form-control" [(ngModel)]="selectedLineProcess" (change)="dt1.filterGlobal($event.target.value, 'contains')">
+      <select class="form-control" [(ngModel)]="selectedLineProcess" (change)="dt1.filterGlobal($event.target.value, 'lineP', 'contains')">
         <option value="">Empty</option>
         <option *ngFor="let item of lineProcess" [value]="item.value">{{item.label}}</option>
       </select>
     </div>
   </div> 
 
-  <p-table #dt1 [value]="defectMappingList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+  <p-table #dt1 [value]="defectDetailList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
   styleClass="p-datatable-striped mt-3"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [responsive]="true"
     [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
@@ -35,7 +35,7 @@
     <ng-template pTemplate="body" let-item>
       <tr style="font-size: small; text-align: start;">
         <td>{{item.defectCode}}</td>
-        <td>{{item.defectGroup}}</td>
+        <td>{{item.defectName}}</td>
         <!-- <td>
           <button type="button" class="btn btn-sm btn-danger" (click)="delete(item)">
             <i class="fa fa-times"></i>
@@ -71,33 +71,42 @@
         
         <form class="needs-validation" [formGroup]="defectMappingForm" >
 
-          <div class="d-flex justify-content-start mt-1">
-            <label for="defectType" class="form-label">Defect Type</label>
-              <div class="form-group col-md-6 col-12 mb-2 ms-5">
-                  <input type="text" class="form-control" formControlName="defectType" placeholder="Process"
-                    [ngClass]="{'is-invalid': defectGroupForm.get('defectType').errors && defectGroupForm.get('defectType').touched}">
+          <div class="row me-2">
+            <label for="defectType" class="col-3 col-form-label">Defect Type</label>
+              <div class="form-group col-md-6 col-10 mb-2 ms-5">
+                  <select class="form-control" aria-label="select Defect Type" formControlName="defectType"
+                    [ngClass]="{'is-invalid': defectMappingForm.get('defectType').errors && defectMappingForm.get('defectType').touched}">
+                    <option *ngFor="let item of defectType" [value]="item.label" >{{item.label}}</option>            
+                  </select>
+                  <!-- <input type="text" class="form-control" formControlName="defectType" placeholder="Process"
+                    [ngClass]="{'is-invalid': defectGroupForm.get('defectType').errors && defectGroupForm.get('defectType').touched}"> -->
                   <div class="invalid-feedback">
                     Harap isi Defect Type
                   </div>
               </div>
           </div>
 
-          <div class="d-flex justify-content-start">
-            <label for="defectType" class="form-label">Line Process Group</label>
-              <div class="form-group col-md-6 col-12 mb-2 ms-3">
-                  <input type="text" class="form-control" formControlName="lineProcessGroup" placeholder="lineProcessGroup"          
-                    [ngClass]="{'is-invalid': defectGroupForm.get('lineProcessGroup').errors && defectGroupForm.get('lineProcessGroup').touched}">
+          <div class="row me-2">
+            <label for="defectType" class="col-3 col-form-label">Line Process Group</label>
+              <div class="form-group col-md-6 col-10 mb-2 ms-5">
+                  <select class="form-control" aria-label="select line Process Group" formControlName="lineProcessGroup"
+                    [ngClass]="{'is-invalid': defectMappingForm.get('lineProcessGroup').errors && defectMappingForm.get('lineProcessGroup').touched}">
+                    <option *ngFor="let item of lineProcess" [value]="item.value" >{{item.label}}</option>            
+                  </select>
                   <div class="invalid-feedback">
                       Harap isi Line Process Group
                   </div>
               </div>
           </div>
 
-          <div class="d-flex justify-content-start">
-            <label for="defectType" class="form-label">Defect Type</label>
-              <div class="form-group col-md-6 col-12 mb-2 ms-5 ">
-                  <input type="text" class="form-control" formControlName="defectCode" placeholder=""          
-                    [ngClass]="{'is-invalid': defectGroupForm.get('defectCode').errors && defectGroupForm.get('defectCode').touched}">
+          <div class="row me-2">
+            <label for="defectType" class="col-3 col-form-label">Defect Code</label>
+              <div class="form-group col-md-6 col-10 mb-2 ms-5 ">
+                <p-dropdown [options]="defectCode" formControlName="defectCode" 
+                    optionLabel="label" optionValue="value" [filter]="true"
+                    [style]="{'width':'100%'}" class="d-block w-100"
+                    [ngClass]="{'is-invalid': defectMappingForm.get('defectCode').errors && defectMappingForm.get('defectCode').touched}">            
+                </p-dropdown>
                   <div class="invalid-feedback">
                       Harap isi Defect Code
                   </div>
@@ -105,7 +114,7 @@
           </div>
 
           <div class="d-flex justify-content-end mb-3">
-              <button type="button" class="btn btn-sm btn-success me-2" (click)="saveItem()">
+              <button type="button" class="btn btn-sm btn-success me-2" (click)="save()">
                   <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
                   <i class="fa fa-check mr-2"></i>Save
               </button>
