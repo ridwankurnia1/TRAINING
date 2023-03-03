@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { RadioButtonModule } from "primeng/radiobutton";
+import { DefectDetailComponent } from "src/app/master/defect-detail/defect-detail.component";
 import { SummaryComponent } from "./summary.component";
 import { SummaryRoutes } from "./summary.routing";
 
@@ -13,7 +14,7 @@ import { SummaryRoutes } from "./summary.routing";
         AutoCompleteModule,
         RadioButtonModule,
         SummaryRoutes,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     declarations: [
         SummaryComponent

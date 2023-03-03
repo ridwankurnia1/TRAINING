@@ -1,9 +1,8 @@
-<div class="container mt-3">
+<div class="container my-3">
   <!-- <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog> -->
   <p-table #dt1 [value]="listEmployee" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-  styleClass="p-datatable-striped"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [responsive]="true"
-    [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)" 
+    styleClass="p-datatable-striped" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [responsive]="true" [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)"
     [totalRecords]="pagination.totalItems" [loading]="loading">
     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-between">
@@ -12,31 +11,32 @@
             <i class="fa fa-plus mr-2"></i> Add
           </button>
           <button type="button" class="btn btn-success ml-2 mb-2" (click)="exportExcel()">
-            <i class="fa fa-file mr-2"></i> Xlsx
+            <i class="fa fa-file-excel-o mr-2"></i> Xlsx
           </button>
-        </div>        
+        </div>
         <div class="col-md-3 col-6">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" (input)="dt1.filterGlobal($event.target.value, 'contains')">
+            <input type="text" class="form-control" placeholder="Search"
+              (input)="dt1.filterGlobal($event.target.value, 'contains')">
             <span class="input-group-text" id="basic-addon2">
               <i class="fa fa-search"></i>
             </span>
           </div>
-        </div>        
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 6%;" scope="col">Edit</th>
-          <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
-          <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th> 
-          <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
-          <th style="width: 18%;" pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
-          <th style="width: 6%;" scope="col">Del</th>        
-        </tr>
+      <tr style="font-size: small;">
+        <th style="width: 6%;" scope="col">Edit</th>
+        <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
+        <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th>
+        <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
+        <th style="width: 18%;" pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
+        <th style="width: 6%;" scope="col">Del</th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-      <tr [ngClass]="{'bg-warning': item.departmentId.indexOf('1102')>=0}">
+      <tr style="font-size: small;">
         <td>
           <button type="button" class="btn btn-sm btn-primary" (click)="edit(item, popup)">
             <i class="fa fa-pencil"></i>
@@ -45,7 +45,7 @@
         <td>
           <div class="row ml-2">
             <div class="table-img">
-              <img [src]="item.photo" width="50" height="50">              
+              <img [src]="item.photo" width="50" height="50">
             </div>
             <div class="col-8">
               <div class="w-100">
@@ -53,7 +53,7 @@
               </div>
               <span class="text-primary">{{item.nik}}</span>
             </div>
-          </div>          
+          </div>
         </td>
         <td>{{item.nama | titlecase}}</td>
         <td>{{item.department}}</td>
@@ -63,7 +63,7 @@
             <i class="fa fa-times"></i>
           </button>
         </td>
-      </tr>    
+      </tr>
     </ng-template>
   </p-table>
 
@@ -116,7 +116,7 @@
       </div>
     </caption>
   </table> -->
- 
+
   <ng-template #popup>
     <div class="modal-header">
       <h4 class="modal-title pull-left">Edit Employee</h4>
@@ -125,11 +125,10 @@
       </button>
     </div>
     <div class="modal-body">
-      <form class="needs-validation" [formGroup]="employeeForm" >
+      <form class="needs-validation" [formGroup]="employeeForm">
         <div class="mb-3">
           <label for="nik" class="form-label">NIK</label>
-          <input type="text" class="form-control" formControlName="nik" placeholder="Employee Id"
-            (blur)="getEmployee()"
+          <input type="text" class="form-control" formControlName="nik" placeholder="Employee Id" (blur)="getEmployee()"
             [ngClass]="{'is-invalid': employeeForm.get('nik').errors && employeeForm.get('nik').touched}">
           <div class="invalid-feedback">
             Harap isi NIK
@@ -137,8 +136,8 @@
         </div>
         <div class="mb-3">
           <label for="nama" class="form-label">Nama</label>
-          <input type="text" class="form-control" formControlName="nama" placeholder="Nama"          
-           [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
+          <input type="text" class="form-control" formControlName="nama" placeholder="Nama"
+            [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
           <div class="invalid-feedback">
             Harap isi Nama
           </div>
@@ -146,16 +145,16 @@
         <div class="mb-3">
           <label for="birthDate" class="form-label">Birth Date</label>
           <div class="input-group">
-            <input type="text" class="form-control" #dp1="bsDatepicker" formControlName="birthDate" placeholder="Birth Date"
+            <input type="text" class="form-control" #dp1="bsDatepicker" formControlName="birthDate"
+              placeholder="Birth Date"
               [ngClass]="{'is-invalid': employeeForm.get('birthDate').errors && employeeForm.get('birthDate').touched}"
               bsDatepicker [bsConfig]="bsConfig">
             <div class="input-group-append">
-              <button class="btn btn-outline-primary" (click)="dp1.toggle()"
-                [attr.aria-expanded]="dp1.isOpen">
+              <button class="btn btn-outline-primary" (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen">
                 <i class="fa fa-calendar"></i>
               </button>
             </div>
-          </div>          
+          </div>
           <div class="invalid-feedback">
             Harap isi Tanggal Lahir
           </div>
@@ -166,10 +165,9 @@
             [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
             <option *ngFor="let item of department" [value]="item.value" >{{item.label}}</option>            
           </select> -->
-          <p-dropdown [options]="department" formControlName="departmentId" 
-            optionLabel="label" optionValue="value" [filter]="true"
-            [style]="{'width':'100%'}" class="d-block w-100"
-            [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">            
+          <p-dropdown [options]="department" formControlName="departmentId" optionLabel="label" optionValue="value"
+            [filter]="true" [style]="{'width':'100%'}" class="d-block w-100"
+            [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
           </p-dropdown>
           <div class="invalid-feedback">
             Harap pilih department
@@ -179,7 +177,7 @@
           <label for="grade" class="form-label">Grade</label>
           <select class="form-control" aria-label="select grade" formControlName="grade"
             [ngClass]="{'is-invalid': employeeForm.get('grade').errors && employeeForm.get('grade').touched}">
-            <option *ngFor="let item of grade" [value]="item.value" >{{item.label}}</option>            
+            <option *ngFor="let item of grade" [value]="item.value">{{item.label}}</option>
           </select>
           <!-- <input type="text" class="form-control" formControlName="grade" placeholder="Grade"> -->
         </div>
@@ -188,12 +186,11 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
             <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">            
+          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">
             <i class="fa fa-undo mr-2"></i> Cancel
-          </button>  
+          </button>
         </div>
       </form>
-     
     </div>
   </ng-template>
 </div>

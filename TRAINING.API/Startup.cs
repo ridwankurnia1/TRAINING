@@ -134,7 +134,7 @@ namespace TRAINING.API
                         EnableSchemaRequests = env.IsDevelopment(),
                         Tool = { Enable = env.IsDevelopment() }
                     });
-                // endpoints.MapFallbackToController("Index", "Fallback");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
 
             // app.UseEndpoints(endpoints => {

@@ -8,8 +8,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
-import { EmployeeComponent } from './master/employee/employee.component';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
@@ -24,8 +22,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { LoginComponent } from './login/login.component';
 import { SummaryComponent } from './lebaran/summary/summary.component';
-import { DetailComponent } from './lebaran/detail/detail.component';
-import { SecurityComponent } from './lebaran/security/security.component';
 import { TapComponent } from './tap/tap.component';
 import { TaplistComponent } from './taplist/taplist.component';
 import { PartNumberComponent } from './master/part-number/part-number.component';
@@ -44,11 +40,8 @@ export function tokenGetter(): string {
   declarations: [
     AppComponent,
     NavComponent,
-    EmployeeComponent,
     LoginComponent,
     SummaryComponent,
-    DetailComponent,
-    SecurityComponent,
     TapComponent,
     TaplistComponent,
     PartNumberComponent,

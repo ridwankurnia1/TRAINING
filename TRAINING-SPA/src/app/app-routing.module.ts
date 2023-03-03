@@ -63,8 +63,8 @@ const routes: Routes = [
     loadChildren: () => import('./lebaran/security/security.module').then(m => m.SecurityModule),
   },
   {
-    path: 'emp',
-    component: EmployeeComponent,
+    path: 'employee',
+    loadChildren: () => import('./master/employee/employee.module').then(m => m.EmployeeModule),
   },
   {
     path: 'register',
