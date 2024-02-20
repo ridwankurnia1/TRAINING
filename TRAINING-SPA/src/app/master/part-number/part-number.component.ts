@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -9,11 +9,26 @@ import { Dropdown } from 'src/app/_model/Dropdown';
 import { GqlPagination } from 'src/app/_model/GqlPagination';
 import { PartNumber } from 'src/app/_model/PartNumber';
 import { UIService } from 'src/app/_service/ui.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CommonModule } from '@angular/common';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { TableModule } from 'primeng/table';
+import { EmployeeRoutes } from '../employee/employee.routing';
 
 @Component({
   selector: 'app-part-number',
   templateUrl: './part-number.component.html',
-  styleUrls: ['./part-number.component.css']
+  styleUrls: ['./part-number.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule,
+    ConfirmDialogModule
+  ]
 })
 export class PartNumberComponent implements OnInit {
   @ViewChild('popup', { static: true}) popup: TemplateRef<any>;

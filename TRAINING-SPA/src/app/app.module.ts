@@ -38,17 +38,17 @@ export function tokenGetter(): string {
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavComponent,
-    LoginComponent,
-    SummaryComponent,
-    TapComponent,
-    TaplistComponent,
-    PartNumberComponent,
-    DefectGroupComponent,
-    DefectGroupSecondComponent,
-    DefectDetailComponent,
-    DefectMappingComponent
+    // AppComponent,
+    // NavComponent,
+    // LoginComponent,
+    // SummaryComponent,
+    // TapComponent,
+    // TaplistComponent,
+    // PartNumberComponent,
+    // DefectGroupComponent,
+    // DefectGroupSecondComponent,
+    // DefectDetailComponent,
+    // DefectMappingComponent
    ],
   imports: [
     AutoCompleteModule,

@@ -8,11 +8,25 @@ import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { environment } from 'src/environments/environment';
 import Quiz from '../../../assets/lebaran2021.json';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { TableModule } from 'primeng/table';
+import { EmployeeRoutes } from 'src/app/master/employee/employee.routing';
 
 @Component({
   selector: 'app-clinic',
   templateUrl: './clinic.component.html',
-  styleUrls: ['./clinic.component.css']
+  styleUrls: ['./clinic.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule
+  ]
 })
 export class ClinicComponent implements OnInit {
   questions: LebaranQuiz[] = [];

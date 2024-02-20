@@ -11,11 +11,18 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { ThisReceiver } from '@angular/compiler';
 import * as XLSX from 'xlsx';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-defect-detail',
   templateUrl: './defect-detail.component.html',
   styleUrls: ['./defect-detail.component.css'],
+  standalone:true,
+  imports:[
+    TableModule,
+    ConfirmDialogModule,
+  ]
 })
 export class DefectDetailComponent implements OnInit {
   defectDetailForm: FormGroup;

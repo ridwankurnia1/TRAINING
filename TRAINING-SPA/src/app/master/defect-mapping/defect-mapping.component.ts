@@ -6,6 +6,8 @@ import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
@@ -19,11 +21,24 @@ import { ConfirmationService } from 'primeng/api';
 import { ThisReceiver } from '@angular/compiler';
 import * as XLSX from 'xlsx';
 import { DefectDetail } from 'src/app/_model/DefectDetail';
+import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { EmployeeRoutes } from '../employee/employee.routing';
 
 @Component({
   selector: 'app-defect-mapping',
   templateUrl: './defect-mapping.component.html',
   styleUrls: ['./defect-mapping.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule,
+  ]
 })
 export class DefectMappingComponent implements OnInit {
   defectMappingForm: FormGroup;

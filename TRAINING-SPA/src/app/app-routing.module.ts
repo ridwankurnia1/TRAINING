@@ -10,8 +10,8 @@ import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { DefectGroupComponent } from './master/defect-group/defect-group.component';
 import { EmployeeComponent } from './master/employee/employee.component';
-import {DefectGroupSecondComponent} from './master/defect-group-second/defect-group-second.component';
-import {DefectDetailComponent} from './master/defect-detail/defect-detail.component';
+import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
+import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
 import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
 
 import { WarehouseComponent } from './master/warehouse/warehouse.component';
@@ -21,7 +21,10 @@ import { TestingComponent } from './master/testing/testing.component';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./lebaran/questionnaire/questionnaire.module').then(m => m.QuestionnaireModule),
+    loadChildren: () =>
+      import('./lebaran/questionnaire/questionnaire.module').then(
+        (m) => m.QuestionnaireModule
+      ),
   },
   {
     path: 'learning',
@@ -38,7 +41,10 @@ const routes: Routes = [
   {
     path: 'warehouse',
     // lazy load module
-    loadChildren: () => import('./master/warehouse/warehouse.module').then(m => m.WarehouseModule),  
+    loadChildren: () =>
+      import('./master/warehouse/warehouse.module').then(
+        (m) => m.WarehouseModule
+      ),
   },
   {
     path: 'pallet-type',
@@ -52,6 +58,8 @@ const routes: Routes = [
   },
   {
     path: 'tap',
+    loadComponent: () =>
+      import('./tap/tap.component').then((m) => m.TapComponent),
     component: TaplistComponent,
   },
   {
@@ -60,15 +68,22 @@ const routes: Routes = [
   },
   {
     path: 'security',
-    loadChildren: () => import('./lebaran/security/security.module').then(m => m.SecurityModule),
+    loadChildren: () =>
+      import('./lebaran/security/security.module').then(
+        (m) => m.SecurityModule
+      ),
   },
   {
     path: 'employee',
-    loadChildren: () => import('./master/employee/employee.module').then(m => m.EmployeeModule),
+    component: EmployeeComponent,
+    // loadChildren: () => import('./master/employee/employee.module').then(m => m.EmployeeModule),
   },
   {
     path: 'register',
-    loadChildren: () => import('./lebaran/register/register.module').then(m => m.RegisterModule),
+    loadChildren: () =>
+      import('./lebaran/register/register.module').then(
+        (m) => m.RegisterModule
+      ),
   },
   // {
   //   path: 'clinic',
@@ -86,7 +101,8 @@ const routes: Routes = [
     path: 'summary/:id',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./lebaran/detail/detail.module').then(m => m.DetailModule),
+    loadChildren: () =>
+      import('./lebaran/detail/detail.module').then((m) => m.DetailModule),
   },
   // {
   //   path: 'detail',

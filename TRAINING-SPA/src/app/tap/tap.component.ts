@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -10,17 +10,31 @@ import { LogHeader } from '../_model/LogHeader';
 import { PaginatedResult } from '../_model/Pagination';
 import { ChecksheetService } from '../_service/checksheet.service';
 import { UIService } from '../_service/ui.service';
+import { CommonModule } from '@angular/common';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { TapRoutes } from './tap.routing';
 
 @Component({
   selector: 'app-tap',
   templateUrl: './tap.component.html',
-  styleUrls: ['./tap.component.css']
+  styleUrls: ['./tap.component.css'],
+  standalone: true,
+  imports:[
+    CommonModule,
+    FormsModule,
+    AutoCompleteModule,
+    RadioButtonModule,
+    TapRoutes,
+    ReactiveFormsModule
+  ]
+  
 })
 export class TapComponent implements OnInit {
   @ViewChild('popup', { static: true}) popUp: TemplateRef<any>;
   header: LogHeader = {};
   id = '1';
-  nikorid = '';
+  // nikorid = '';
   employee: Employee = {};
   listEmployee: Employee[] = [];
   display = 10;
@@ -29,6 +43,7 @@ export class TapComponent implements OnInit {
   totalCount = 0;
   defaultImages = environment.imgEmpUrl + 'NoImage.png';
   employeeForm: UntypedFormGroup;
+  formSearch: UntypedFormGroup;
   config = {
     ignoreBackdropClick: true
   };
@@ -82,16 +97,23 @@ export class TapComponent implements OnInit {
       rfid: [{values:'', disabled: true}],
     });
   }
+  createFormSearch(){
+    this.formSearch= this.fb.group({
+      nikorid:['']
+    })
+  }
   getEmployee(): void {
-    if (this.ui.isNullOrEmpty(this.nikorid)) {
-      return;
+    let dataForm = this.formSearch.getRawValue();
+
+    if (this.ui.isNullOrEmpty(dataForm.nikorid)) {
+      return
     }
 
     const param: EmployeeId = {};
-    if (this.nikorid.length === 10) {
-      param.rfid = this.nikorid;
+    if (dataForm.nikorid.length === 10) {
+      param.rfid = dataForm.nikorid;
     } else {
-      param.nik = this.nikorid;
+      param.nik = dataForm.nikorid;
     }
 
     this.csservice.addTapLog(this.id, param).subscribe({
@@ -100,7 +122,7 @@ export class TapComponent implements OnInit {
           this.listEmployee.splice((this.display - 1), 1);
         }
         this.listEmployee.unshift(resp);
-        this.nikorid = '';
+        this.formSearch.controls['nikorid'].setValue('');
         this.totalCount++;
         this.todayCount++;
       }, error: (err) => {

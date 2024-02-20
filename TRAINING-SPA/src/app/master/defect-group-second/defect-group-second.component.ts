@@ -10,11 +10,18 @@ import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import * as XLSX from 'xlsx';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-defect-group-second',
   templateUrl: './defect-group-second.component.html',
-  styleUrls: ['./defect-group-second.component.css']
+  styleUrls: ['./defect-group-second.component.css'],
+  standalone: true,
+  imports:[
+    TableModule,
+    ConfirmDialogModule,
+  ]
 })
 export class DefectGroupSecondComponent implements OnInit {
   defectGroupForm: FormGroup;

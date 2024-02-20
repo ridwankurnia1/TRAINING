@@ -7,6 +7,8 @@ import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
@@ -14,11 +16,24 @@ import { ExcelService } from 'src/app/_service/excel.service';
 import { DropdownFilterOptions } from 'primeng/dropdown';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
 import moment from 'moment';
+import { CommonModule } from '@angular/common';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { TableModule } from 'primeng/table';
+import { EmployeeRoutes } from '../employee/employee.routing';
 
 @Component({
   selector: 'app-pallet-type',
   templateUrl: './pallet-type.component.html',
   styleUrls: ['./pallet-type.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule
+  ]
 })
 export class PalletTypeComponent implements OnInit {
   // common

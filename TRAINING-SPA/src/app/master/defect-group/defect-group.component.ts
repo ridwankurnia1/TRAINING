@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -12,6 +12,10 @@ import {ProductionService} from 'src/app/_service/production.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { Mdf0 } from 'src/app/_model/Mdf0';
 import { DefectGroup } from 'src/app/_model/DefectGroup';
+import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { EmployeeRoutes } from '../employee/employee.routing';
 
 
 
@@ -19,6 +23,15 @@ import { DefectGroup } from 'src/app/_model/DefectGroup';
   selector: 'app-defect-group',
   templateUrl: './defect-group.component.html',
   styleUrls: ['./defect-group.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule
+  ]
 })
 
 

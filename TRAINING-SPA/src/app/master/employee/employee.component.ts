@@ -1,19 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { EmployeeService } from 'src/app/_service/employee.service';
 import * as XLSX from 'xlsx';
+import { EmployeeRoutes } from './employee.routing';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.css']
+  styleUrls: ['./employee.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RadioButtonModule,
+    EmployeeRoutes,
+    TableModule,
+    ReactiveFormsModule
+  ]
 })
 export class EmployeeComponent implements OnInit {
   param = {};
