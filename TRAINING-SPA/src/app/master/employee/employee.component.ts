@@ -129,6 +129,7 @@ export class EmployeeComponent implements OnInit {
     });
 }
   edit(item: Employee, template: TemplateRef<any>): void {
+    console.log("ok")
     if (item) {
       this.isEdit = true;
       this.employeeForm.setValue({
@@ -140,9 +141,11 @@ export class EmployeeComponent implements OnInit {
       });
       this.employeeForm.controls.nik.disable();
     } else {
+      console.log("ok")
       this.isEdit = false;
       this.employeeForm.reset();
-      this.employeeForm.controls.nik.enable();
+      // this.employeeForm.controls.nik.enable();
+      this.employeeForm.controls['nik'].enable();
     }
     this.modalRef = this.modalService.show(template, this.configModal);
   }
