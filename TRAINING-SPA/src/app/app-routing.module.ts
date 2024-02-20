@@ -50,10 +50,6 @@ const routes: Routes = [
     path: 'pallet-type',
     /* runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard], */
-    loadChildren: () =>
-      import('./master/pallet-type/pallet-type.module').then(
-        (m) => m.PalletTypeModule
-      ),
     component: PalletTypeComponent,
   },
   {

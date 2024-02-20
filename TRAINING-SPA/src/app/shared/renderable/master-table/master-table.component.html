@@ -1,18 +1,7 @@
-<p-table
-  #mainTable
-  [columns]="columns"
-  [value]="value"
-  [loading]="isLoading"
-  [lazy]="true"
-  (onLazyLoad)="onChange($event)"
-  [paginator]="paginator"
-  [showCurrentPageReport]="paginator"
-  [currentPageReportTemplate]="pageReportTemplate"
-  [paginatorDropdownAppendTo]="itemsPerPage"
-  [rows]="defaultTableRow"
-  [totalRecords]="pagination.totalItems"
-  styleClass="p-datatable-striped"
->
+<p-table #mainTable [columns]="columns" [value]="value" [loading]="isLoading" [lazy]="true"
+  (onLazyLoad)="onChange($event)" [paginator]="paginator" [showCurrentPageReport]="paginator"
+  [currentPageReportTemplate]="pageReportTemplate" [paginatorDropdownAppendTo]="itemsPerPage" [rows]="defaultTableRow"
+  [totalRecords]="pagination.totalItems" styleClass="p-datatable-striped">
   <ng-template pTemplate="caption">
     <div class="row d-flex justify-content-between">
       <div class="col-xs-12 col-md-7 col-lg-10">
@@ -22,62 +11,56 @@
         <button class="btn btn-success mb-3 me-2" (click)="onReset(mainTable)">
           <i class="pi pi-refresh me-2"></i>Refresh
         </button>
-        <button
-          class="btn btn-secondary mb-3 me-2"
-          [disabled]="isExporting"
-          (click)="onExport()"
-        >
-          <i
-            class="pi me-2"
-            [class]="!isExporting ? 'pi-file-excel' : 'pi-spin pi-spinner'"
-          ></i
-          >Download
+        <button class="btn btn-secondary mb-3 me-2" [disabled]="isExporting" (click)="onExport()">
+          <i class="pi me-2" [class]="!isExporting ? 'pi-file-excel' : 'pi-spin pi-spinner'"></i>Export
         </button>
       </div>
       <div class="col-xs-12 col-md-5 col-lg-2 text-end">
-        <input
-          type="text"
-          (input)="wTable.filterGlobal(warehouseSearch, 'contains')"
-          [(ngModel)]="warehouseSearch"
-          class="form-control"
-          placeholder="Search"
-        />
+        <input type="text" (input)="mainTable.filterGlobal($event.target.value, 'contains')" class="form-control"
+          placeholder="Search" [(ngModel)]="globalSearch" />
       </div>
     </div>
   </ng-template>
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th style="width: 3%"></th>
-      <th *ngFor="let item of columns" [style.width]="item.width">
-        {{ item.header }}
-      </th>
-      <th style="width: 3%"></th>
+      <th style="width: 3%" *ngIf="enableUpdate"></th>
+      <ng-container *ngFor="let item of columns">
+        <th pSortableColumn="{{item.field}}" [style.width]="item.width"
+          *ngIf="enableSort && item.sortable;else commonHeader">
+          {{ item.header }} <p-sortIcon [field]="item.field"></p-sortIcon>
+        </th>
+      </ng-container>
+      <ng-container #commonHeader>
+        <th [style.width]="item.width">
+          {{ item.header }}
+        </th>
+      </ng-container>
+      <th style="width: 3%" *ngIf="enableDelete"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-data let-columns="columns">
     <tr>
-      <td class="text-center">
-        <button
-          pButton
-          type="button"
-          style="font-size: 14px"
-          class="p-button-outlined p-button-primary"
-          icon="pi pi-pencil"
-          (click)="onUpdate('test')"
-        ></button>
+      <td class="text-center" *ngIf="enableUpdate">
+        <button pButton type="button" style="font-size: 14px" class="p-button-outlined p-button-primary"
+          icon="pi pi-pencil" (click)="onUpdate(data)"></button>
       </td>
       <td *ngFor="let item of columns">
-        {{ data[item.field] }}
+        <div *ngIf="item.field == 'status' || item.field == 'recordStatus';else commonField">
+          <div *ngIf="data[item.field] == 1; else inactive">
+            <span><i class="pi pi-circle-fill me-2" style="font-size: 12px; color: rgb(10, 248, 69)"></i>ACTIVE</span>
+          </div>
+          <ng-template #inactive><span><i class="pi pi-circle me-2"
+                style="font-size: 12px; color: rgb(238, 38, 12)"></i>INACTIVE</span></ng-template>
+        </div>
+        <ng-template #commonField>
+          <div>
+            {{ data[item.field] }}
+          </div>
+        </ng-template>
       </td>
-      <td class="text-center">
-        <button
-          pButton
-          type="button"
-          style="font-size: 14px"
-          class="p-button-outlined p-button-danger"
-          icon="pi pi-times"
-          (click)="onDelete('test')"
-        ></button>
+      <td class="text-center" *ngIf="enableDelete">
+        <button pButton type="button" style="font-size: 14px" class="p-button-outlined p-button-danger"
+          icon="pi pi-times" (click)="onDelete(data)"></button>
       </td>
     </tr>
   </ng-template>

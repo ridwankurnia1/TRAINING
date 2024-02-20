@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Pagination } from 'src/app/_model/Pagination';
 import { MasterTableColumn } from '../../models/master-table-column';
 
@@ -19,6 +26,11 @@ export class MasterTableComponent implements OnInit {
   @Input('loading') isLoading: boolean = false;
   @Input('exporting') isExporting: boolean = false;
 
+  // toggle related
+  @Input('update') enableUpdate: boolean = false;
+  @Input('delete') enableDelete: boolean = false;
+  @Input('sortable') enableSort: boolean = false;
+
   // pagination related
   itemsPerPage: any;
   pagination: Pagination = {};
@@ -29,14 +41,16 @@ export class MasterTableComponent implements OnInit {
   // event related
   //  COMMONS //
   @Output('onChange') tableChangedEvent = new EventEmitter<any>();
-  @Output('onReset') resetTableEvent = new EventEmitter();
-  // onFiltering : Event
+  @Output('onReset') resetTableEvent = new EventEmitter<ElementRef<any>>();
 
   //  ACTIONS //
   @Output('onCreate') createDataEvent = new EventEmitter();
-  @Output('onUpdate') updateDataEvent = new EventEmitter<string>();
-  @Output('onDelete') deleteDataEvent = new EventEmitter<string>();
+  @Output('onUpdate') updateDataEvent = new EventEmitter<any>();
+  @Output('onDelete') deleteDataEvent = new EventEmitter<any>();
   @Output('onExport') exportDataEvent = new EventEmitter();
+
+  // class variables
+  globalSearch: string;
 
   constructor() {}
 
@@ -65,20 +79,20 @@ export class MasterTableComponent implements OnInit {
     this.createDataEvent.emit();
   }
 
-  onUpdate(id: string) {
-    this.updateDataEvent.emit(id);
+  onUpdate(obj: any) {
+    this.updateDataEvent.emit(obj);
   }
 
-  onDelete(id: string) {
-    this.deleteDataEvent.emit(id);
+  onDelete(obj: any) {
+    this.deleteDataEvent.emit(obj);
   }
 
   onExport() {
     this.exportDataEvent.emit();
   }
 
-  onReset(table: any){
-    table.reset();
-    this.resetTableEvent.emit();
+  onReset(table: ElementRef<any>) {
+    this.globalSearch = '';
+    this.resetTableEvent.emit(table);
   }
 }

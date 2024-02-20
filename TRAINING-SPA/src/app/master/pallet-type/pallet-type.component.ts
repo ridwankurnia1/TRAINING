@@ -13,13 +13,22 @@ import {
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
 import { ExcelService } from 'src/app/_service/excel.service';
-import { DropdownFilterOptions } from 'primeng/dropdown';
+import { DropdownFilterOptions, DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
 import moment from 'moment';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
 import { EmployeeRoutes } from '../employee/employee.routing';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-pallet-type',
@@ -28,12 +37,21 @@ import { EmployeeRoutes } from '../employee/employee.routing';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    RadioButtonModule,
-    EmployeeRoutes,
+    CollapseModule,
     TableModule,
-    ReactiveFormsModule
-  ]
+    BsDatepickerModule,
+    InputTextModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    RadioButtonModule,
+    CheckboxModule,
+    ButtonModule,
+    CalendarModule,
+    InputNumberModule,
+    ConfirmDialogModule,
+    ToastModule,
+  ],
 })
 export class PalletTypeComponent implements OnInit {
   // common

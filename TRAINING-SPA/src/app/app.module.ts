@@ -31,6 +31,7 @@ import { DefectGroupSecondComponent } from './master/defect-group-second/defect-
 import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
 import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
 import { ToastModule } from 'primeng/toast';
+import { RouterModule } from '@angular/router';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -38,7 +39,7 @@ export function tokenGetter(): string {
 
 @NgModule({
   declarations: [
-    // AppComponent,
+    AppComponent,
     // NavComponent,
     // LoginComponent,
     // SummaryComponent,
@@ -49,7 +50,7 @@ export function tokenGetter(): string {
     // DefectGroupSecondComponent,
     // DefectDetailComponent,
     // DefectMappingComponent
-   ],
+  ],
   imports: [
     AutoCompleteModule,
     BrowserModule,

@@ -1,17 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../_service/auth.service';
 import { UIService } from '../_service/ui.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class LoginComponent implements OnInit {
-  model: any = { };
+  model: any = {};
   loginForm: UntypedFormGroup;
   returnUrl: string;
   loading = false;
@@ -21,13 +29,13 @@ export class LoginComponent implements OnInit {
     private ui: UIService,
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
 
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
@@ -44,8 +52,10 @@ export class LoginComponent implements OnInit {
       () => {
         this.toastr.success('Login success');
         this.router.navigate([this.returnUrl]);
-      }, (error) => {
+      },
+      (error) => {
         this.loading = false;
-      });
+      }
+    );
   }
 }

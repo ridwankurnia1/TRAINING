@@ -1,51 +1,22 @@
 <div class="container-fluid mt-3" [collapse]="!isCollapsed" [isAnimated]="true">
-  <p-table
-    #ptable
-    (onLazyLoad)="loadData($event)"
-    (onRowSelect)="onItemSelected($event)"
-    [lazy]="true"
-    [loading]="isLoading"
-    [value]="pallets"
-    [paginator]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [totalRecords]="pagination.totalItems"
-    [paginatorDropdownAppendTo]="itemsPerPage"
-    [globalFilterFields]="['palletType', 'palletLength']"
-    styleClass="p-datatable-striped mb-3"
-    [responsive]="true"
-  >
+  <p-table #ptable (onLazyLoad)="loadData($event)" (onRowSelect)="onItemSelected($event)" [lazy]="true"
+    [loading]="isLoading" [value]="pallets" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="pagination.totalItems" [paginatorDropdownAppendTo]="itemsPerPage"
+    [globalFilterFields]="['palletType', 'palletLength']" styleClass="p-datatable-striped mb-3" [responsive]="true">
     <ng-template pTemplate="caption">
       <div class="row">
         <div class="col-12">
-          <button
-            type="button"
-            class="btn btn-primary mr-2"
-            (click)="toggleForm()"
-          >
+          <button type="button" class="btn btn-primary mr-2" (click)="toggleForm()">
             <i class="fa fa-plus mr-2"></i>Add
           </button>
-          <button
-            type="button"
-            class="btn btn-success mr-2"
-            (click)="getData()"
-          >
+          <button type="button" class="btn btn-success mr-2" (click)="getData()">
             <i class="fa fa-refresh mr-2"></i>Refresh
           </button>
-          <button
-            type="button"
-            class="btn btn-secondary mr-3"
-            (click)="export()"
-            [disabled]="isExporting"
-          >
-            <i
-              [className]="
+          <button type="button" class="btn btn-secondary mr-3" (click)="export()" [disabled]="isExporting">
+            <i [className]="
                 !isExporting ? 'pi pi-file-excel' : 'pi pi-spin pi-spinner'
-              "
-              class="mr-2"
-            ></i>
+              " class="mr-2"></i>
             Download
           </button>
         </div>
@@ -136,56 +107,27 @@
       <tr>
         <th></th>
         <th>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="typeFilter"
-            [style]="{ width: '100%' }"
-            (input)="ptable.filter(typeFilter, 'contains')"
-          />
+          <input type="text" pInputText [(ngModel)]="typeFilter" [style]="{ width: '100%' }"
+            (input)="ptable.filter(typeFilter, 'contains')" />
         </th>
         <th>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="nameFilter"
-            [style]="{ width: '100%' }"
-            (input)="ptable.filter(nameFilter, 'contains')"
-          />
+          <input type="text" pInputText [(ngModel)]="nameFilter" [style]="{ width: '100%' }"
+            (input)="ptable.filter(nameFilter, 'contains')" />
         </th>
         <th>
-          <p-dropdown
-            [(ngModel)]="appFilter"
-            [options]="dAppFilterable"
-            [style]="{ width: '100%' }"
-            optionLabel="name"
-            optionValue="value"
-            placeholder="Filter OWP/RTN"
-            (onChange)="ptable.filter(appFilter, 'equal')"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="appFilter" [options]="dAppFilterable" [style]="{ width: '100%' }" optionLabel="name"
+            optionValue="value" placeholder="Filter OWP/RTN"
+            (onChange)="ptable.filter(appFilter, 'equal')"></p-dropdown>
         </th>
         <th>
-          <p-dropdown
-            [(ngModel)]="materialFilter"
-            [options]="dMaterialFilterable"
-            [style]="{ width: '100%' }"
-            optionLabel="name"
-            optionValue="value"
-            placeholder="Filter Material"
-            (onChange)="ptable.filter(materialFilter, 'equal')"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="materialFilter" [options]="dMaterialFilterable" [style]="{ width: '100%' }"
+            optionLabel="name" optionValue="value" placeholder="Filter Material"
+            (onChange)="ptable.filter(materialFilter, 'equal')"></p-dropdown>
         </th>
         <th>
-          <p-dropdown
-            [(ngModel)]="statusFilter"
-            [options]="dStatusFilterable"
-            [style]="{ width: '100%' }"
-            optionLabel="name"
-            optionValue="value"
-            placeholder="Filter Active/Inactive"
-            [showClear]="true"
-            (onChange)="ptable.filter(statusFilter, 'equal')"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="statusFilter" [options]="dStatusFilterable" [style]="{ width: '100%' }"
+            optionLabel="name" optionValue="value" placeholder="Filter Active/Inactive" [showClear]="true"
+            (onChange)="ptable.filter(statusFilter, 'equal')"></p-dropdown>
         </th>
         <th></th>
       </tr>
@@ -193,14 +135,8 @@
     <ng-template pTemplate="body" let-pallet>
       <tr [pSelectableRow]="pallet">
         <td>
-          <button
-            pButton
-            type="button"
-            (click)="getItem(pallet)"
-            style="font-size: 14px"
-            class="p-button-outlined p-button-primary"
-            icon="pi pi-pencil"
-          ></button>
+          <button pButton type="button" (click)="getItem(pallet)" style="font-size: 14px"
+            class="p-button-outlined p-button-primary" icon="pi pi-pencil"></button>
         </td>
 
         <td>{{ pallet.palletType }}</td>
@@ -212,43 +148,20 @@
         <td>{{ pallet.materialType }}</td>
         <td>
           <div *ngIf="pallet.recordStatus == 1; else record">
-            <span
-              ><i
-                class="pi pi-circle-fill mr-2"
-                style="font-size: 12px; color: rgb(10, 248, 69)"
-              ></i
-              >ACTIVE</span
-            >
+            <span><i class="pi pi-circle-fill mr-2" style="font-size: 12px; color: rgb(10, 248, 69)"></i>ACTIVE</span>
           </div>
-          <ng-template #record
-            ><span
-              ><i
-                class="pi pi-circle mr-2"
-                style="font-size: 12px; color: rgb(238, 38, 12)"
-              ></i
-              >INACTIVE</span
-            ></ng-template
-          >
+          <ng-template #record><span><i class="pi pi-circle mr-2"
+                style="font-size: 12px; color: rgb(238, 38, 12)"></i>INACTIVE</span></ng-template>
         </td>
         <td>
-          <button
-            pButton
-            type="button"
-            class="p-button-outlined p-button-danger"
-            icon="pi pi-times"
-            style="font-size: 14px"
-            (click)="deleteItem(pallet)"
-          ></button>
+          <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times"
+            style="font-size: 14px" (click)="deleteItem(pallet)"></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="paginatorright">
-      <p-button
-        type="button"
-        icon="pi pi-refresh"
-        (click)="resetTable(ptable)"
-        styleClass="p-button-rounded"
-      ></p-button>
+      <p-button type="button" icon="pi pi-refresh" (click)="resetTable(ptable)"
+        styleClass="p-button-rounded"></p-button>
     </ng-template>
   </p-table>
 </div>
@@ -259,117 +172,67 @@
     <div class="row mb-3 p-2">
       <div class="col-6">
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Type</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Type</label>
           <div class="col-9">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="palletType"
-              pInputText
-              [ngClass]="{
+            <input type="text" class="form-control" formControlName="palletType" pInputText [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletType').invalid &&
                   formGroup.get('palletType').touched
-              }"
-            />
+              }" />
             <div class="invalid-feedback">Please insert pallet type</div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Type Description</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Type Description</label>
           <div class="col-9">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="palletName"
-              pInputText
-              [ngClass]="{
+            <input type="text" class="form-control" formControlName="palletName" pInputText [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletName').invalid &&
                   formGroup.get('palletName').touched
-              }"
-            />
+              }" />
             <div class="invalid-feedback">Please insert pallet description</div>
           </div>
         </div>
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Pallet App</label>
           <div class="col-9">
-            <p-dropdown
-              [style]="{ width: '100%' }"
-              [options]="dApp"
-              [(ngModel)]="ipApp"
-              optionLabel="name"
-              optionValue="value"
-              formControlName="palletApp"
-              placeholder="OWP/RTN"
-              [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dApp" [(ngModel)]="ipApp" optionLabel="name"
+              optionValue="value" formControlName="palletApp" placeholder="OWP/RTN" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletApp').invalid &&
                   formGroup.get('palletApp').touched
-              }"
-            ></p-dropdown>
+              }"></p-dropdown>
             <div class="invalid-feedback">Please choose App</div>
           </div>
         </div>
         <div class="form-group row mb-3">
           <label class="col-3 col-form-label">Material Type</label>
           <div class="col-9">
-            <p-dropdown
-              [style]="{ width: '100%' }"
-              [options]="dMaterial"
-              [(ngModel)]="ipMaterial"
-              optionLabel="name"
-              optionValue="value"
-              formControlName="materialType"
-              placeholder="SELECT MATERIAL TYPE"
-              [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dMaterial" [(ngModel)]="ipMaterial" optionLabel="name"
+              optionValue="value" formControlName="materialType" placeholder="SELECT MATERIAL TYPE" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('materialType').errors &&
                   formGroup.get('materialType').touched
-              }"
-            ></p-dropdown>
+              }"></p-dropdown>
             <div class="invalid-feedback">Please choose material</div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Color</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Color</label>
           <div class="col-9">
-            <p-dropdown
-              [style]="{ width: '100%' }"
-              [options]="dColor"
-              [(ngModel)]="ipColor"
-              optionLabel="name"
-              optionValue="value"
-              formControlName="palletColor"
-              [filter]="true"
-              filterBy="name"
-              placeholder="SELECT COLOR"
-              [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dColor" [(ngModel)]="ipColor" optionLabel="name"
+              optionValue="value" formControlName="palletColor" [filter]="true" filterBy="name"
+              placeholder="SELECT COLOR" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletColor').invalid &&
                   formGroup.get('palletColor').touched
-              }"
-            >
+              }">
               <ng-template pTemplate="filter" let-options="options">
                 <div class="flex p-1">
                   <div class="p-inputgroup" (click)="$event.stopPropagation()">
-                    <span class="p-inputgroup-addon"
-                      ><i class="pi pi-search"></i
-                    ></span>
-                    <input
-                      type="text"
-                      pInputText
-                      placeholder="Filter"
-                      [(ngModel)]="dColorFilter"
-                      (keyup)="options.filter($event)"
-                    />
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="dColorFilter"
+                      (keyup)="options.filter($event)" />
                   </div>
                 </div>
               </ng-template>
@@ -382,39 +245,21 @@
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Currency</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Currency</label>
           <div class="col-9">
-            <p-dropdown
-              [style]="{ width: '100%' }"
-              [options]="dCurrency"
-              [(ngModel)]="ipCurrency"
-              optionLabel="name"
-              optionValue="value"
-              [filter]="true"
-              filterBy="name"
-              formControlName="palletCurrency"
-              placeholder="SELECT CURRENCY TYPE"
-              [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dCurrency" [(ngModel)]="ipCurrency" optionLabel="name"
+              optionValue="value" [filter]="true" filterBy="name" formControlName="palletCurrency"
+              placeholder="SELECT CURRENCY TYPE" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletCurrency').invalid &&
                   formGroup.get('palletCurrency').touched
-              }"
-            >
+              }">
               <ng-template pTemplate="filter" let-options="options">
                 <div class="flex p-1">
                   <div class="p-inputgroup" (click)="$event.stopPropagation()">
-                    <span class="p-inputgroup-addon"
-                      ><i class="pi pi-search"></i
-                    ></span>
-                    <input
-                      type="text"
-                      pInputText
-                      placeholder="Filter"
-                      [(ngModel)]="dCurrencyFilter"
-                      (keyup)="options.filter($event)"
-                    />
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="dCurrencyFilter"
+                      (keyup)="options.filter($event)" />
                   </div>
                 </div>
               </ng-template>
@@ -433,42 +278,23 @@
             Pallet Codification
           </label>
           <div class="col-2">
-            <p-radioButton
-              value="1"
-              [(ngModel)]="ipCodification"
-              formControlName="palletCodification"
-              [ngClass]="{
+            <p-radioButton value="1" [(ngModel)]="ipCodification" formControlName="palletCodification" [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').touched
-              }"
-              label="Automatic"
-              class="m-1"
-            ></p-radioButton>
-            <p-radioButton
-              value="2"
-              [(ngModel)]="ipCodification"
-              formControlName="palletCodification"
-              label="Manual"
+              }" label="Automatic" class="m-1"></p-radioButton>
+            <p-radioButton value="2" [(ngModel)]="ipCodification" formControlName="palletCodification" label="Manual"
               [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').dirty
-              }"
-              class="m-1"
-            ></p-radioButton>
-            <p-radioButton
-              value="3"
-              [(ngModel)]="ipCodification"
-              formControlName="palletCodification"
-              label="Automatic/Manual"
-              [ngClass]="{
+              }" class="m-1"></p-radioButton>
+            <p-radioButton value="3" [(ngModel)]="ipCodification" formControlName="palletCodification"
+              label="Automatic/Manual" [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').dirty
-              }"
-              class="m-1"
-            ></p-radioButton>
+              }" class="m-1"></p-radioButton>
             <div class="invalid-feedback">
               Please choose pallet codification
             </div>
@@ -479,234 +305,125 @@
             Record Status
           </label>
           <div class="col-2">
-            <p-checkbox
-              formControlName="recordStatus"
-              value="1"
-              [(ngModel)]="ipStatus"
-              [binary]="true"
-              class="ml-2"
-              label="Active"
-            ></p-checkbox>
+            <p-checkbox formControlName="recordStatus" value="1" [(ngModel)]="ipStatus" [binary]="true" class="ml-2"
+              label="Active"></p-checkbox>
           </div>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Length</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Length</label>
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber
-                  [(ngModel)]="ipLength"
-                  mode="decimal"
-                  name="palletLength"
-                  [minFractionDigits]="6"
-                ></p-inputNumber>
+                <p-inputNumber [(ngModel)]="ipLength" mode="decimal" name="palletLength"
+                  [minFractionDigits]="6"></p-inputNumber>
               </div>
               <div class="col-6">
-                <p-dropdown
-                  [style]="{ width: '100%' }"
-                  [options]="dMeasure"
-                  [(ngModel)]="ipLengthType"
-                  optionLabel="name"
-                  optionValue="value"
-                  formControlName="lengthUm"
-                ></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipLengthType"
+                  optionLabel="name" optionValue="value" formControlName="lengthUm"></p-dropdown>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Width</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Width</label>
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber
-                  [(ngModel)]="ipWidth"
-                  mode="decimal"
-                  name="palletWidth"
-                  [minFractionDigits]="6"
-                ></p-inputNumber>
+                <p-inputNumber [(ngModel)]="ipWidth" mode="decimal" name="palletWidth"
+                  [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid width</div>
               </div>
               <div class="col-6">
-                <p-dropdown
-                  [style]="{ width: '100%' }"
-                  [options]="dMeasure"
-                  [(ngModel)]="ipWidthType"
-                  formControlName="widthUm"
-                  optionLabel="name"
-                  optionValue="value"
-                ></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipWidthType"
+                  formControlName="widthUm" optionLabel="name" optionValue="value"></p-dropdown>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Height</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Height</label>
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber
-                  [(ngModel)]="ipHeight"
-                  mode="decimal"
-                  name="palletHeight"
-                  [minFractionDigits]="6"
-                ></p-inputNumber>
+                <p-inputNumber [(ngModel)]="ipHeight" mode="decimal" name="palletHeight"
+                  [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid height</div>
               </div>
               <div class="col-6">
-                <p-dropdown
-                  [style]="{ width: '100%' }"
-                  [options]="dMeasure"
-                  [(ngModel)]="ipHeightType"
-                  optionLabel="name"
-                  optionValue="value"
-                  formControlName="heightUm"
-                ></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipHeightType"
+                  optionLabel="name" optionValue="value" formControlName="heightUm"></p-dropdown>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Weight</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Weight</label>
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber
-                  [(ngModel)]="ipWeight"
-                  mode="decimal"
-                  name="palletWeight"
-                  [minFractionDigits]="6"
-                ></p-inputNumber>
+                <p-inputNumber [(ngModel)]="ipWeight" mode="decimal" name="palletWeight"
+                  [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid weight</div>
               </div>
               <div class="col-6">
-                <p-dropdown
-                  [style]="{ width: '100%' }"
-                  [options]="dMeasure"
-                  [(ngModel)]="ipWeightType"
-                  formControlName="weightUm"
-                  optionLabel="name"
-                  optionValue="value"
-                ></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipWeightType"
+                  formControlName="weightUm" optionLabel="name" optionValue="value"></p-dropdown>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row mb-3">
-          <label for="inputName" class="col-3 col-form-label"
-            >Pallet Price</label
-          >
+          <label for="inputName" class="col-3 col-form-label">Pallet Price</label>
           <div class="col-9" [style]="{ width: '100%' }" style="width: 100%">
-            <p-inputNumber
-              [(ngModel)]="ipPrice"
-              mode="currency"
-              currency="IDR"
-              name="palletPrice"
-              [minFractionDigits]="6"
-            ></p-inputNumber>
+            <p-inputNumber [(ngModel)]="ipPrice" mode="currency" currency="IDR" name="palletPrice"
+              [minFractionDigits]="6"></p-inputNumber>
             <div class="invalid-feedback">Insert a valid price</div>
           </div>
         </div>
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Remark</label>
           <div class="col-9">
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="ipRemark"
-              formControlName="remark"
-              pInputText
+            <input type="text" class="form-control" [(ngModel)]="ipRemark" formControlName="remark" pInputText
               [ngClass]="{
                 'is-invalid':
                   formGroup.get('remark').invalid &&
                   formGroup.get('remark').touched
-              }"
-            />
+              }" />
             <div class="invalid-feedback">please insert remark</div>
           </div>
         </div>
         <div class="row d-flex mb-3 justify-content-start">
           <label class="col-3 col-form-label">Flags</label>
           <div class="col-4">
-            <p-checkbox
-              formControlName="flag1"
-              value="1"
-              [(ngModel)]="ipFl1"
-              [binary]="true"
-              class="ml-2"
-              label="General Flag"
-            ></p-checkbox>
-            <p-checkbox
-              formControlName="carryInFlag"
-              value="1"
-              [(ngModel)]="ipCarryIn"
-              [binary]="true"
-              class="ml-2"
-              label="Carry In Flag"
-            ></p-checkbox>
-            <p-checkbox
-              formControlName="carryOutFlag"
-              value="1"
-              [(ngModel)]="ipCarryOut"
-              [binary]="true"
-              class="ml-2"
-              label="Carry Out Flag"
-            ></p-checkbox>
+            <p-checkbox formControlName="flag1" value="1" [(ngModel)]="ipFl1" [binary]="true" class="ml-2"
+              label="General Flag"></p-checkbox>
+            <p-checkbox formControlName="carryInFlag" value="1" [(ngModel)]="ipCarryIn" [binary]="true" class="ml-2"
+              label="Carry In Flag"></p-checkbox>
+            <p-checkbox formControlName="carryOutFlag" value="1" [(ngModel)]="ipCarryOut" [binary]="true" class="ml-2"
+              label="Carry Out Flag"></p-checkbox>
           </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-4">
-        <button
-          type="submit"
-          class="btn mr-2"
-          [ngClass]="{
+        <button type="submit" class="btn mr-2" [ngClass]="{
             'btn-primary': !isSubmitting,
             'btn-secondary': isSubmitting
-          }"
-          [disabled]="!formGroup.valid || isSubmitting"
-          *ngIf="!isUpdating; else updateBtn"
-        >
-          <i
-            [class]="!isSubmitting ? 'pi pi-save' : 'pi pi-spin pi-spinner'"
-            aria-hidden="true"
-          ></i
-          >Save
+          }" [disabled]="!formGroup.valid || isSubmitting" *ngIf="!isUpdating; else updateBtn">
+          <i [class]="!isSubmitting ? 'pi pi-save' : 'pi pi-spin pi-spinner'" aria-hidden="true"></i>Save
         </button>
         <ng-template #updateBtn>
-          <button
-            type="submit"
-            class="btn mr-2"
-            [ngClass]="{
+          <button type="submit" class="btn mr-2" [ngClass]="{
               'btn-info': !isSubmitting,
               'btn-secondary': isSubmitting
-            }"
-            [disabled]="!formGroup.valid"
-          >
-            <i
-              [class]="!isSubmitting ? 'pi pi-penci' : 'pi pi-spin pi-spinner'"
-              aria-hidden="true"
-            ></i
-            >Update
+            }" [disabled]="!formGroup.valid">
+            <i [class]="!isSubmitting ? 'pi pi-penci' : 'pi pi-spin pi-spinner'" aria-hidden="true"></i>Update
           </button>
         </ng-template>
-        <button
-          type="button"
-          class="btn btn-danger"
-          [disabled]="isSubmitting"
-          (click)="toggleForm()"
-        >
+        <button type="button" class="btn btn-danger" [disabled]="isSubmitting" (click)="toggleForm()">
           <i class="fa fa-window-close mr-2" aria-hidden="true"></i>Cancel
         </button>
       </div>
@@ -714,10 +431,6 @@
   </form>
 </div>
 
-<p-confirmDialog
-  header="Confirmation"
-  acceptButtonStyleClass="btn btn-primary"
-  rejectButtonStyleClass="btn btn-danger"
-  icon="pi pi-exclamation-triangle"
-></p-confirmDialog>
+<p-confirmDialog header="Confirmation" acceptButtonStyleClass="btn btn-primary" rejectButtonStyleClass="btn btn-danger"
+  icon="pi pi-exclamation-triangle"></p-confirmDialog>
 <p-toast></p-toast>
