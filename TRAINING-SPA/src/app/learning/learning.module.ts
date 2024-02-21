@@ -9,7 +9,6 @@ import { VersionComponent } from './shared/renderable/version/version.component'
 @NgModule({
   imports: [CommonModule, FormsModule],
   declarations: [
-    LearningComponent,
     LearnCardComponent,
     VersionComponent,
     QuestionsComponent,

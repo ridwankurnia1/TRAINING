@@ -13,7 +13,6 @@ import { UIService } from '../_service/ui.service';
 import { CommonModule } from '@angular/common';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { TapRoutes } from './tap.routing';
 
 @Component({
   selector: 'app-tap',
@@ -25,7 +24,6 @@ import { TapRoutes } from './tap.routing';
     FormsModule,
     AutoCompleteModule,
     RadioButtonModule,
-    TapRoutes,
     ReactiveFormsModule
   ]
   

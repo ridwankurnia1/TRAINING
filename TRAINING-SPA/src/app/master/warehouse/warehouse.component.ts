@@ -1,10 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Dropdown2 } from 'src/app/_model/Dropdown2';
@@ -14,11 +15,42 @@ import { WarehouseGroup } from 'src/app/_model/WarehouseGroup';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { WarehouseService } from 'src/app/_service/warehouse.service';
+import * as moment from 'moment';
+import { CommonModule } from '@angular/common';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { NgModule } from '@angular/core';
+import { TabViewModule } from 'primeng/tabview';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-warehouse',
   templateUrl: './warehouse.component.html',
   styleUrls: ['./warehouse.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TabViewModule,
+    TableModule,
+    ButtonModule,
+    DialogModule,
+    DropdownModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    InputNumberModule,
+    CheckboxModule,
+    CollapseModule,
+    ConfirmDialogModule,
+    ToastModule,
+    FormsModule,
+  ],
   providers: [WarehouseService],
 })
 export class WarehouseComponent implements OnInit {

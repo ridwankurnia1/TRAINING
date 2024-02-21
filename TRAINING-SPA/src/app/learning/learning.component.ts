@@ -2,11 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Learning } from '../_model/Learning';
 import { QuestionsComponent } from './shared/renderable/questions/questions.component';
 import { VersionComponent } from './shared/renderable/version/version.component';
+import { LearningModule } from './learning.module';
 
 @Component({
   selector: 'app-learning',
   templateUrl: './learning.component.html',
   styleUrls: ['./learning.component.css'],
+  standalone: true,
+  imports: [LearningModule],
   // encapsulation: ViewEncapsulation.ShadowDom
 })
 export class LearningComponent implements OnInit {
@@ -22,7 +25,7 @@ export class LearningComponent implements OnInit {
   learnings: Learning[];
 
   @ViewChild(VersionComponent) versionRef: any;
-  @ViewChild(QuestionsComponent) questionRef : any;
+  @ViewChild(QuestionsComponent) questionRef: any;
 
   constructor() {}
 

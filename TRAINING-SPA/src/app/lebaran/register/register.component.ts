@@ -1,14 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Dropdown } from 'src/app/_model/Dropdown';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
+import { CommonModule } from '@angular/common';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    AutoCompleteModule,
+    RadioButtonModule,
+    ReactiveFormsModule,
+  ],
 })
 export class RegisterComponent implements OnInit {
   formItem: UntypedFormGroup;
@@ -19,7 +36,7 @@ export class RegisterComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private ui: UIService,
     private csservice: ChecksheetService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.createFormItem();
@@ -30,14 +47,14 @@ export class RegisterComponent implements OnInit {
       nik: ['', Validators.required],
       nama: ['', Validators.required],
       rfid: [''],
-      departmentId: ['', Validators.required]
+      departmentId: ['', Validators.required],
     });
   }
   dropdownInit() {
     this.csservice.getDepartment('CKP').subscribe({
       next: (res: Dropdown[]) => {
         this.department = res;
-      }
+      },
     });
   }
   save() {
@@ -48,18 +65,18 @@ export class RegisterComponent implements OnInit {
 
     this.process = true;
     const data = this.formItem.getRawValue();
-    const idx = this.department.findIndex(x => x.value === data.departmentId);
+    const idx = this.department.findIndex((x) => x.value === data.departmentId);
     data.department = this.department[idx].label;
     this.csservice.addEmployee(data).subscribe({
       next: () => {
         this.process = false;
         this.toastr.success('Employee berhasil disimpan');
         this.formItem.reset();
-      }, error: (err) => {
+      },
+      error: (err) => {
         this.process = false;
         this.toastr.error(err.error);
-      }
+      },
     });
-    
   }
 }

@@ -15,7 +15,6 @@ import { DefectGroup } from 'src/app/_model/DefectGroup';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { EmployeeRoutes } from '../employee/employee.routing';
 
 
 
@@ -28,7 +27,6 @@ import { EmployeeRoutes } from '../employee/employee.routing';
     CommonModule,
     FormsModule,
     RadioButtonModule,
-    EmployeeRoutes,
     TableModule,
     ReactiveFormsModule
   ]

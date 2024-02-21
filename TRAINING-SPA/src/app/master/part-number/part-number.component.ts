@@ -13,7 +13,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
-import { EmployeeRoutes } from '../employee/employee.routing';
 
 @Component({
   selector: 'app-part-number',
@@ -24,7 +23,6 @@ import { EmployeeRoutes } from '../employee/employee.routing';
     CommonModule,
     FormsModule,
     RadioButtonModule,
-    EmployeeRoutes,
     TableModule,
     ReactiveFormsModule,
     ConfirmDialogModule

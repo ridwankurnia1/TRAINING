@@ -1,84 +1,64 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SummaryComponent } from './lebaran/summary/summary.component';
-import { LoginComponent } from './login/login.component';
-import { PalletTypeComponent } from './master/pallet-type/pallet-type.component';
-import { PartNumberComponent } from './master/part-number/part-number.component';
-import { TapComponent } from './tap/tap.component';
-import { TaplistComponent } from './taplist/taplist.component';
 import { AuthGuard } from './_guards/auth.guard';
-import { DefectGroupComponent } from './master/defect-group/defect-group.component';
-import { EmployeeComponent } from './master/employee/employee.component';
-import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
-import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
-import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
-
-import { WarehouseComponent } from './master/warehouse/warehouse.component';
-import { LearningComponent } from './learning/learning.component';
-import { TestingComponent } from './master/testing/testing.component';
 
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./lebaran/questionnaire/questionnaire.module').then(
-        (m) => m.QuestionnaireModule
+    loadComponent: () =>
+      import('./lebaran/questionnaire/questionnaire.component').then(
+        (c) => c.QuestionnaireComponent
       ),
   },
   {
     path: 'learning',
-    loadChildren: () =>
-      import('./learning/learning.module').then((m) => m.LearningModule),
-    component: LearningComponent,
-  },
-  {
-    path: 'testing',
-    loadChildren: () =>
-      import('./master/testing/testing.module').then((m) => m.TestingModule),
-    component: TestingComponent,
+    loadComponent: () =>
+      import('./learning/learning.component').then((c) => c.LearningComponent),
   },
   {
     path: 'warehouse',
-    // lazy load module
-    loadChildren: () =>
-      import('./master/warehouse/warehouse.module').then(
-        (m) => m.WarehouseModule
+    loadComponent: () =>
+      import('./master/warehouse/warehouse.component').then(
+        (c) => c.WarehouseComponent
       ),
   },
   {
     path: 'pallet-type',
-    /* runGuardsAndResolvers: 'always',
-    canActivate: [AuthGuard], */
-    component: PalletTypeComponent,
+    loadComponent: () =>
+      import('./master/pallet-type/pallet-type.component').then(
+        (c) => c.PalletTypeComponent
+      ),
   },
   {
     path: 'tap',
     loadComponent: () =>
       import('./tap/tap.component').then((m) => m.TapComponent),
-    component: TaplistComponent,
   },
   {
     path: 'tap/:id',
-    component: TapComponent,
+    loadComponent: () =>
+      import('./tap/tap.component').then((m) => m.TapComponent),
   },
   {
     path: 'security',
-    loadChildren: () =>
-      import('./lebaran/security/security.module').then(
-        (m) => m.SecurityModule
+    loadComponent: () =>
+      import('./lebaran/security/security.component').then(
+        (c) => c.SecurityComponent
       ),
   },
   {
     path: 'employee',
-    component: EmployeeComponent,
-    // loadChildren: () => import('./master/employee/employee.module').then(m => m.EmployeeModule),
+    loadComponent: () =>
+      import('./master/employee/employee.component').then(
+        (c) => c.EmployeeComponent
+      ),
   },
   {
     path: 'register',
-    loadChildren: () =>
-      import('./lebaran/register/register.module').then(
-        (m) => m.RegisterModule
+    loadComponent: () =>
+      import('./lebaran/register/register.component').then(
+        (c) => c.RegisterComponent
       ),
   },
   // {
@@ -91,14 +71,19 @@ const routes: Routes = [
     path: 'summary',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    component: SummaryComponent,
+    loadComponent: () =>
+      import('./lebaran/summary/summary.component').then(
+        (c) => c.SummaryComponent
+      ),
   },
   {
     path: 'summary/:id',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./lebaran/detail/detail.module').then((m) => m.DetailModule),
+    loadComponent: () =>
+      import('./lebaran/detail/detail.component').then(
+        (c) => c.DetailComponent
+      ),
   },
   // {
   //   path: 'detail',
@@ -108,27 +93,43 @@ const routes: Routes = [
   // },
   {
     path: 'part',
-    component: PartNumberComponent,
+    loadComponent: () =>
+      import('./master/part-number/part-number.component').then(
+        (c) => c.PartNumberComponent
+      ),
   },
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./login/login.component').then((c) => c.LoginComponent),
   },
   {
     path: 'defect',
-    component: DefectGroupComponent,
+    loadComponent: () =>
+      import('./master/defect-group/defect-group.component').then(
+        (c) => c.DefectGroupComponent
+      ),
   },
   {
     path: 'defectSecond',
-    component: DefectGroupSecondComponent,
+    loadComponent: () =>
+      import('./master/defect-group-second/defect-group-second.component').then(
+        (c) => c.DefectGroupSecondComponent
+      ),
   },
   {
     path: 'defectDetail',
-    component: DefectDetailComponent,
+    loadComponent: () =>
+      import('./master/defect-detail/defect-detail.component').then(
+        (c) => c.DefectDetailComponent
+      ),
   },
   {
     path: 'defectMapping',
-    component: DefectMappingComponent,
+    loadComponent: () =>
+      import('./master/defect-mapping/defect-mapping.component').then(
+        (c) => c.DefectMappingComponent
+      ),
   },
   {
     path: '**',

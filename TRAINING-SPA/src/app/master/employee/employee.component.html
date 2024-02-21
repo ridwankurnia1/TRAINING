@@ -1,9 +1,9 @@
 <div class="container my-3">
-  <!-- <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog> -->
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
   <p-table #dt1 [value]="listEmployee" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
     styleClass="p-datatable-striped" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [responsive]="true" [rowsPerPageOptions]="[10,25,50]" [lazy]="true" (onLazyLoad)="pageChanged($event)"
-    [totalRecords]="pagination.totalItems" [loading]="loading">
+    [totalRecords]="pagination?.totalItems" [loading]="loading">
     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-between">
         <div class="col-md-3 col-6">
@@ -117,80 +117,83 @@
     </caption>
   </table> -->
 
+
   <ng-template #popup>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Edit Employee</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form class="needs-validation" [formGroup]="employeeForm">
-        <div class="mb-3">
-          <label for="nik" class="form-label">NIK</label>
-          <input type="text" class="form-control" formControlName="nik" placeholder="Employee Id" (blur)="getEmployee()"
-            [ngClass]="{'is-invalid': employeeForm.get('nik').errors && employeeForm.get('nik').touched}">
-          <div class="invalid-feedback">
-            Harap isi NIK
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="nama" class="form-label">Nama</label>
-          <input type="text" class="form-control" formControlName="nama" placeholder="Nama"
-            [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
-          <div class="invalid-feedback">
-            Harap isi Nama
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="birthDate" class="form-label">Birth Date</label>
-          <div class="input-group">
-            <input type="text" class="form-control" #dp1="bsDatepicker" formControlName="birthDate"
-              placeholder="Birth Date"
-              [ngClass]="{'is-invalid': employeeForm.get('birthDate').errors && employeeForm.get('birthDate').touched}"
-              bsDatepicker [bsConfig]="bsConfig">
-            <div class="input-group-append">
-              <button class="btn btn-outline-primary" (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen">
-                <i class="fa fa-calendar"></i>
-              </button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Edit Employee</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modalRef.hide()"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="needs-validation" [formGroup]="employeeForm">
+          <div class="mb-3">
+            <label for="nik" class="form-label">NIK</label>
+            <input type="text" class="form-control" formControlName="nik" placeholder="Employee Id"
+              (blur)="getEmployee()"
+              [ngClass]="{'is-invalid': employeeForm.get('nik').errors && employeeForm.get('nik').touched}">
+            <div class="invalid-feedback">
+              Harap isi NIK
             </div>
           </div>
-          <div class="invalid-feedback">
-            Harap isi Tanggal Lahir
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" formControlName="nama" placeholder="Nama"
+              [ngClass]="{'is-invalid': employeeForm.get('nama').errors && employeeForm.get('nama').touched}">
+            <div class="invalid-feedback">
+              Harap isi Nama
+            </div>
           </div>
-        </div>
-        <div class="mb-3">
-          <label for="department" class="form-label">Department</label>
-          <!-- <select class="form-control" aria-label="select department" formControlName="departmentId"
-            [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
-            <option *ngFor="let item of department" [value]="item.value" >{{item.label}}</option>            
-          </select> -->
-          <p-dropdown [options]="department" formControlName="departmentId" optionLabel="label" optionValue="value"
-            [filter]="true" [style]="{'width':'100%'}" class="d-block w-100"
-            [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
-          </p-dropdown>
-          <div class="invalid-feedback">
-            Harap pilih department
+          <div class="mb-3">
+            <label for="birthDate" class="form-label">Birth Date</label>
+            <div class="input-group">
+              <input type="text" class="form-control" #dp1="bsDatepicker" formControlName="birthDate"
+                placeholder="Birth Date"
+                [ngClass]="{'is-invalid': employeeForm.get('birthDate').errors && employeeForm.get('birthDate').touched}"
+                bsDatepicker [bsConfig]="bsConfig">
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary" (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+            <div class="invalid-feedback">
+              Harap isi Tanggal Lahir
+            </div>
           </div>
-        </div>
-        <div class="mb-3">
-          <label for="grade" class="form-label">Grade</label>
-          <select class="form-control" aria-label="select grade" formControlName="grade"
-            [ngClass]="{'is-invalid': employeeForm.get('grade').errors && employeeForm.get('grade').touched}">
-            <option *ngFor="let item of grade" [value]="item.value">{{item.label}}</option>
-          </select>
-          <!-- <input type="text" class="form-control" formControlName="grade" placeholder="Grade"> -->
-        </div>
-        <div class="mb-3">
-          <button type="button" class="btn btn-sm btn-danger mr-2" (click)="save()">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-            <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
-          </button>
-          <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">
-            <i class="fa fa-undo mr-2"></i> Cancel
-          </button>
-        </div>
-      </form>
+          <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <!-- <select class="form-control" aria-label="select department" formControlName="departmentId"
+                  [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
+                  <option *ngFor="let item of department" [value]="item.value" >{{item.label}}</option>            
+                </select> -->
+            <p-dropdown [options]="department" formControlName="departmentId" optionLabel="label" optionValue="value"
+              [filter]="true" [style]="{'width':'100%'}" class="d-block w-100"
+              [ngClass]="{'is-invalid': employeeForm.get('departmentId').errors && employeeForm.get('departmentId').touched}">
+            </p-dropdown>
+            <div class="invalid-feedback">
+              Harap pilih department
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="grade" class="form-label">Grade</label>
+            <select class="form-control" aria-label="select grade" formControlName="grade"
+              [ngClass]="{'is-invalid': employeeForm.get('grade').errors && employeeForm.get('grade').touched}">
+              <option *ngFor="let item of grade" [value]="item.value">{{item.label}}</option>
+            </select>
+            <!-- <input type="text" class="form-control" formControlName="grade" placeholder="Grade"> -->
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="save()">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+              <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">
+              <i class="fa fa-undo mr-2"></i> Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </ng-template>
 </div>

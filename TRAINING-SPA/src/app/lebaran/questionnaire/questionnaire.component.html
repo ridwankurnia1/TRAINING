@@ -16,8 +16,8 @@
         <form #checkInForm="ngForm" (submit)="submit()">
           <div class="form-group">
             <label for="nikorname">Identitas Karyawan</label>
-            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)" field="employeeName"
-              [size]="10" placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4"
+            <p-autoComplete name="nik" [suggestions]="filteredEmp" (completeMethod)="filterUser($event)"
+              field="employeeName" [size]="10" placeholder="Isi NIK atau nama" [(ngModel)]="employee" [minLength]="4"
               [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" (onSelect)="filterSelect($event)"
               [forceSelection]="true" [disabled]="readOnly">
               <ng-template let-item pTemplate="item">
@@ -75,7 +75,7 @@
           <h6>Mengucapkan</h6>
           <h5>Selamat Idul Fitri 1442 H</h5>
           <h5>Mohon Maaf Lahir dan Bathin</h5>
-          <img class="d-block mx-auto mb-2" src="assets/ketupat.png" alt="" width="72" height="72">    
+          <img class="d-block mx-auto mb-2" src="assets/ketupat.png" alt="" width="72" height="72">
         </div>
       </div>
 

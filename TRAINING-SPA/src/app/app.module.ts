@@ -1,37 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavComponent } from './nav/nav.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { JwtModule } from '@auth0/angular-jwt';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { DropdownModule } from 'primeng/dropdown';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { LoginComponent } from './login/login.component';
-import { SummaryComponent } from './lebaran/summary/summary.component';
-import { TapComponent } from './tap/tap.component';
-import { TaplistComponent } from './taplist/taplist.component';
-import { PartNumberComponent } from './master/part-number/part-number.component';
 import { GraphQLModule } from './graphql.module';
-import { DefectGroupComponent } from './master/defect-group/defect-group.component';
-import { DefectGroupSecondComponent } from './master/defect-group-second/defect-group-second.component';
-import { DefectDetailComponent } from './master/defect-detail/defect-detail.component';
-import { DefectMappingComponent } from './master/defect-mapping/defect-mapping.component';
-import { ToastModule } from 'primeng/toast';
-import { RouterModule } from '@angular/router';
+import { RouterModule, TitleStrategy } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './_service/error.interceptor';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token');
@@ -52,25 +30,10 @@ export function tokenGetter(): string {
     // DefectMappingComponent
   ],
   imports: [
-    AutoCompleteModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    TableModule,
-    ButtonModule,
-    ConfirmDialogModule,
-    ToastModule,
-    DropdownModule,
-    RadioButtonModule,
+    RouterModule,
     GraphQLModule,
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    PaginationModule.forRoot(),
+    // ConfirmDialogModule,
     ToastrModule.forRoot({ positionClass: 'toast-bottom-right' }),
-    BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter,
@@ -79,7 +42,13 @@ export function tokenGetter(): string {
       },
     }),
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    // { provide: TitleStrategy, useClass:  },
+    MessageService,
+    ToastrService,
+    BsModalService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

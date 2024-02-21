@@ -4,13 +4,10 @@ import { DefectMappingService } from 'src/app/_service/defect-mapping.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { Dropdown } from 'src/app/_model/Dropdown';
@@ -18,13 +15,11 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
-import { ThisReceiver } from '@angular/compiler';
-import * as XLSX from 'xlsx';
 import { DefectDetail } from 'src/app/_model/DefectDetail';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { EmployeeRoutes } from '../employee/employee.routing';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-defect-mapping',
@@ -35,10 +30,10 @@ import { EmployeeRoutes } from '../employee/employee.routing';
     CommonModule,
     FormsModule,
     RadioButtonModule,
-    EmployeeRoutes,
     TableModule,
+    RouterModule,
     ReactiveFormsModule,
-  ]
+  ],
 })
 export class DefectMappingComponent implements OnInit {
   defectMappingForm: FormGroup;
@@ -214,7 +209,7 @@ export class DefectMappingComponent implements OnInit {
       });
     }
   }
-  closeClick(): void{
+  closeClick(): void {
     this.defectMappingForm.reset();
   }
 }

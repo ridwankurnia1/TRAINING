@@ -15,11 +15,9 @@ import { Dropdown2 } from 'src/app/_model/Dropdown2';
 import { ExcelService } from 'src/app/_service/excel.service';
 import { DropdownFilterOptions, DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
-import moment from 'moment';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
-import { EmployeeRoutes } from '../employee/employee.routing';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ButtonModule } from 'primeng/button';
@@ -29,6 +27,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-pallet-type',
