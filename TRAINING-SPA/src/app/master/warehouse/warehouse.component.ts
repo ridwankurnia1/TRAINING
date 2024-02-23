@@ -26,7 +26,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { NgModule } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
 import { DialogModule } from 'primeng/dialog';
 
@@ -51,7 +50,7 @@ import { DialogModule } from 'primeng/dialog';
     ToastModule,
     FormsModule,
   ],
-  providers: [WarehouseService],
+  providers: [WarehouseService, ConfirmationService, MessageService],
 })
 export class WarehouseComponent implements OnInit {
   warehouseData: Warehouse[];

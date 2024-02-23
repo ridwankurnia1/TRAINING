@@ -7,10 +7,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
+  standalone: true,
+  imports: [FormsModule],
 })
 export class QuestionsComponent implements OnInit {
   // this variable is used as two-way binding

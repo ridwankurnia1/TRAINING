@@ -85,27 +85,6 @@ export class PalletTypeComponent implements OnInit {
 
   // form variables
   formGroup: UntypedFormGroup;
-  ipType: String;
-  ipName: String;
-  ipCodification: Number;
-  ipApp: String = '';
-  ipMaterial: String = '';
-  ipColor: String;
-  ipCurrency: String = '';
-  ipLength: Number;
-  ipLengthType: String;
-  ipWidth: Number;
-  ipWidthType: String;
-  ipWeight: Number;
-  ipWeightType: String = '';
-  ipHeight: number;
-  ipHeightType: String = '';
-  ipPrice: Number;
-  ipStatus: Number;
-  ipFl1: Number;
-  ipCarryIn: Number;
-  ipCarryOut: Number;
-  ipRemark: String;
 
   // dropdown variables
   dApp = [];
@@ -222,20 +201,12 @@ export class PalletTypeComponent implements OnInit {
   }
 
   resetForm() {
-    this.formGroup.reset();
-
-    this.ipType = '';
-    this.ipApp = '';
-    this.ipColor = '';
-    this.ipCodification = null;
-    this.ipCurrency = '';
-    this.ipHeight = null;
-    this.ipWeight = null;
-    this.ipLength = null;
-    this.ipPrice = null;
-    this.ipRemark = null;
-
-    this.initForm();
+    this.formGroup.reset({
+      lengthUm: 'MM',
+      widthUm: 'MM',
+      heightUm: 'MM',
+      weightUm: 'KG',
+    });
   }
 
   initForm() {
@@ -293,11 +264,6 @@ export class PalletTypeComponent implements OnInit {
       { name: 'ACTIVE', value: 1 },
       { name: 'INACTIVE', value: 2 },
     ];
-
-    this.ipHeightType = 'MM';
-    this.ipWidthType = 'MM';
-    this.ipLengthType = 'MM';
-    this.ipWeightType = 'KG';
   }
 
   resetDropdownFilter(options: DropdownFilterOptions) {

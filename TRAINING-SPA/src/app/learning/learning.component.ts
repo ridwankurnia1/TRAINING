@@ -2,14 +2,22 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Learning } from '../_model/Learning';
 import { QuestionsComponent } from './shared/renderable/questions/questions.component';
 import { VersionComponent } from './shared/renderable/version/version.component';
-import { LearningModule } from './learning.module';
+import { LearnCardComponent } from './shared/renderable/learn-card/learn-card.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-learning',
   templateUrl: './learning.component.html',
   styleUrls: ['./learning.component.css'],
   standalone: true,
-  imports: [LearningModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LearnCardComponent,
+    VersionComponent,
+    QuestionsComponent,
+  ],
   // encapsulation: ViewEncapsulation.ShadowDom
 })
 export class LearningComponent implements OnInit {

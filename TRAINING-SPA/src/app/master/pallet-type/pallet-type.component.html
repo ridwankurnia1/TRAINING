@@ -196,8 +196,8 @@
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Pallet App</label>
           <div class="col-9">
-            <p-dropdown [style]="{ width: '100%' }" [options]="dApp" [(ngModel)]="ipApp" optionLabel="name"
-              optionValue="value" formControlName="palletApp" placeholder="OWP/RTN" [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dApp" optionLabel="name" optionValue="value"
+              formControlName="palletApp" placeholder="OWP/RTN" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletApp').invalid &&
                   formGroup.get('palletApp').touched
@@ -208,8 +208,8 @@
         <div class="form-group row mb-3">
           <label class="col-3 col-form-label">Material Type</label>
           <div class="col-9">
-            <p-dropdown [style]="{ width: '100%' }" [options]="dMaterial" [(ngModel)]="ipMaterial" optionLabel="name"
-              optionValue="value" formControlName="materialType" placeholder="SELECT MATERIAL TYPE" [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dMaterial" optionLabel="name" optionValue="value"
+              formControlName="materialType" placeholder="SELECT MATERIAL TYPE" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('materialType').errors &&
                   formGroup.get('materialType').touched
@@ -220,9 +220,8 @@
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Pallet Color</label>
           <div class="col-9">
-            <p-dropdown [style]="{ width: '100%' }" [options]="dColor" [(ngModel)]="ipColor" optionLabel="name"
-              optionValue="value" formControlName="palletColor" [filter]="true" filterBy="name"
-              placeholder="SELECT COLOR" [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dColor" optionLabel="name" optionValue="value"
+              formControlName="palletColor" [filter]="true" filterBy="name" placeholder="SELECT COLOR" [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletColor').invalid &&
                   formGroup.get('palletColor').touched
@@ -231,7 +230,7 @@
                 <div class="flex p-1">
                   <div class="p-inputgroup" (click)="$event.stopPropagation()">
                     <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="dColorFilter"
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="dColorFilter" [ngModelOptions]="{standalone:true}"
                       (keyup)="options.filter($event)" />
                   </div>
                 </div>
@@ -247,9 +246,9 @@
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Pallet Currency</label>
           <div class="col-9">
-            <p-dropdown [style]="{ width: '100%' }" [options]="dCurrency" [(ngModel)]="ipCurrency" optionLabel="name"
-              optionValue="value" [filter]="true" filterBy="name" formControlName="palletCurrency"
-              placeholder="SELECT CURRENCY TYPE" [ngClass]="{
+            <p-dropdown [style]="{ width: '100%' }" [options]="dCurrency" optionLabel="name" optionValue="value"
+              [filter]="true" filterBy="name" formControlName="palletCurrency" placeholder="SELECT CURRENCY TYPE"
+              [ngClass]="{
                 'ng-invalid ng-dirty is-invalid':
                   formGroup.get('palletCurrency').invalid &&
                   formGroup.get('palletCurrency').touched
@@ -259,15 +258,9 @@
                   <div class="p-inputgroup" (click)="$event.stopPropagation()">
                     <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
                     <input type="text" pInputText placeholder="Filter" [(ngModel)]="dCurrencyFilter"
-                      (keyup)="options.filter($event)" />
+                      [ngModelOptions]="{standalone:true}" (keyup)="options.filter($event)" />
                   </div>
                 </div>
-              </ng-template>
-              <ng-template pTemplate="selectedItem">
-                {{ ipCurrency }}
-              </ng-template>
-              <ng-template let-currency pTemplate="item">
-                {{ currency.name }}
               </ng-template>
             </p-dropdown>
             <div class="invalid-feedback">Please choose currency type</div>
@@ -278,19 +271,17 @@
             Pallet Codification
           </label>
           <div class="col-2">
-            <p-radioButton value="1" [(ngModel)]="ipCodification" formControlName="palletCodification" [ngClass]="{
+            <p-radioButton value="1" formControlName="palletCodification" [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').touched
               }" label="Automatic" class="m-1"></p-radioButton>
-            <p-radioButton value="2" [(ngModel)]="ipCodification" formControlName="palletCodification" label="Manual"
-              [ngClass]="{
+            <p-radioButton value="2" formControlName="palletCodification" label="Manual" [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').dirty
               }" class="m-1"></p-radioButton>
-            <p-radioButton value="3" [(ngModel)]="ipCodification" formControlName="palletCodification"
-              label="Automatic/Manual" [ngClass]="{
+            <p-radioButton value="3" formControlName="palletCodification" label="Automatic/Manual" [ngClass]="{
                 'is-invalid':
                   formGroup.get('palletCodification').invalid &&
                   formGroup.get('palletCodification').dirty
@@ -305,7 +296,7 @@
             Record Status
           </label>
           <div class="col-2">
-            <p-checkbox formControlName="recordStatus" value="1" [(ngModel)]="ipStatus" [binary]="true" class="ml-2"
+            <p-checkbox formControlName="recordStatus" value="1" [binary]="true" class="ml-2"
               label="Active"></p-checkbox>
           </div>
         </div>
@@ -316,12 +307,11 @@
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber [(ngModel)]="ipLength" mode="decimal" name="palletLength"
-                  [minFractionDigits]="6"></p-inputNumber>
+                <p-inputNumber mode="decimal" formControlName="palletLength" [minFractionDigits]="6"></p-inputNumber>
               </div>
               <div class="col-6">
-                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipLengthType"
-                  optionLabel="name" optionValue="value" formControlName="lengthUm"></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" optionLabel="name" optionValue="value"
+                  formControlName="lengthUm"></p-dropdown>
               </div>
             </div>
           </div>
@@ -331,13 +321,12 @@
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber [(ngModel)]="ipWidth" mode="decimal" name="palletWidth"
-                  [minFractionDigits]="6"></p-inputNumber>
+                <p-inputNumber mode="decimal" formControlName="palletWidth" [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid width</div>
               </div>
               <div class="col-6">
-                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipWidthType"
-                  formControlName="widthUm" optionLabel="name" optionValue="value"></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" formControlName="widthUm"
+                  optionLabel="name" optionValue="value"></p-dropdown>
               </div>
             </div>
           </div>
@@ -347,13 +336,12 @@
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber [(ngModel)]="ipHeight" mode="decimal" name="palletHeight"
-                  [minFractionDigits]="6"></p-inputNumber>
+                <p-inputNumber mode="decimal" formControlName="palletHeight" [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid height</div>
               </div>
               <div class="col-6">
-                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipHeightType"
-                  optionLabel="name" optionValue="value" formControlName="heightUm"></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" optionLabel="name" optionValue="value"
+                  formControlName="heightUm"></p-dropdown>
               </div>
             </div>
           </div>
@@ -363,30 +351,28 @@
           <div class="col-9">
             <div class="row">
               <div class="col-6">
-                <p-inputNumber [(ngModel)]="ipWeight" mode="decimal" name="palletWeight"
-                  [minFractionDigits]="6"></p-inputNumber>
+                <p-inputNumber mode="decimal" formControlName="palletWeight" [minFractionDigits]="6"></p-inputNumber>
                 <div class="invalid-feedback">Insert a valid weight</div>
               </div>
               <div class="col-6">
-                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" [(ngModel)]="ipWeightType"
-                  formControlName="weightUm" optionLabel="name" optionValue="value"></p-dropdown>
+                <p-dropdown [style]="{ width: '100%' }" [options]="dMeasure" formControlName="weightUm"
+                  optionLabel="name" optionValue="value"></p-dropdown>
               </div>
             </div>
           </div>
         </div>
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Pallet Price</label>
-          <div class="col-9" [style]="{ width: '100%' }" style="width: 100%">
-            <p-inputNumber [(ngModel)]="ipPrice" mode="currency" currency="IDR" name="palletPrice"
-              [minFractionDigits]="6"></p-inputNumber>
+          <div class="col-9">
+            <p-inputNumber mode="currency" styleClass="w-100 mw-100" inputStyleClass="w-100 mw-100" currency="IDR"
+              formControlName="palletPrice" [minFractionDigits]="6"></p-inputNumber>
             <div class="invalid-feedback">Insert a valid price</div>
           </div>
         </div>
         <div class="form-group row mb-3">
           <label for="inputName" class="col-3 col-form-label">Remark</label>
           <div class="col-9">
-            <input type="text" class="form-control" [(ngModel)]="ipRemark" formControlName="remark" pInputText
-              [ngClass]="{
+            <input type="text" class="form-control" formControlName="remark" pInputText [ngClass]="{
                 'is-invalid':
                   formGroup.get('remark').invalid &&
                   formGroup.get('remark').touched
@@ -397,11 +383,11 @@
         <div class="row d-flex mb-3 justify-content-start">
           <label class="col-3 col-form-label">Flags</label>
           <div class="col-4">
-            <p-checkbox formControlName="flag1" value="1" [(ngModel)]="ipFl1" [binary]="true" class="ml-2"
+            <p-checkbox formControlName="flag1" value="1" [binary]="true" class="ml-2"
               label="General Flag"></p-checkbox>
-            <p-checkbox formControlName="carryInFlag" value="1" [(ngModel)]="ipCarryIn" [binary]="true" class="ml-2"
+            <p-checkbox formControlName="carryInFlag" value="1" [binary]="true" class="ml-2"
               label="Carry In Flag"></p-checkbox>
-            <p-checkbox formControlName="carryOutFlag" value="1" [(ngModel)]="ipCarryOut" [binary]="true" class="ml-2"
+            <p-checkbox formControlName="carryOutFlag" value="1" [binary]="true" class="ml-2"
               label="Carry Out Flag"></p-checkbox>
           </div>
         </div>

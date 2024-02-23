@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
+import { Routes } from '@angular/router';
 import { AuthGuard } from './_guards/auth.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./lebaran/questionnaire/questionnaire.component').then(
         (c) => c.QuestionnaireComponent
@@ -18,6 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'warehouse',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./master/warehouse/warehouse.component').then(
         (c) => c.WarehouseComponent
@@ -25,6 +25,7 @@ const routes: Routes = [
   },
   {
     path: 'pallet-type',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./master/pallet-type/pallet-type.component').then(
         (c) => c.PalletTypeComponent
@@ -49,6 +50,7 @@ const routes: Routes = [
   },
   {
     path: 'employee',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./master/employee/employee.component').then(
         (c) => c.EmployeeComponent
@@ -136,9 +138,3 @@ const routes: Routes = [
     redirectTo: '',
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

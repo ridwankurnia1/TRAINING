@@ -57,7 +57,7 @@ export class TapComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const docId = this.route.snapshot.paramMap.get('id');
+    const docId = this.route.snapshot.paramMap?.get('id');
     if (this.ui.isNullOrEmpty(docId)) {
       return;
     }
@@ -94,6 +94,7 @@ export class TapComponent implements OnInit {
       nama: [{values:'', disabled: true}],
       rfid: [{values:'', disabled: true}],
     });
+    this.createFormSearch();
   }
   createFormSearch(){
     this.formSearch= this.fb.group({

@@ -20,7 +20,6 @@ import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { EmployeeService } from 'src/app/_service/employee.service';
-import * as XLSX from 'xlsx';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -30,7 +29,7 @@ import { DropdownModule } from 'primeng/dropdown';
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css'],
   standalone: true,
-  providers: [EmployeeService, ConfirmationService, BsModalService],
+  providers: [EmployeeService, ConfirmationService],
   imports: [
     CommonModule,
     FormsModule,

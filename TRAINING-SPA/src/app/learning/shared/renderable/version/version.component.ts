@@ -4,6 +4,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   selector: 'app-version',
   templateUrl: './version.component.html',
   styleUrls: ['./version.component.css'],
+  standalone: true,
 })
 export class VersionComponent implements OnChanges {
   @Input() major = 1;
