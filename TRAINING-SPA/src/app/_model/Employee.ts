@@ -13,4 +13,6 @@ export interface Employee {
     healthCheckDate?: Date;
     checkPIC?: string;
     remarks?: string;
+    address?: string;
+    branch?: string;
 }

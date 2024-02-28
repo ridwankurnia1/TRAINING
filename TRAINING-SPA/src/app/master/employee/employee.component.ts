@@ -20,16 +20,19 @@ import { Dropdown } from 'src/app/_model/Dropdown';
 import { Employee } from 'src/app/_model/Employee';
 import { PaginatedResult, Pagination } from 'src/app/_model/Pagination';
 import { EmployeeService } from 'src/app/_service/employee.service';
+import * as XLSX from 'xlsx';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { saveAs } from 'file-saver';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css'],
   standalone: true,
-  providers: [EmployeeService, ConfirmationService],
+  providers: [EmployeeService, ConfirmationService, BsModalService],
   imports: [
     CommonModule,
     FormsModule,
@@ -46,6 +49,7 @@ export class EmployeeComponent implements OnInit {
   param = {};
   department: Dropdown[] = [];
   grade: Dropdown[] = [];
+  branch: Dropdown[] = [];
   modalRef: BsModalRef;
   listEmployee: Employee[] = [];
   pagination: Pagination;
@@ -85,9 +89,11 @@ export class EmployeeComponent implements OnInit {
     this.employeeForm = this.fb.group({
       nik: ['', Validators.required],
       nama: ['', Validators.required],
+      branch: ['', Validators.required],
       departmentId: ['', Validators.required],
       grade: ['', Validators.required],
       birthDate: ['', Validators.required],
+      address: ['', Validators.required],
     });
   }
 
@@ -109,6 +115,7 @@ export class EmployeeComponent implements OnInit {
     this.employeeService.getDropdown(this.param).subscribe((res) => {
       this.department = res.dept;
       this.grade = res.grade;
+      this.branch = res.branch;
     });
   }
   pageChanged(event): void {
@@ -130,19 +137,49 @@ export class EmployeeComponent implements OnInit {
           this.employeeForm.setValue({
             nik: item.nik,
             nama: item.nama,
+            branch: item.branch,
             departmentId: item.departmentId,
             grade: item.grade,
             birthDate: new Date(item.birthDate),
+            // birthDate: item.birthDate,
+            address: item.address,
           });
-          this.employeeForm.controls.nik.disable();
+          (this.isEdit = true), this.employeeForm.controls.nik.disable();
+          this.employeeForm.controls.branch.disable();
           this.toastr.info('Employee already exists');
         }
       },
     });
   }
   exportExcel(): void {
+    console.log('button ok');
     import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.listEmployee);
+      var Heading = [['PT. Asahimas Flat Glass Tbk']];
+      var Address = [
+        [
+          'Cikampek, Bukit Indah Industrial Park Blok. J-L Sector 1-A Karangjaya Tirtamulya 41373 Kalihurip Jawa Barat · ~73,1 km',
+        ],
+      ];
+      var listExport: any[] = JSON.parse(JSON.stringify(this.listEmployee));
+      listExport = listExport.map((data: Employee) => {
+        var emp: Employee = {
+          nama: data.nama,
+          branch: data.branch,
+          department: data.department,
+          birthDate: data.birthDate,
+          address: data.address,
+        };
+        console.log(this.ucwords(emp.nama));
+        console.log(emp.address);
+        return emp;
+      });
+
+      const worksheet = xlsx.utils.aoa_to_sheet(Heading);
+      xlsx.utils.sheet_add_aoa(worksheet, Address, { origin: 'A2' });
+      xlsx.utils.sheet_add_json(worksheet, listExport, {
+        origin: 'A3',
+      });
+
       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, {
         bookType: 'xlsx',
@@ -152,6 +189,7 @@ export class EmployeeComponent implements OnInit {
     });
   }
   saveAsExcelFile(buffer: any, fileName: string): void {
+    console.log('Fungsi saveAsExcelFile');
     import('file-saver').then((FileSaver) => {
       const EXCEL_TYPE =
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -163,26 +201,83 @@ export class EmployeeComponent implements OnInit {
         data,
         fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION
       );
+      console.log('filesaver save as aman');
     });
   }
+
+  // exportExcel(): void {
+  //   let kopSheet = [
+  //     { A1: 'PT Asahimas Flat Glass Tbk' },
+  //     { A1: 'Data Employee' },
+  //     {
+  //       A1:
+  //         'Export Time : ' +
+  //         moment
+  //           .utc(new Date(), 'MM-DD-YYYY')
+  //           .local()
+  //           .format('DD-MM-YYYY hh:mm:ss'),
+  //     },
+  //     { A1: '' },
+  //   ];
+
+  //   let headerSheet = [
+  //     {
+  //       A1: 'Name',
+  //       A2: 'Branch',
+  //       A3: 'Department',
+  //       A4: 'Birth Date',
+  //     },
+  //   ];
+
+  //   // TODO : replace pageMetadata with corresponding meta data variable
+  //   var listExport: any[] = JSON.parse(JSON.stringify(this.listEmployee));
+  //     listExport = listExport.map((data: Employee) => {
+  //       var emp: Employee = {
+  //         nama: data.nama,
+  //         branch: data.branch,
+  //         department: data.department,
+  //         birthDate: data.birthDate,
+  //         address: data.address,
+
+  //       };
+  //       return emp;
+  //     });
+
+  //     this.excel.exportAsExcelFile(
+  //       kopSheet,
+  //       headerSheet,
+  //       filtered,
+  //       'DATA WAREHOUSE GROUP'
+  //     );
+
+  //     this.isExporting = false;
+  //   });
+  // }
+
   edit(item: Employee, template: TemplateRef<any>): void {
-    console.log('ok');
     if (item) {
       this.isEdit = true;
+
       this.employeeForm.setValue({
         nik: item.nik,
         nama: item.nama,
+        branch: item.branch,
         departmentId: item.departmentId,
         grade: item.grade,
+
         birthDate: new Date(item.birthDate),
+        // birthDate: item.birthDate,
+        address: item.address,
       });
+
       this.employeeForm.controls.nik.disable();
+      this.employeeForm.controls.branch.disable();
     } else {
-      console.log('ok');
       this.isEdit = false;
       this.employeeForm.reset();
       // this.employeeForm.controls.nik.enable();
       this.employeeForm.controls['nik'].enable();
+      this.employeeForm.controls.branch.enable();
     }
     this.modalRef = this.modalService.show(template, this.configModal);
   }
@@ -206,11 +301,16 @@ export class EmployeeComponent implements OnInit {
         }
       );
     } else {
+      console.log('data kosong, lanjut add');
       this.employeeService.addEmployee(data).subscribe(
         () => {
+          console.log('sukses tambah data');
           this.loadData();
+          this.loading = false;
+          this.modalRef.hide();
         },
         (error) => {
+          console.log('add data error');
           this.toastr.error(error.error);
         }
       );
@@ -228,6 +328,19 @@ export class EmployeeComponent implements OnInit {
       },
     });
   }
+
+
+  // Generate kata jadi PascalCase
+  ucwords(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+
+    return splitStr.join(' ');
+  }
+
   validateFormEntry(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);

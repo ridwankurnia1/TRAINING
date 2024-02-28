@@ -25,6 +25,10 @@ namespace TRAINING.API.Data
         public DbSet<ZVAR> ZVAR { get; set; }
         public DbSet<IWGR> IWGR { get; set; }
         public DbSet<IWHS> IWHS { get; set; }
+        public DbSet<ZBRC> ZBRC { get; set; }
+        public DbSet<TRCK> TRCK { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -49,6 +53,9 @@ namespace TRAINING.API.Data
             builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
             builder.Entity<IWGR>().HasKey(k => new { k.HVWHGR });
             builder.Entity<IWHS>().HasKey(k => new { k.HWWHNO });
+
+            builder.Entity<ZBRC>().HasKey(k => new { k.ZBBRNO, k.ZBCONO });
+            builder.Entity<TRCK>().HasKey(k => new { k.TBRCID });
 
             // SeedWarehouse(builder);
         }

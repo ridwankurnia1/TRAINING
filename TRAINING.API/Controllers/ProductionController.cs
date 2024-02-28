@@ -10,6 +10,7 @@ using TRAINING.API.Extensions;
 using System.Collections.Generic;
 using TRAINING.API.Model;
 
+
 namespace TRAINING.API.Controllers
 {
     [Route("api/[Controller]")]
@@ -72,9 +73,9 @@ namespace TRAINING.API.Controllers
                 return BadRequest("Data Sudah Ada");
 
             if (temp == null)
-            {   
+            {
                 _repo.Add<MDF0>(data);
-                
+
                 if (await _repo.SaveAll())
                     return Ok();
             }
@@ -94,7 +95,7 @@ namespace TRAINING.API.Controllers
         // [HttpGet("DatMDF0")]
         // public async Task<IActionResult> GetMDF0Name([FromQuery] InventoryParams prm, IProductionRepository repo)
         // {
-            
+
         //     var data = await _repo.GetListMDF0(prm);
 
         //     return Ok(data);
@@ -104,9 +105,9 @@ namespace TRAINING.API.Controllers
         [HttpDelete("DatMDF0")]
         public async Task<IActionResult> DeleteListMDF0(MDF0 data)
         {
-            
+
             _repo.Delete<MDF0>(data);
-             if (await _repo.SaveAll())
+            if (await _repo.SaveAll())
                 return Ok();
             return Ok();
             // throw new Exception("Gagal Menghapus Data");
@@ -115,7 +116,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpPut("EditDatMDF0")]
         //mengedit data dengan menggunakan objek
-         public async Task<IActionResult> EditMDf0(MDF0 obj)
+        public async Task<IActionResult> EditMDf0(MDF0 obj)
         {
             var data = await _repo.Get1MDF0(obj.DDTRID);
             if (data == null)
@@ -132,7 +133,7 @@ namespace TRAINING.API.Controllers
             data.DDCRUS = obj.DDCRUS;
             data.DDCHTM = obj.DDCHTM;
             data.DDCHUS = obj.DDCHUS;
-            
+
             // var sum1 = obj.Question01 + obj.Question02 + obj.Question03 + obj.Question04 + obj.Question05 +
             //            obj.Question06 + obj.Question07 + obj.Question08 + obj.Question09 + obj.Question10 +
             //            obj.Question11 + obj.Question12 + obj.Question13 + obj.Question14 + obj.Question15 +
@@ -168,7 +169,7 @@ namespace TRAINING.API.Controllers
             //GetMDF0ByID GetMDF0ByNAME
             // string strNIK = string.Empty;
             // string strRFID = string.Empty;
-            
+
             // if (id.Length == 10)
             //     strRFID = id;
             // else
@@ -186,7 +187,7 @@ namespace TRAINING.API.Controllers
         {
             // string strNIK = string.Empty;
             // string strRFID = string.Empty;
-            
+
             // if (id.Length == 10)
             //     strRFID = id;
             // else
@@ -251,7 +252,7 @@ namespace TRAINING.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("Mdf0/{ddtrid}")]
-         public async Task<IActionResult> GetMDF0ByDdtrid(int ddtrid)
+        public async Task<IActionResult> GetMDF0ByDdtrid(int ddtrid)
         {
             var data = await _repo.GetMDF0ByDdtrid(ddtrid);
 
@@ -267,7 +268,7 @@ namespace TRAINING.API.Controllers
         {
             var delete = await _repo.GetMDF0ByDdtrid(ddtrid);
             _repo.Delete<MDF0>(delete);
-             if (await _repo.SaveAll())
+            if (await _repo.SaveAll())
                 return Ok("Berhasil Menghapus Data");
             // return Ok();
             throw new Exception("Gagal Menghapus Data");
@@ -280,7 +281,7 @@ namespace TRAINING.API.Controllers
             var mdf0 = await _repo.GetMDF0ByDdtrid(ddtrid);
             if (mdf0 == null)
                 return BadRequest("Data tidak ditemukan");
-            
+
             mdf0.DDDFGR = data.DDDFGR;
             mdf0.DDREMA = data.DDREMA;
             mdf0.DDRCST = data.DDRCST;
@@ -288,14 +289,14 @@ namespace TRAINING.API.Controllers
             mdf0.DDCRUS = data.DDCRUS;
             mdf0.DDCHTM = data.DDCHTM;
             mdf0.DDCHUS = data.DDCHUS;
-            
+
             if (await _repo.SaveAll())
                 return Ok("Data Berhasil Di Update");
-            
+
             throw new Exception("Gagal mengupdate data");
         }
-        
-        
+
+
         //get data by params id
 
 
@@ -307,31 +308,31 @@ namespace TRAINING.API.Controllers
             var mdf0 = await _repo.GetMDF0ByDdtrid(ddtrid);
             if (mdf0 == null)
                 return BadRequest("Data tidak ditemukan");
-            
+
             _repo.Delete<MDF0>(mdf0);
             // employee.EMRCST = 0;
             // employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
             // employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
             // employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+
             if (await _repo.SaveAll())
                 return Ok("Data Berhasil Dihapus");
-            
+
             throw new Exception("Gagal mengupdate data");
         }
 
 
         //PEMBUATAN API DENGAN MENGGUNAKAN MAPPER 
-        
+
         [AllowAnonymous]
         [HttpGet("DatMDF0Map")]
         //menampilkan semua data pada database MDF0 dengan menggunakan mapper
-        public async Task<IActionResult> GetListMDF0Map([FromQuery]InventoryParams prm)
+        public async Task<IActionResult> GetListMDF0Map([FromQuery] InventoryParams prm)
         {
             // var data = await _repo.GetListMDF0();
             var data = await _repo.GetListDefectPaging(prm);
             Response.AddPagination(data.CurrentPage, data.PageSize, data.TotalCount, data.TotalPages);
-            
+
             var result = _mapper.Map<IEnumerable<Mdf0Dto>>(data);
             return Ok(result);
         }
@@ -339,7 +340,7 @@ namespace TRAINING.API.Controllers
         [AllowAnonymous]
         [HttpGet("DatMDF0Map/{ddtrid}")]
         //menampilkan data pada MDF0 berdasarkan ddtrid menggunakan mapper
-         public async Task<IActionResult> GetMDF0ByDdtridMap(int ddtrid)
+        public async Task<IActionResult> GetMDF0ByDdtridMap(int ddtrid)
         {
 
             var data = await _repo.GetMDF0ByDdtrid(ddtrid);
@@ -365,9 +366,9 @@ namespace TRAINING.API.Controllers
             var temp = await _repo.GetDfGMDF0(data.DefectGroup);
             if (temp != null)
                 return BadRequest("Data Sudah Ada");
-            
+
             var mdf0 = _mapper.Map<MDF0>(data);
-            
+
             if (temp == null)
             {
                 _repo.Add<MDF0>(mdf0);
@@ -390,7 +391,7 @@ namespace TRAINING.API.Controllers
 
             if (mdf0 == null)
                 return BadRequest("Data tidak ditemukan");
-            
+
             var temp = await _repo.GetDfGMDF0(data.DefectGroup);
 
             // var temp = await _repo.GetMdf0By(data.DefectGroup, data.TransactionId );
@@ -398,9 +399,9 @@ namespace TRAINING.API.Controllers
                 return BadRequest("Data Sudah Ada");
             // if (temp.DDTRID == mdf0.DDTRID)
             //     return BadRequest("Data Sudah Ada");
-            
+
             // if (mdf0.DDTRID != data.TransactionId){
-            
+
             // mdf0.DDTRID = data.TransactionId;
             mdf0.DDDFGR = data.DefectGroup;
             mdf0.DDREMA = data.Remark;
@@ -409,28 +410,28 @@ namespace TRAINING.API.Controllers
             mdf0.DDCRUS = data.CreateUser;
             mdf0.DDCHTM = DateTime.Now;
             mdf0.DDCHUS = data.ChangeUser;
-                
-                if (await _repo.SaveAll())
-                    return Ok();
+
+            if (await _repo.SaveAll())
+                return Ok();
             // }
-            
+
             throw new Exception("Gagal mengupdate data");
         }
 
-        
+
         [AllowAnonymous]
         [HttpDelete("DatMDF0ByDdtridMap/{transactionId}")]
         //menghapus data pada database MDF0 dengan parameter id menggunakan params
         public async Task<IActionResult> DeleteListMDF0ByDdtridMap(int transactionId)
         {
             var emp = await _repo.GetMDF0ByDdtrid(transactionId);
-            
+
             if (emp == null)
                 return BadRequest("Data karyawan tidak ditemukan");
 
             var delete = await _repo.GetMDF0ByDdtrid(transactionId);
             _repo.Delete<MDF0>(delete);
-            
+
             if (await _repo.SaveAll())
                 return Ok("Berhasil Menghapus Data");
             // return Ok();
@@ -438,4 +439,139 @@ namespace TRAINING.API.Controllers
         }
 
 
-}}
+
+        //TRUCK
+        [AllowAnonymous]
+        [HttpGet("truck")]
+        public async Task<IActionResult> GetTruck([FromQuery] TruckParams prm)
+        {
+            var truck = await _repo.GetListTruck(prm);
+            var result = _mapper.Map<IEnumerable<TruckDto>>(truck);
+            Response.AddPagination(truck.CurrentPage, truck.PageSize, truck.TotalCount, truck.TotalPages);
+
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("truck")]
+        public async Task<IActionResult> AddTruck(TruckDto data)
+        {
+            var trck = _mapper.Map<TRCK>(data);
+            trck.TBCRUS = "Ricky";
+            trck.TBCHUS = "Ricky";
+
+
+            _repo.Add<TRCK>(trck);
+
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            throw new Exception("Gagal menyimpan data");
+
+
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("truck/{truckId}")]
+        public async Task<IActionResult> GetTruckByTruckId(int truckId)
+        {
+            var truck = await _repo.GetTruck(truckId);
+            if (truck == null)
+                return NoContent();
+
+            var dataToReturn = _mapper.Map<TruckDto>(truck);
+            return Ok(dataToReturn);
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpPut("truck/{truckId}")]
+        public async Task<IActionResult> EditTruck(int truckId, TruckDto data)
+        {
+            var truck = await _repo.GetTruck(truckId);
+            if (truck == null)
+            {
+                return BadRequest("Truck tidak ditemukan");
+            }
+
+            //Convert waktu angular ke timezone c#
+            TimeZoneInfo timeZoneInfo;
+            DateTime joinDateTime;
+            DateTime endDateTime;
+            timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            joinDateTime = TimeZoneInfo.ConvertTime(data.JoinDate.Value, timeZoneInfo);
+            endDateTime = TimeZoneInfo.ConvertTime(data.EndDate.Value, timeZoneInfo);
+
+            truck.TBTRNA = data.TruckName;
+            truck.TBMRKA = data.Merk;
+            truck.TBDRNA = data.Driver;
+            truck.TBJNDT = joinDateTime;
+            truck.TBENDT = endDateTime;
+            truck.TBCHDT = DateTime.Now;
+
+            truck.TBCHUS = "Ricky";
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            throw new Exception("Gagal mengupdate data");
+        }
+
+
+        //restore
+        [AllowAnonymous]
+        [HttpPut("truck-restore/{truckId}")]
+        public async Task<IActionResult> RestoreTruck(int truckId, int truckId2)
+        {
+            var truck = await _repo.GetTruck(truckId);
+            if (truck == null)
+                return BadRequest("Truck tidak ditemukan");
+
+            truck.TBRCST = 1;
+            truck.TBCHDT = DateTime.Now;
+            truck.TBCHUS = "Ricky";
+
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            throw new Exception("Gagal merestore data");
+        }
+
+
+        [AllowAnonymous]
+        [HttpDelete("truck/{truckId}")]
+        public async Task<IActionResult> DeleteTruck(int truckId)
+        {
+            var truck = await _repo.GetTruck(truckId);
+            if (truck == null)
+                return BadRequest("Truck tidak ditemukan");
+
+            // _repo.Delete<MEMP>(employee);
+            truck.TBRCST = 0;
+            truck.TBCHDT = DateTime.Now;
+            truck.TBCHUS = "Ricky";
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            throw new Exception("Gagal menghapus data");
+        }
+        [AllowAnonymous]
+        [HttpGet("export")]
+        public async Task<IActionResult> Export([FromQuery] TruckParams truckParams)
+        {
+            // => Ok(_mapper.Map<IList<TruckDto>>(await _repo.Export(truckParams)));
+            var truck = await _repo.Export(truckParams);
+            var result = _mapper.Map<IEnumerable<TruckDto>>(truck);
+            // Response.AddPagination(truck.CurrentPage, truck.PageSize, truck.TotalCount, truck.TotalPages);
+
+            return Ok(result);
+        }
+
+
+    }
+}

@@ -18,7 +18,9 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.Department, opt => opt.MapFrom(src => src.GOG1.GOOGNA))
                 .ForMember(des => des.Grade, opt => opt.MapFrom(src => src.EMEGNO))
                 .ForMember(des => des.Photo, opt => opt.MapFrom<PhotoResolver, string>(src => src.EMBRNO + "|" + src.EMEMNO))
-                .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.EMBTDT)));
+                .ForMember(des => des.BirthDate, opt => opt.MapFrom(src => CommonMethod.NumericToDateNullable(src.EMBTDT)))
+                .ForMember(des => des.Address, opt => opt.MapFrom(src => src.EMADR1))
+                .ForMember(des => des.Branch, opt => opt.MapFrom(src => src.EMBRNO));
             CreateMap<EmployeeDto, MEMP>()
                 .ForMember(des => des.EMEMNO, opt => opt.MapFrom(src => src.Nik))
                 .ForMember(des => des.EMEMNA, opt => opt.MapFrom(src => src.Nama))
@@ -28,7 +30,10 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.EMCRDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(DateTime.Now)))
                 .ForMember(des => des.EMCRTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)))
                 .ForMember(des => des.EMCHDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(DateTime.Now)))
-                .ForMember(des => des.EMCHTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)));
+                .ForMember(des => des.EMCHTM, opt => opt.MapFrom(src => CommonMethod.TimeToNumeric(DateTime.Now)))
+                .ForMember(des => des.EMADR1, opt => opt.MapFrom(src => src.Address))
+                .ForMember(des => des.EMBRNO, opt => opt.MapFrom(src => src.Branch))
+                .ForMember(des => des.EMBTDT, opt => opt.MapFrom(src => CommonMethod.DateToNumeric(src.BirthDate.Value)));
 
             CreateMap<MEMP, ELOG>()
                 .ForMember(des => des.ELEMNO, opt => opt.MapFrom(src => src.EMEMNO))
@@ -77,17 +82,20 @@ namespace TRAINING.API.Helper
             CreateMap<GCT2, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.CBKYNA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.CBKYNO));
-            
+
             CreateMap<ZVAR, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.ZRVANA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVAVL));
-            
+
             CreateMap<MDF1, DropdownDto>()
                 .ForMember(des => des.Label, opt => opt.MapFrom(src => src.DEDFNA))
                 .ForMember(des => des.Value, opt => opt.MapFrom(src => src.DEDFNO));
 
+            CreateMap<ZBRC, DropdownDto>()
+                .ForMember(des => des.Label, opt => opt.MapFrom(src => src.ZBBRNA))
+                .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZBBRNO));
 
-            
+
 
             CreateMap<EHAL, EmployeeDto>()
                 .ForMember(des => des.Nik, opt => opt.MapFrom(src => src.ELEMNO))
@@ -506,7 +514,7 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.ChangeDate, opt => opt.MapFrom(src => src.DECHDT))
             .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DECHTM))
             .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DECHUS))
-            .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DERCST == 0 ? "Inactive" : "Active" ));
+            .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DERCST == 0 ? "Inactive" : "Active"));
 
             CreateMap<Mdf1Dto, MDF1>()
             .ForMember(des => des.DECONO, opt => opt.MapFrom(src => src.Company))
@@ -544,8 +552,8 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.ChangeDate, opt => opt.MapFrom(src => src.DMCHDT))
                 .ForMember(des => des.ChangeTime, opt => opt.MapFrom(src => src.DMCHTM))
                 .ForMember(des => des.ChangeUser, opt => opt.MapFrom(src => src.DMCHUS))
-                .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DMRCST == 0 ? "Inactive" : "Active" ));
-                
+                .ForMember(des => des.RecordStatusText, opt => opt.MapFrom(src => src.DMRCST == 0 ? "Inactive" : "Active"));
+
             CreateMap<DefectMappingDto, MDMP>()
                 .ForMember(des => des.DMCONO, opt => opt.MapFrom(src => src.Company))
                 .ForMember(des => des.DMBRNO, opt => opt.MapFrom(src => src.Branch))
@@ -565,7 +573,31 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.DMCHTM, opt => opt.MapFrom(src => src.ChangeTime))
                 .ForMember(des => des.DMCHUS, opt => opt.MapFrom(src => src.ChangeUser));
 
+            CreateMap<TRCK, TruckDto>()
+                .ForMember(des => des.TruckId, opt => opt.MapFrom(src => src.TBRCID))
+                .ForMember(des => des.TruckName, opt => opt.MapFrom(src => src.TBTRNA))
+                .ForMember(des => des.Merk, opt => opt.MapFrom(src => src.TBMRKA))
+                .ForMember(des => des.Driver, opt => opt.MapFrom(src => src.TBDRNA))
+                .ForMember(des => des.JoinDate, opt => opt.MapFrom(src => src.TBJNDT))
+                .ForMember(des => des.EndDate, opt => opt.MapFrom(src => src.TBENDT))
+                .ForMember(des => des.CreatedDate, opt => opt.MapFrom(src => src.TBCRDT))
+                .ForMember(des => des.CreatedBy, opt => opt.MapFrom(src => src.TBCRUS))
+                .ForMember(des => des.UpdatedDate, opt => opt.MapFrom(src =>src.TBCHDT))
+                .ForMember(des => des.UpdatedBy, opt => opt.MapFrom(src => src.TBCHUS))
+                .ForMember(des => des.RecordStatus, opt => opt.MapFrom(src => src.TBRCST));
+            CreateMap<TruckDto, TRCK>()
+                // .ForMember(des => des.TBRCID, opt => opt.MapFrom(src => src.TruckId))
+                .ForMember(des => des.TBTRNA, opt => opt.MapFrom(src => src.TruckName))
+                .ForMember(des => des.TBMRKA, opt => opt.MapFrom(src => src.Merk))
+                .ForMember(des => des.TBDRNA, opt => opt.MapFrom(src => src.Driver))
+                .ForMember(des => des.TBJNDT, opt => opt.MapFrom(src => src.JoinDate))
+                .ForMember(des => des.TBENDT, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(des => des.TBCRDT, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(des => des.TBCRUS, opt => opt.MapFrom(src => src.CreatedBy))
+                .ForMember(des => des.TBCHDT, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(des => des.TBCHUS, opt => opt.MapFrom(src => src.UpdatedBy))
 
+                .ForMember(des => des.TBRCST, opt => opt.MapFrom(src => 1));
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

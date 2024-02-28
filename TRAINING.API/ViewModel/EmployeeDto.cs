@@ -15,5 +15,7 @@ namespace TRAINING.API.ViewModel
         public DateTime? FillDate { get; set; }
         public DateTime? AttendDate { get; set; }
         public string Status { get; set; }
+        public string Address {get; set;}
+        public string Branch {get; set;}
     }
 }

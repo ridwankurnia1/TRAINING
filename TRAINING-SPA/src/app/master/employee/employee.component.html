@@ -28,13 +28,23 @@
     <ng-template pTemplate="header">
       <tr style="font-size: small;">
         <th style="width: 6%;" scope="col">Edit</th>
-        <th pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
-        <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th>
-        <th pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
+        <th  style="width: 20%;" pSortableColumn="nik"><p-sortIcon field="nik"></p-sortIcon> Employee</th>
+
+
+        <th  style="width: 10%;" pSortableColumn="branch"><p-sortIcon field="branch"></p-sortIcon> Branch </th>
+        
+        
+        <!-- <th pSortableColumn="nama"><p-sortIcon field="nama"></p-sortIcon> Nama</th> -->
+        <th  style="width: 18%;" pSortableColumn="department"><p-sortIcon field="department"></p-sortIcon> Department</th>
         <th style="width: 18%;" pSortableColumn="birthDate"><p-sortIcon field="birthDate"></p-sortIcon>Birth Date</th>
+
+        <th>Address</th>
+        
         <th style="width: 6%;" scope="col">Del</th>
       </tr>
     </ng-template>
+
+    
     <ng-template pTemplate="body" let-item>
       <tr style="font-size: small;">
         <td>
@@ -43,21 +53,31 @@
           </button>
         </td>
         <td>
-          <div class="row ml-2">
-            <div class="table-img">
-              <img [src]="item.photo" width="50" height="50">
-            </div>
-            <div class="col-8">
-              <div class="w-100">
-                {{item.nama | titlecase}}
+          
+          <div class="row">
+
+            <div class="col-3">
+              <div class="table-img">
+                <img [src]="item.photo" width="50" height="50">
               </div>
-              <span class="text-primary">{{item.nik}}</span>
             </div>
+            
+            <div class="col-9">
+              <div>  {{item.nama | titlecase}} </div>
+              <div><span class="text-primary">{{item.nik}}</span></div>
+            </div>
+          
           </div>
         </td>
-        <td>{{item.nama | titlecase}}</td>
+
+        <!-- <td>{{item.nama | titlecase}}</td> -->
+        
+        <td>{{item.branch}}</td>
         <td>{{item.department}}</td>
         <td>{{item.birthDate | date:'dd MMMM yyyy'}}</td>
+
+        <td>{{item.address}}</td>
+
         <td>
           <button type="button" class="btn btn-sm btn-danger" (click)="delete(item)">
             <i class="fa fa-times"></i>
@@ -121,7 +141,17 @@
   <ng-template #popup>
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Edit Employee</h4>
+        <!-- <h4 class="modal-title pull-left">Edit Employee</h4> -->
+       
+        <div *ngIf="isEdit;then editTitle else addTitle">here is ignored</div>
+        <ng-template #editTitle>
+          <h4 class="modal-title pull-left">Edit Employee</h4>
+        </ng-template>
+        <ng-template #addTitle>
+          <h4 class="modal-title pull-left">Add Employee</h4>
+        </ng-template>
+
+
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modalRef.hide()"
           aria-label="Close"></button>
       </div>
@@ -136,6 +166,18 @@
               Harap isi NIK
             </div>
           </div>
+
+          <div class="mb-3">
+            <label for="branch" class="form-label">Branch</label>
+            <select class="form-control" aria-label="select branch" formControlName="branch"
+              [ngClass]="{'is-invalid': employeeForm.get('branch').errors && employeeForm.get('branch').touched}">
+              <option *ngFor="let item of branch" [value]="item.value">{{item.label}}</option>
+            </select>
+            <div class="invalid-feedback">
+              Harap isi Branch
+            </div>
+          </div>
+
           <div class="mb-3">
             <label for="nama" class="form-label">Nama</label>
             <input type="text" class="form-control" formControlName="nama" placeholder="Nama"
@@ -144,6 +186,8 @@
               Harap isi Nama
             </div>
           </div>
+         
+
           <div class="mb-3">
             <label for="birthDate" class="form-label">Birth Date</label>
             <div class="input-group">
@@ -156,11 +200,12 @@
                   <i class="fa fa-calendar"></i>
                 </button>
               </div>
-            </div>
-            <div class="invalid-feedback">
-              Harap isi Tanggal Lahir
+              <div class="invalid-feedback">
+                Harap isi Tanggal Lahir
+              </div>
             </div>
           </div>
+
           <div class="mb-3">
             <label for="department" class="form-label">Department</label>
             <!-- <select class="form-control" aria-label="select department" formControlName="departmentId"
@@ -175,23 +220,43 @@
               Harap pilih department
             </div>
           </div>
+
           <div class="mb-3">
             <label for="grade" class="form-label">Grade</label>
             <select class="form-control" aria-label="select grade" formControlName="grade"
               [ngClass]="{'is-invalid': employeeForm.get('grade').errors && employeeForm.get('grade').touched}">
               <option *ngFor="let item of grade" [value]="item.value">{{item.label}}</option>
             </select>
+            <div class="invalid-feedback">
+              Harap pilih grade
+            </div>
             <!-- <input type="text" class="form-control" formControlName="grade" placeholder="Grade"> -->
           </div>
+
+          <!-- address -->
+          
           <div class="mb-3">
-            <button type="button" class="btn btn-sm btn-danger mr-2" (click)="save()">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-              <i *ngIf="!loading" class="fa fa-save mr-2"></i>Save
+            <label for="address" class="form-label">Address</label>
+            <textarea style="height: 100px" class="form-control" formControlName="address" placeholder="Address"
+            [ngClass]="{'is-invalid': employeeForm.get('address').errors && employeeForm.get('address').touched}">
+           </textarea>
+            <div class="invalid-feedback">
+              Harap isi alamat
+            </div>
+          </div>
+
+
+
+          <div class="mb-3">
+            <button type="button" class="btn btn-sm btn-danger me-2" (click)="save()">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              <i *ngIf="!loading" class="fa fa-save me-2"></i>Save
             </button>
             <button type="button" class="btn btn-sm btn-secondary" (click)="modalRef.hide()">
-              <i class="fa fa-undo mr-2"></i> Cancel
+              <i class="fa fa-undo me-2"></i> Cancel
             </button>
           </div>
+
         </form>
       </div>
     </div>

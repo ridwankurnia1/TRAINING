@@ -25,5 +25,9 @@ namespace TRAINING.API.Helper
         public string defName { get; set; }
 
         public int rcst { get; set; }
+
+        // coba tambahin param
+        public string merk { get; set; }
+        public string driver { get; set; }
     }
 }

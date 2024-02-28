@@ -54,17 +54,29 @@ namespace TRAINING.API.Controllers
             var employee = await _repo.GetEmployee(data.Nik);
             if (employee != null)
             {
-                employee.EMEGNO = data.Grade;
-                employee.EMDENO = data.DepartmentId;
-                employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
-                employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
-                employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                
+                // employee.EMEGNO = data.Grade;
+                // employee.EMDENO = data.DepartmentId;
+                // employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
+                // employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
+
+                // // hardcode emchus
+                // employee.EMCHUS = "Ricky";
+
+                // // add address and branch
+                // employee.EMADR1 = data.Address;
+                // employee.EMBRNO = data.Branch;
             }
             else
             {
                 var emp = _mapper.Map<MEMP>(data);
-                emp.EMCRUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                emp.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                emp.EMCRUS = "Ricky";
+                emp.EMCHUS = "Ricky";
+
+                // hardcode cono
+                emp.EMCONO = "AMG";
+
                 _repo.Add<MEMP>(emp);
             }
 
@@ -77,17 +89,31 @@ namespace TRAINING.API.Controllers
         public async Task<IActionResult> EditEmployee(string nik, EmployeeDto data)
         {
             var employee = await _repo.GetEmployee(nik);
-            if (employee == null)
+            if (employee == null){
                 return BadRequest("Employee tidak ditemukan");
-            
+            }
+
+            //Convert waktu angular ke timezone c#
+            TimeZoneInfo timeZoneInfo; 
+            DateTime dateTime ; 
+            timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"); 
+            dateTime = TimeZoneInfo.ConvertTime(data.BirthDate.Value, timeZoneInfo);
+
             employee.EMEMNA = data.Nama;
             employee.EMEGNO = data.Grade;
             employee.EMDENO = data.DepartmentId;
-            employee.EMBTDT = CommonMethod.DateToNumeric(data.BirthDate.Value);
+            employee.EMBTDT = CommonMethod.DateToNumeric(dateTime);
             employee.EMCHDT = CommonMethod.DateToNumeric(DateTime.Now);
             employee.EMCHTM = CommonMethod.TimeToNumeric(DateTime.Now);
-            employee.EMCHUS = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             
+            //Perlu login untuk mengambil nilai Employee Change User
+            employee.EMCHUS = "Ricky";
+
+            // add address and branch
+            employee.EMADR1 = data.Address;
+            employee.EMBRNO = data.Branch;
+
+           
             if (await _repo.SaveAll())
                 return Ok();
             
@@ -117,12 +143,15 @@ namespace TRAINING.API.Controllers
         {
             var gog1 = await _repo.GetOrganization();
             var mgrd = await _repo.GetListGrade();
+            var brno = await _repo.GetListBranch();
             var ddl_org = _mapper.Map<IEnumerable<DropdownDto>>(gog1);
             var ddl_grd = _mapper.Map<IEnumerable<DropdownDto>>(mgrd);            
+            var ddl_brno = _mapper.Map<IEnumerable<DropdownDto>>(brno);            
 
             return Ok(new {
                 grade = ddl_grd,
-                dept = ddl_org
+                dept = ddl_org,
+                branch = ddl_brno
             });
         }
 

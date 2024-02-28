@@ -15,6 +15,7 @@ namespace TRAINING.API.Data
         Task<PagedList<MEMP>> GetListEmmployee(InventoryParams prm);
         Task<IEnumerable<GOG1>> GetOrganization();
         Task<IEnumerable<MGRD>> GetListGrade();
+        Task<IEnumerable<ZBRC>> GetListBranch();
         // Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm);
         Task<MEMP> GetEmployee(string nik, string rfid);
     }

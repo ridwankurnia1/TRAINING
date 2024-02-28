@@ -74,6 +74,7 @@ namespace TRAINING.API.Data
         {
             return await _context.GOG1.Where(x => x.GORCST == 1).ToListAsync();
         }
+       
 
         // public async Task<List<EMPLOYEE>> GetListEmmployeeAPRISE(Params prm)
         // {
@@ -99,5 +100,11 @@ namespace TRAINING.API.Data
         {
             return await _context.MGRD.ToListAsync();
         }
+
+        public async Task<IEnumerable<ZBRC>> GetListBranch()
+        {
+            return await _context.ZBRC.ToListAsync();
+        }
     }
+        
 }

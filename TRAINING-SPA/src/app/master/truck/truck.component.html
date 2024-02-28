@@ -1,0 +1,334 @@
+<div class="container my-3">
+  <p-confirmDialog 
+  [style]="{width: '40vw'}"
+    header="Confirmation"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
+  <p-table
+    #dt1
+    [value]="listTruck"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    styleClass="p-datatable-striped"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [responsive]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [lazy]="true"
+    (onLazyLoad)="pageChanged($event)"
+    [totalRecords]="pagination?.totalItems"
+    [loading]="loading"
+  >
+    <!-- Button Header -->
+    <ng-template pTemplate="caption">
+      <div class="d-flex justify-content-between">
+        <div class="col-6">
+          <button
+            type="button"
+            class="btn btn-primary mb-2 me-2"
+            (click)="edit(null, popup)"
+          >
+            <i class="fa fa-plus me-2"></i> Add
+          </button>
+          <button
+            type="button"
+            class="btn btn-success ml-2 mb-2"
+            (click)="exportExcel()"
+          >
+            <i class="fa fa-file-excel-o me-2"></i> Xlsx
+          </button>
+
+          <!-- <button
+            type="button"
+            class="btn btn-success ml-2 mb-2"
+            (click)="exportThisPage()"
+          >
+            <i class="fa fa-file-excel-o me-2"></i> Eksport This Page
+          </button>
+           -->
+           
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search"
+              [(ngModel)]="groupSearch"
+              (input)="dt1.filterGlobal(groupSearch, 'contains')"
+            />
+
+            <span class="input-group-text" id="basic-addon2">
+              <i class="fa fa-search"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Header Table -->
+    <ng-template pTemplate="header">
+      <tr style="font-size: small">
+        <th style="width: 6%" scope="col">Edit</th>
+        <th pSortableColumn="trna">
+          <p-sortIcon field="trna"></p-sortIcon> Truck Name
+        </th>
+        <th style="width: 12%" pSortableColumn="mrka">
+          <p-sortIcon field="mrka"></p-sortIcon>Merk
+        </th>
+        <th style="width: 12%" pSortableColumn="drna">
+          <p-sortIcon field="drna"></p-sortIcon> Driver
+        </th>
+        <th style="width: 12%" pSortableColumn="jndt">
+          <p-sortIcon field="jndt"></p-sortIcon>Join Date
+        </th>
+        <th style="width: 12%" pSortableColumn="endt">
+          <p-sortIcon field="endt"></p-sortIcon>End Date
+        </th>
+        <th style="width: 12%" pSortableColumn="chus">
+          <p-sortIcon field="chus"></p-sortIcon> Updated By
+        </th>
+        <th style="width: 10%" pSortableColumn="rcst">
+          <p-sortIcon field="rcst"></p-sortIcon>Status
+        </th>
+        <th style="width: 6%">Del</th>
+      </tr>
+    </ng-template>
+
+    <!-- Body Table -->
+    <ng-template pTemplate="body" let-item>
+      <tr style="font-size: small">
+        <td>
+          <div *ngIf="item.recordStatus == 1" (click)="edit(item, popup)">
+            <button type="button" class="btn btn-sm btn-primary">
+              <i class="fa fa-pencil"></i>
+            </button>
+          </div>
+        </td>
+        <td>{{ item.truckName }}</td>
+        <td>{{ item.merk }}</td>
+        <td>{{ item.driver }}</td>
+        <td>{{ item.joinDate | date : "dd MMMM yyyy" }}</td>
+        <td>{{ item.endDate | date : "dd MMMM yyyy" }}</td>
+        <td>{{ item.updatedBy }}</td>
+        <td>
+          <div *ngIf="item.recordStatus; then active; else inactive">
+            here is ignored
+          </div>
+          <ng-template #active>
+            <span
+              ><i
+                class="pi pi-circle-fill mr-2"
+                style="font-size: 12px; color: rgb(10, 248, 69)"
+              ></i
+              >ACTIVE</span
+            >
+          </ng-template>
+          <ng-template #inactive>
+            <span
+              ><i
+                class="pi pi-circle mr-2"
+                style="font-size: 12px; color: rgb(238, 38, 12)"
+              ></i
+              >INACTIVE</span
+            >
+          </ng-template>
+        </td>
+        <td>
+          <div *ngIf="item.recordStatus == 1" (click)="delete(item)">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div *ngIf="item.recordStatus == 0" (click)="restore(item)">
+            <button type="button" class="btn btn-sm btn-success">
+              <i class="fa fa-undo"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Popup menu add dan edit -->
+  <ng-template #popup>
+    <!-- <div class="modal">
+      <div class="modal-dialog modal-lg"> -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <div *ngIf="isEdit; then editTitle; else addTitle">
+              here is ignored
+            </div>
+            <ng-template #editTitle>
+              <h4 class="modal-title pull-left">Edit Truck</h4>
+            </ng-template>
+            <ng-template #addTitle>
+              <h4 class="modal-title pull-left">Add Truck</h4>
+            </ng-template>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              (click)="modalRef.hide()"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form class="needs-validation" [formGroup]="truckForm">
+              <!-- baris 1 -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label for="truckName" class="form-label">Truck Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="truckName"
+                      placeholder="Truck Name"
+                      [ngClass]="{
+                        'is-invalid':
+                          truckForm.get('truckName').errors &&
+                          truckForm.get('truckName').touched
+                      }"
+                    />
+                    <div class="invalid-feedback">Harap isi Truck Name</div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label for="joinDate" class="form-label">Join Date</label>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        #dp1="bsDatepicker"
+                        formControlName="joinDate"
+                        placeholder="Join Date"
+                        [ngClass]="{
+                          'is-invalid':
+                            truckForm.get('joinDate').errors &&
+                            truckForm.get('joinDate').touched
+                        }"
+                        bsDatepicker
+                        [bsConfig]="bsConfig"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-primary"
+                          (click)="dp1.toggle()"
+                          [attr.aria-expanded]="dp1.isOpen"
+                        >
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </div>
+                      <div class="invalid-feedback">Harap isi Join Date</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- baris 2 -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label for="merk" class="form-label">Merk</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="merk"
+                      placeholder="Merk"
+                      [ngClass]="{
+                        'is-invalid':
+                          truckForm.get('merk').errors &&
+                          truckForm.get('merk').touched
+                      }"
+                    />
+                    <div class="invalid-feedback">Harap isi Merk</div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        #dp2="bsDatepicker"
+                        formControlName="endDate"
+                        placeholder="End Date"
+                        [ngClass]="{
+                          'is-invalid':
+                            truckForm.get('endDate').errors &&
+                            truckForm.get('endDate').touched
+                        }"
+                        bsDatepicker
+                        [bsConfig]="bsConfig"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          class="btn btn-outline-primary"
+                          (click)="dp2.toggle()"
+                          [attr.aria-expanded]="dp2.isOpen"
+                        >
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </div>
+                      <div class="invalid-feedback">Harap isi End Date</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- baris 3 -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label for="driver" class="form-label">Driver</label>
+                    <input
+                      [min]="minDate"
+                      type="text"
+                      class="form-control"
+                      formControlName="driver"
+                      placeholder="Driver"
+                      [ngClass]="{
+                        'is-invalid':
+                          truckForm.get('driver').errors &&
+                          truckForm.get('driver').touched
+                      }"
+                    />
+                    <div class="invalid-feedback">Harap isi Driver</div>
+                  </div>
+                </div>
+                <div class="col-lg-6"></div>
+              </div>
+
+              <div class="mb-3">
+                <button
+                  [disabled]="!truckForm.valid"
+                  type="button"
+                  class="btn btn-sm btn-danger me-2"
+                  (click)="save()"
+                >
+                  <span
+                    *ngIf="loading"
+                    class="spinner-border spinner-border-sm me-2"
+                  ></span>
+                  <i *ngIf="!loading" class="fa fa-save me-2"></i>Save
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="modalRef.hide()"
+                >
+                  <i class="fa fa-undo me-2"></i> Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      <!-- </div> -->
+    <!-- </div> -->
+  </ng-template>
+</div>

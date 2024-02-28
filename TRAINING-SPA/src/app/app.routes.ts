@@ -56,6 +56,15 @@ export const routes: Routes = [
         (c) => c.EmployeeComponent
       ),
   },
+
+  {
+    path: 'truck',
+    loadComponent: () =>
+      import('./master/truck/truck.component').then(
+        (c) => c.TruckComponent
+      ),
+  },
+
   {
     path: 'register',
     loadComponent: () =>
@@ -133,6 +142,7 @@ export const routes: Routes = [
         (c) => c.DefectMappingComponent
       ),
   },
+ 
   {
     path: '**',
     redirectTo: '',

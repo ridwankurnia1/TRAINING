@@ -23,10 +23,16 @@ namespace TRAINING.API.Data
 
         Task<MDF0> GetMDF0ByDdtrid(int ddtrid);
 
-        Task <IEnumerable<MDF0>> GetMDF0ByDddfgr(string dddfgr);
+        Task<IEnumerable<MDF0>> GetMDF0ByDddfgr(string dddfgr);
 
         Task<MDF0> GetDfGMDF0(string dddfgr);
 
-        Task <IEnumerable<MDF0>> GetMdf0By(string DefectGroup, int transactionId);
+        Task<IEnumerable<MDF0>> GetMdf0By(string DefectGroup, int transactionId);
+
+
+        // Truck
+        Task<PagedList<TRCK>> GetListTruck(TruckParams prm);
+        Task<TRCK> GetTruck(int truckId);
+    Task<IList<TRCK>> Export(TruckParams truckParams);
     }
 }
