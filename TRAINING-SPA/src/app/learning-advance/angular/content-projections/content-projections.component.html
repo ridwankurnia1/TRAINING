@@ -1,0 +1,37 @@
+<div class="container mt-3 mb-5">
+  <h3 class="my-0">Content Projections</h3>
+  <p>
+    <span class="text-muted">Reference</span> : <span>
+      <a class="text-decoration-none" href="https://angular.dev/guide/components/content-projection">
+        Angular Content Projection</a>
+    </span>
+  </p>
+  <hr>
+  <div class="my-3">
+    <p>Using <span class="fw-bold">'{{ngContentText}}'</span></p>
+    <div class="bg-light border p-4">
+      <app-my-card>
+        <div class="card-header">
+          <p class="card-title">
+            My Custom Card Title
+          </p>
+        </div>
+      </app-my-card>
+    </div>
+  </div>
+  <div class="my-3">
+    <p>Multi-slot content projection</p>
+    <div class="bg-light border p-4">
+      <app-my-card>
+        <div class="card-header">
+          <p class="card-title">
+            My Custom Card Title (slot #1)
+          </p>
+        </div>
+        <div class="card-footer">
+          Footnote (slot #2)
+        </div>
+      </app-my-card>
+    </div>
+  </div>
+</div>

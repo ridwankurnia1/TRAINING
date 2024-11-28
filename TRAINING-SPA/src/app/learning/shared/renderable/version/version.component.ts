@@ -6,9 +6,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   templateUrl: './version.component.html',
   styleUrls: ['./version.component.css'],
   standalone: true,
-  imports:[
-    CommonModule,
-  ]
+  imports: [CommonModule],
 })
 export class VersionComponent implements OnChanges {
   @Input() major = 1;

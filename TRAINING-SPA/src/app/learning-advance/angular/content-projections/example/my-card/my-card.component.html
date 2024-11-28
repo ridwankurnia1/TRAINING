@@ -1,0 +1,18 @@
+<div class="card">
+  <!-- ng content with a fallback content (Default view) (ONLY FOR v18 and above) -->
+  <!-- <ng-content select="card-title">
+    <p class="card-title">A default title</p>
+  </ng-content> -->
+  <ng-content></ng-content>
+  <div class="card-body">
+    <p class="card-text">
+      Iam inside the body!
+    </p>
+    <p class="card-text">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi laudantium sunt, officia deleniti iusto error
+      sapiente, quod consectetur ipsa culpa, sequi laboriosam aliquid beatae consequatur!
+    </p>
+  </div>
+  <!-- select element using classes query -->
+  <ng-content select=".card-footer"></ng-content>
+</div>

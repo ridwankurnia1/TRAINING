@@ -16,6 +16,13 @@ export const routes: Routes = [
       import('./learning/learning.component').then((c) => c.LearningComponent),
   },
   {
+    path: 'learning-adv',
+    loadChildren: () =>
+      import('./learning-advance/learning-advance.module').then(
+        (c) => c.LearningAdvanceModule
+      ),
+  },
+  {
     path: 'warehouse',
     canActivate: [AuthGuard],
     loadComponent: () =>

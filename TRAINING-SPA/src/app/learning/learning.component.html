@@ -7,36 +7,21 @@
           <app-version [major]="major" [minor]="minor"></app-version>
           <div class="row mt-3">
             <div class="col">
-              <button
-                type="button"
-                (click)="versionNewMajor()"
-                class="btn btn-primary me-2"
-              >
+              <button type="button" (click)="versionNewMajor()" class="btn btn-primary me-2">
                 Major
               </button>
-              <button
-                type="button"
-                (click)="versionNewMinor()"
-                class="btn btn-success me-2"
-              >
+              <button type="button" (click)="versionNewMinor()" class="btn btn-success me-2">
                 Minor
               </button>
-              <button
-                type="button"
-                (click)="versionReset()"
-                class="btn btn-danger"
-              >
+              <button type="button" (click)="versionReset()" class="btn btn-danger">
                 Reset
               </button>
             </div>
           </div>
         </div>
         <div [id]="learn.name" *ngSwitchCase="'questions'" AppTemplateDirective>
-          <app-questions
-            [listen]="listeningQuestion"
-            (onInput)="questionOnInput($event)"
-            (onSave)="questionOnSave($event)"
-          ></app-questions>
+          <app-questions [listen]="listeningQuestion" (onInput)="questionOnInput($event)"
+            (onSave)="questionOnSave($event)"></app-questions>
           <hr />
           <p class="mb-3 mt-3">
             Your answer will appear here :
@@ -48,19 +33,11 @@
           <hr />
           <div class="row">
             <div class="col">
-              <button
-                type="button"
-                class="btn mx-2"
-                (click)="listeningQuestion = !listeningQuestion"
-                [class]="listeningQuestion ? 'btn-secondary' : 'btn-success'"
-              >
+              <button type="button" class="btn mx-2" (click)="listeningQuestion = !listeningQuestion"
+                [class]="listeningQuestion ? 'btn-secondary' : 'btn-success'">
                 {{ listeningQuestion ? "Listening" : "Listen" }}
               </button>
-              <button
-                (click)="questionReset()"
-                type="button"
-                class="btn btn-danger"
-              >
+              <button (click)="questionReset()" type="button" class="btn btn-danger">
                 Reset
               </button>
             </div>

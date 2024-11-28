@@ -1,0 +1,75 @@
+<div class="container mt-3 mb-5">
+  <h3 class="my-0">Drag and Drop API</h3>
+  <p>
+    <span class="text-muted">Reference</span> : <span>
+      <a class="text-decoration-none" href="https://material.angular.io/cdk/drag-drop/overview">
+        Material Angular Drag and Drop</a>
+    </span>
+  </p>
+  <hr>
+  <div class="my-3">
+    <p>Basic</p>
+    <div class="bg-light border p-4">
+      <div class="rounded basic-box" cdkDrag>
+        <p class="my-0">Drag Me</p>
+      </div>
+    </div>
+  </div>
+  <div class="my-3">
+    <p>List</p>
+    <div class="bg-light border p-4">
+      <div class="row row-cols-md-4 g-3 justify-content-evenly" cdkDropList cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="exListItems">
+        <div class="col rounded basic-box" *ngFor="let item of exListItems;" cdkDrag>
+          <div class="rounded opacity-50 shadow-sm box-placeholder" *cdkDragPlaceholder>
+            <p class="my-0">Placeholder {{item}}</p>
+          </div>
+          <p class="my-0">Item {{item}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="my-3">
+    <p>List Connection</p>
+    <div class="bg-light border p-4">
+      <div #listA="cdkDropList" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListConnectedTo]="[listB]"
+        (cdkDropListDropped)="onDropped($event)" class="row row-cols-md-4 g-3 justify-content-evenly"
+        [cdkDropListData]="exListA">
+        <div class="col rounded basic-box" *ngFor="let item of exListA; let last = last"
+          [cdkDragDisabled]="exListA?.length === 1 && last" cdkDrag>
+          <p class="my-0">Item A{{item}}</p>
+        </div>
+      </div>
+      <hr class="my-3">
+      <div #listB="cdkDropList" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListConnectedTo]="[listA]"
+        (cdkDropListDropped)="onDropped($event)" class="row row-cols-md-4 g-3 justify-content-evenly"
+        [cdkDropListData]="exListB">
+        <div class="col rounded basic-box" *ngFor="let item of exListB; let last = last"
+          [cdkDragDisabled]="exListB?.length === 1 && last" cdkDrag>
+          <p class="my-0">Item B{{item}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="my-3">
+    <p>Grouped</p>
+    <div class="bg-light border p-4">
+      <div class="d-flex gap-3 align-items-stretch justify-content-evenly" cdkDropListGroup>
+        <div class="w-100" *ngFor="let item of exGroup">
+          <div class="p-4 rounded bg-white mb-3 d-flex align-items-center">
+            <h6 class="my-0">{{item.title | uppercase}}</h6>
+          </div>
+          <div class="list-group bg-white" style="min-height: 58px;" cdkDropList [cdkDropListData]="item.items" (cdkDropListDropped)="onDropped($event)">
+            <div class="list-group-item p-3" style="cursor: move;" *ngFor="let row of item.items" cdkDrag
+              [cdkDragData]="row">
+              {{row | titlecase}}
+            </div>
+            <!-- <li class="list-group-item p-3" *ngIf="item.items?.length === 0">
+              <div class="text-muted">Drop your items here</div>
+            </li> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
