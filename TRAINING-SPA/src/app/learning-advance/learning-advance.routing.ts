@@ -29,6 +29,18 @@ const routes: Routes = [
     path: 'css',
     children: [],
   },
+  {
+    path: 'reactive',
+    children: [
+      {
+        path: 'observable-observer',
+        loadComponent: () =>
+          import(
+            './reactive-programming/observables-observers/observables-observers.component'
+          ).then((c) => c.ObservablesObserversComponent),
+      },
+    ],
+  },
 ];
 
 export const LearningAdvanceRoutes = RouterModule.forChild(routes);
