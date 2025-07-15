@@ -1,3 +1,4 @@
+// Variable.ts
 export interface VariableItem {
   variableId?: number;
   user: string;

@@ -1,3 +1,4 @@
+// variable.component.ts
 import { Component, OnInit } from '@angular/core';
 import { VariableService } from '../_service/variable.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,29 +7,17 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { VariableItem, CreateVariableItem, UpdateVariableItem } from '../_model/Variable';
 import { CommonModule } from '@angular/common';
 
-
-// import { Component, OnInit, TemplateRef } from '@angular/core';
-
-
-
-@Component({
-  templateUrl: './variable.component.html',
-  standalone:true,
-  selector: 'app-variable',
-  // styleUrls: ['./variable.component.css'],
-  imports:[
-      TableModule,
-      ConfirmDialogModule,
-      CommonModule,
-      ReactiveFormsModule
-  ]
-})
 @Component({
   selector: 'app-variable',
   templateUrl: './variable.component.html',
   styleUrls: ['./variable.component.css'],
   standalone:true,
-  imports: [TableModule, ConfirmDialogModule]
+  imports: [
+    TableModule,
+    ConfirmDialogModule,
+    CommonModule,
+    ReactiveFormsModule
+  ]
 })
 export class VariableComponent implements OnInit {
   variables:VariableItem[] = []
@@ -42,7 +31,17 @@ export class VariableComponent implements OnInit {
   pageChanged($event: any) {
   throw new Error('Method not implemented.');
 }
-constructor(private variableService: VariableService) {}
+constructor(
+  private variableService: VariableService,
+  private fb:FormBuilder
+) {
+  this.itemForm = this.fb.group({
+    user: ['', [Validators.required, Validators.minLength(2)]],
+    name: ['', [Validators.required, Validators.minLength(5)]],
+    code: ['', [Validators.required, Validators.minLength(5)]],
+    value: ['', [Validators.required, Validators.minLength(5)]],
+  });
+}
 
 ngOnInit(): void {
   this.loadVariable();
@@ -71,6 +70,15 @@ createVariable(): void{
     }
   })
 }
+onSubmit(): void {
+  if (this.itemForm.valid) {
+    if (this.isEditing) {
+      this.updateVariable();
+    } else {
+      this.createVariable();
+    }
+  }
+}
 
   deleteVariable(id: number): void {
   if (confirm('Are you sure you want to delete this item?')) {
@@ -88,7 +96,7 @@ createVariable(): void{
   updateVariable(): void {
     if (this.editingId) {
       const updatedItem: UpdateVariableItem = {
-        id: this.editingId,
+        variableId: this.editingId,
         ...this.itemForm.value
       };
       
@@ -129,5 +137,4 @@ createVariable(): void{
     this.isEditing = false;
     this.editingId = null;
   }
-} 
-
+}

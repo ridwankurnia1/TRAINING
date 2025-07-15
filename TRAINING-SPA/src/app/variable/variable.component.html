@@ -1,1 +1,162 @@
-<h1>Hello world</h1>
+<!-- variable.component.html -->
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-12">
+      <h2>Variable Management</h2>
+      
+      <!-- Form Section -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{{ isEditing ? 'Edit' : 'Add New' }} Variable</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="user" class="form-label">User *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="user" 
+                    formControlName="user"
+                    [class.is-invalid]="itemForm.get('user')?.invalid && itemForm.get('user')?.touched">
+                  <div class="invalid-feedback">
+                    User is required and must be at least 2 characters long.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="name" 
+                    formControlName="name"
+                    [class.is-invalid]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
+                  <div class="invalid-feedback">
+                    Name is required and must be at least 2 characters long.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="code" class="form-label">Code *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="code" 
+                    formControlName="code"
+                    [class.is-invalid]="itemForm.get('code')?.invalid && itemForm.get('code')?.touched">
+                  <div class="invalid-feedback">
+                    Code is required and must be at least 2 characters long.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="value" class="form-label">Value *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="value" 
+                    formControlName="value"
+                    [class.is-invalid]="itemForm.get('value')?.invalid && itemForm.get('value')?.touched">
+                  <div class="invalid-feedback">
+                    Value is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="itemForm.invalid">
+                {{ isEditing ? 'Update' : 'Create' }}
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-secondary"
+                *ngIf="isEditing"
+                (click)="cancelEdit()">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- PrimeNG Table Section -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Variables List</h5>
+        </div>
+        <div class="card-body">
+          <p-table 
+            [value]="variables" 
+            [loading]="loading"
+            [paginator]="true" 
+            [rows]="10"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [totalRecords]="variables.length"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            styleClass="p-datatable-striped">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Variable ID</th>
+                <th>User</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Value</th>
+                <th>Created Time</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-variable>
+              <tr>
+                <td>{{ variable.variableId }}</td>
+                <td>{{ variable.user }}</td>
+                <td>{{ variable.name }}</td>
+                <td>{{ variable.code }}</td>
+                <td>{{ variable.value }}</td>
+                <td>{{ variable.cretedTime | date:'short' }}</td>
+                <td>
+                  <button 
+                    type="button"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    (click)="editVariable(variable)">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button 
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteVariable(variable.variableId!)">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7" class="text-center">
+                  No variables found. Create your first variable using the form above.
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
