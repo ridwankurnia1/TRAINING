@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Variable } from '../_model/Variable';
+import { VariableItem, CreateVariableItem, UpdateVariableItem } from '../_model/Variable';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class VariableService {
-  private apiUrl = 'http://your-api-url/api/variables'; // change to your actual API
+  baseUrl = environment.apiUrl + 'Variable/';
 
   constructor(private http: HttpClient) {}
 
-  getVariables(): Observable<Variable[]> {
-    return this.http.get<Variable[]>(this.apiUrl);
+  getVariables(): Observable<VariableItem[]> {
+    return this.http.get<VariableItem[]>(this.baseUrl);
   }
 
-  deleteVariable(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  getById(variableId: number): Observable<VariableItem | undefined> {
+    return this.http.get<VariableItem>(`${this.baseUrl}/${variableId}`);
   }
 
-  updateVariable(variable: Variable): Observable<Variable> {
-    return this.http.put<Variable>(`${this.apiUrl}/${variable.variableId}`, variable);
+  create(item: CreateVariableItem): Observable<VariableItem> {
+    return this.http.post<VariableItem>(this.baseUrl, item);
+  }
+
+  update(variable: UpdateVariableItem): Observable<VariableItem> {
+    return this.http.put<VariableItem>(`${this.baseUrl}/${variable.variableId}`, variable);
+  }
+
+  delete(variableId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${variableId}`);
   }
 }

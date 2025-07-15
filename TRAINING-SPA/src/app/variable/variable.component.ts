@@ -1,19 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Variable } from '../_model/Variable';
 import { VariableService } from '../_service/variable.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableModule } from "primeng/table";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { VariableItem, CreateVariableItem, UpdateVariableItem } from '../_model/Variable';
+import { CommonModule } from '@angular/common';
+
+
 // import { Component, OnInit, TemplateRef } from '@angular/core';
 
 
 
 @Component({
-    templateUrl: './variable.component.html',
-    standalone:true,
-    imports:[
-        TableModule,
-        ConfirmDialogModule,
-    ]
+  templateUrl: './variable.component.html',
+  standalone:true,
+  selector: 'app-variable',
+  // styleUrls: ['./variable.component.css'],
+  imports:[
+      TableModule,
+      ConfirmDialogModule,
+      CommonModule,
+      ReactiveFormsModule
+  ]
 })
 @Component({
   selector: 'app-variable',
@@ -23,32 +31,103 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
   imports: [TableModule, ConfirmDialogModule]
 })
 export class VariableComponent implements OnInit {
-rowsPerPageOptions: any;
-pageSize: any;
-pageChanged($event: any) {
-throw new Error('Method not implemented.');
+  variables:VariableItem[] = []
+  rowsPerPageOptions: any;
+  pageSize: any;
+  itemForm: FormGroup;
+  loading = false;
+  isEditing = false;
+  editingId: number | null = null
+
+  pageChanged($event: any) {
+  throw new Error('Method not implemented.');
 }
-  variables: Variable[] = [];
-defectDetailList: any;
-pagination: any;
-loading: any;
+constructor(private variableService: VariableService) {}
 
-  constructor(private variableService: VariableService) {}
+ngOnInit(): void {
+  this.loadVariable();
+}
 
-  ngOnInit(): void {
-    this.loadVariable();
+loadVariable():void {
+  this.loading = true;
+  this.variableService.getVariables().subscribe({
+    next:(data) => {
+      this.variables = data
+      this.loading = false
+    },
+    error: (error) => {
+      console.error('Error loading data:', error)
+      this.loading = false;
+    }
+  })
+}
+
+createVariable(): void{
+  const newItem: CreateVariableItem = this.itemForm.value;
+  this.variableService.create(newItem).subscribe({
+    next: (item) => {
+      this.variables.push(item);
+      this.resetForm()
+    }
+  })
+}
+
+  deleteVariable(id: number): void {
+  if (confirm('Are you sure you want to delete this item?')) {
+    this.variableService.delete(id).subscribe({
+      next: () => {
+        this.variables = this.variables.filter(variable => variable.variableId !== id);
+      },
+      error: (error) => {
+        console.error('Error deleting item:', error);
+      }
+    });
+  }
+}
+
+  updateVariable(): void {
+    if (this.editingId) {
+      const updatedItem: UpdateVariableItem = {
+        id: this.editingId,
+        ...this.itemForm.value
+      };
+      
+      this.variableService.update(updatedItem).subscribe({
+        next: (item) => {
+          const index = this.variables.findIndex(i => i.variableId === item.variableId);
+          if (index !== -1) {
+            this.variables[index] = item;
+          }
+          this.resetForm();
+        },
+        error: (error) => {
+          console.error('Error updating item:', error);
+        }
+      });
+    }
   }
 
-  loadVariable() {
-    this.variableService.getVariables().subscribe(data => this.variables = data)
+  editVariable(item: VariableItem): void {
+    this.isEditing = true;
+    this.editingId = item.variableId;
+    this.itemForm.patchValue({
+      user: item.user,
+      name: item.name,
+      code: item.code,
+      value: item.value
+    });
+  }
+  
+
+  cancelEdit(): void {
+  this.resetForm();
   }
 
-  deleteVariable(id: number) {
-    this.variableService.deleteVariable(id).subscribe(()=> this.loadVariable)
-  }
-
-  updateVarible(variable: Variable) {
-    this.variableService.updateVariable(variable).subscribe(()=> this.loadVariable)
+  resetForm(): void {
+    this.itemForm.reset();
+    this.itemForm.patchValue({ isActive: true });
+    this.isEditing = false;
+    this.editingId = null;
   }
 } 
 
