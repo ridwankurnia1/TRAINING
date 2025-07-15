@@ -1,0 +1,222 @@
+<div class="container mt-3">
+  <p-table #dt1 
+    [value]="defectDetailList" 
+    [paginator]="true" 
+    [rows]="pageSize" 
+    [showCurrentPageReport]="true"
+    styleClass="p-datatable-striped"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+    [responsive]="true"
+    [rowsPerPageOptions]="rowsPerPageOptions" 
+    [lazy]="true" 
+    (onLazyLoad)="pageChanged($event)" 
+    [totalRecords]="pagination.totalItems" 
+    [loading]="loading">
+
+    <!-- Table Caption: Action Buttons and Filters -->
+    <ng-template pTemplate="caption">
+      <div class="d-flex justify-content-between flex-wrap">
+        <!-- Action Buttons -->
+        <div class="col-md-3 mb-2">
+          <button type="button" class="btn btn-primary me-2" (click)="edit(popup, null)">
+            <i class="fa fa-plus me-2"></i> {{ addButtonText }}
+          </button>
+          <button type="button" class="btn btn-success me-2" (click)="download()">
+            <i class="fa fa-file me-2"></i> {{ downloadButtonText }}
+          </button>
+          <a class="btn btn-danger" [routerLink]="[summaryRoute]">
+            {{ summaryButtonText }}
+          </a>
+        </div>
+
+        <!-- Filters -->
+        <div class="col-md-3 col-12 mb-2">
+          <select class="form-control" [(ngModel)]="selectedStatus" (change)="loadItems()">
+            <option [value]="''">{{ allStatusText }}</option>
+            <option *ngFor="let item of status" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3 mb-2">
+          <select class="form-control" [(ngModel)]="selectedDefect" (change)="dt1.filterGlobal($event.target.value, 'contains')">
+            <option [value]="''">{{ allDefectText }}</option>
+            <option *ngFor="let item of defectName" [value]="item.value">{{ item.label }}</option>
+          </select>
+        </div>        
+
+        <div class="col-md-3 mb-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="{{ searchPlaceholder }}" (input)="dt1.filterGlobal($event.target.value, 'contains')">
+            <span class="input-group-text">
+              <i class="fa fa-search"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Table Header -->
+    <ng-template pTemplate="header">
+      <tr style="font-size: small; text-align: center;">
+        <th style="width: 6%;">{{ editColumnLabel }}</th>
+        <th>{{ companyColumnLabel }}</th>
+        <th>
+          {{ defectNameColumnLabel }}
+          <input type="text" class="form-control form-control-sm mt-1" placeholder="{{ searchPlaceholder }}" (input)="dt1.filterGlobal($event.target.value, 'defName', 'contains')">
+        </th>
+        <th>
+          {{ defectTypeColumnLabel }}
+          <input type="text" class="form-control form-control-sm mt-1" placeholder="{{ searchPlaceholder }}" (input)="dt1.filterGlobal($event.target.value, 'defType', 'contains')">
+        </th>
+        <th>{{ defectGroup1ColumnLabel }}</th>
+        <th>{{ defectGroup2ColumnLabel }}</th>
+        <th>{{ remarkColumnLabel }}</th>
+        <th>{{ recordStatusColumnLabel }}</th>
+        <th>{{ createUserColumnLabel }}</th>
+        <th>{{ changeUserColumnLabel }}</th>
+        <th style="width: 6%;">{{ deleteColumnLabel }}</th>
+      </tr>
+    </ng-template>
+
+    <!-- Table Body -->
+    <ng-template pTemplate="body" let-item>
+      <tr style="font-size: small; text-align: center;">
+        <td>
+          <button type="button" class="btn btn-sm btn-primary" (click)="edit(popup, item)">
+            <i class="fa fa-pencil"></i>
+          </button>
+        </td>
+        <td class="text-start">
+          <div>{{ item.company }}</div>
+          <small class="text-primary">{{ item.branch }}</small>
+        </td>
+        <td class="text-start">
+          <div>{{ item.defectName }}</div>
+          <small class="text-primary">{{ item.defectCode }}</small>
+        </td>
+        <td>{{ item.defectType }}</td>
+        <td>{{ item.defectGroup1 }}</td>
+        <td>{{ item.defectGroup2 }}</td>
+        <td>{{ item.remark }}</td>
+        <td>
+          <span *ngIf="item.recordStatusText === 'Active'" class="fa fa-circle text-success me-2"></span>
+          <span *ngIf="item.recordStatusText === 'Inactive'" class="fa fa-circle text-muted me-2"></span>
+          {{ item.recordStatusText }}
+        </td>
+        <td>{{ item.createUser }}</td>
+        <td>{{ item.changeUser }}</td>
+        <td>
+          <button type="button" class="btn btn-sm btn-danger" (click)="delete(item)">
+            <i class="fa fa-times"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Modal Popup -->
+  <ng-template #popup>
+    <div class="modal-header">
+      <h4 class="modal-title">{{ popTitle }}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.hide(); closeClick()"></button>
+    </div>
+    <div class="modal-body">
+      <form class="needs-validation" [formGroup]="defectDetailForm">
+        <div class="mb-3">
+          <label for="defectGroup1" class="form-label">{{ defectGroup1Label }}</label>
+          <p-dropdown
+            [options]="defectName"
+            formControlName="defectGroup1"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            [style]="{ width: '100%' }"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('defectGroup1').errors && defectDetailForm.get('defectGroup1').touched }">
+          </p-dropdown>
+          <div class="invalid-feedback">{{ defectGroup1Error }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="defectCode" class="form-label">{{ defectCodeLabel }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="defectCode"
+            placeholder="{{ defectCodePlaceholder }}"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('defectCode').errors && defectDetailForm.get('defectCode').touched }" />
+          <div class="invalid-feedback">{{ defectCodeError }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="defectName" class="form-label">{{ defectNameLabel }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="defectName"
+            placeholder="{{ defectNamePlaceholder }}"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('defectName').errors && defectDetailForm.get('defectName').touched }" />
+          <div class="invalid-feedback">{{ defectNameError }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="defectType" class="form-label">{{ defectTypeLabel }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="defectType"
+            placeholder="{{ defectTypePlaceholder }}"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('defectType').errors && defectDetailForm.get('defectType').touched }" />
+          <div class="invalid-feedback">{{ defectTypeError }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="defectGroup2" class="form-label">{{ defectGroup2Label }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="defectGroup2"
+            placeholder="{{ defectGroup2Placeholder }}"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('defectGroup2').errors && defectDetailForm.get('defectGroup2').touched }" />
+          <div class="invalid-feedback">{{ defectGroup2Error }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="remark" class="form-label">{{ remarkLabel }}</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="remark"
+            placeholder="{{ remarkPlaceholder }}"
+            [ngClass]="{ 'is-invalid': defectDetailForm.get('remark').errors && defectDetailForm.get('remark').touched }" />
+          <div class="invalid-feedback">{{ remarkError }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label me-2">{{ statusLabel }}</label>
+          <div class="dropdown d-inline">
+            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ statusDropdown }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+              <li><a class="dropdown-item" (click)="setStatus('Active')">Active</a></li>
+              <li><a class="dropdown-item" (click)="setStatus('Inactive')">Inactive</a></li>
+            </ul>
+          </div>
+          <div *ngIf="statusInvalid" class="invalid-feedback d-block">{{ statusError }}</div>
+        </div>
+
+        <div class="mb-3">
+          <button type="button" class="btn btn-danger me-2" (click)="save()">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!loading" class="fa fa-save me-2"></i>{{ saveButtonText }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="modalRef.hide(); closeClick()">
+            <i class="fa fa-undo me-2"></i>{{ cancelButtonText }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <p-confirmDialog [style]="{ width: '50vw' }" [baseZIndex]="10000"></p-confirmDialog>
+</div>

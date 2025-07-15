@@ -103,6 +103,7 @@ export const routes: Routes = [
         (c) => c.DetailComponent
       ),
   },
+
   // {
   //   path: 'detail',
   //   runGuardsAndResolvers: 'always',
@@ -149,7 +150,25 @@ export const routes: Routes = [
         (c) => c.DefectMappingComponent
       ),
   },
- 
+  {
+    path: 'simplecrud',
+    // runGuardsAndResolvers: 'always',
+    // canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./simplecrud/simplecrud.component').then(
+        (c) => c.SimplecrudComponent
+      ),
+  },
+
+  {
+    path: 'variable',
+    // runGuardsAndResolvers: 'always',
+    // canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./variable/variable.component').then(
+        (c) => c.VariableComponent
+      ),
+  },
   {
     path: '**',
     redirectTo: '',
