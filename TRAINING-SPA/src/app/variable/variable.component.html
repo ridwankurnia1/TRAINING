@@ -1,43 +1,47 @@
 <!-- variable.component.html -->
+<p-confirmDialog> </p-confirmDialog>
 <div class="container-fluid p-4">
   <div class="row">
     <div class="col-12">
       <h2>Variable Management</h2>
-      
       <!-- Form Section -->
       <div class="card mb-4">
         <div class="card-header">
-          <h5>{{ isEditing ? 'Edit' : 'Add New' }} Variable</h5>
+          <h5>{{ isEditing ? "Edit" : "Add New" }} Variable</h5>
         </div>
         <div class="card-body">
-          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="variableForm" (submit)="onSubmit()">
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="user" class="form-label">User *</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="user" 
+                  <label for="user" class="form-label">User </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="user"
                     formControlName="user"
-                    [class.is-invalid]="itemForm.get('user')?.invalid && itemForm.get('user')?.touched">
-                  <div class="invalid-feedback">
-                    User is required and must be at least 2 characters long.
-                  </div>
+                    readonly
+                    [class.is-invalid]="
+                      variableForm.get('user')?.invalid &&
+                      variableForm.get('user')?.touched
+                    "
+                  />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="name" class="form-label">Name *</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="name" 
+                  <label for="name" class="form-label">Name </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
                     formControlName="name"
-                    [class.is-invalid]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-                  <div class="invalid-feedback">
-                    Name is required and must be at least 2 characters long.
-                  </div>
+                    readonly
+                    [class.is-invalid]="
+                      variableForm.get('name')?.invalid &&
+                      variableForm.get('name')?.touched
+                    "
+                  />
                 </div>
               </div>
             </div>
@@ -45,50 +49,240 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="code" class="form-label">Code *</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="code" 
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="code"
                     formControlName="code"
-                    [class.is-invalid]="itemForm.get('code')?.invalid && itemForm.get('code')?.touched">
-                  <div class="invalid-feedback">
-                    Code is required and must be at least 2 characters long.
-                  </div>
+                    [class.is-invalid]="
+                      variableForm.get('code')?.invalid &&
+                      variableForm.get('code')?.touched
+                    "
+                  />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="value" class="form-label">Value *</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="value" 
+                  <label for="value" class="form-label">Value</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="value"
                     formControlName="value"
-                    [class.is-invalid]="itemForm.get('value')?.invalid && itemForm.get('value')?.touched">
-                  <div class="invalid-feedback">
-                    Value is required.
-                  </div>
+                    [class.is-invalid]="
+                      variableForm.get('value')?.invalid &&
+                      variableForm.get('value')?.touched
+                    "
+                  />
                 </div>
               </div>
             </div>
             <div class="d-flex gap-2">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 class="btn btn-primary"
-                [disabled]="itemForm.invalid">
-                {{ isEditing ? 'Update' : 'Create' }}
+                [disabled]="variableForm.invalid"
+              >
+                {{ isEditing ? "Update" : "Create" }}
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 class="btn btn-secondary"
-                *ngIf="isEditing"
-                (click)="cancelEdit()">
-                Cancel
+                (click)="cancelEditReguler()"
+              >
+                Clear
               </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="openModalForm(null, modalForm)"
+                *ngIf="!isEditing"
+              >
+                Use Modal
+              </button>
+              <!-- <button
+                type="button"
+                class="btn btn-success"
+                [disabled]="variableForm.invalid"
+                (click)="openModalForm(null, modalForm)"
+                *ngIf="!isEditing"
+              >
+                Use Modal
+              </button> -->
             </div>
           </form>
         </div>
       </div>
+
+      <!-- <p-table
+        #dt2
+        [value]="variable"
+        dataKey="id"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [globalFilterFields]="[
+          'name',
+          'country.name',
+          'representative.name',
+          'status'
+        ]"
+        [tableStyle]="{ 'min-width': '75rem' }"
+      >
+        <ng-template #caption>
+          <div class="flex">
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                (input)="dt2.filterGlobal($event.target.value, 'contains')"
+                placeholder="Search keyword"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+        <ng-template #header>
+          <tr>
+            <th style="width: 22%">Name</th>
+            <th style="width: 22%">Country</th>
+            <th style="width: 22%">Agent</th>
+            <th style="width: 22%">Status</th>
+            <th style="width: 12%">Verified</th>
+          </tr>
+          <tr>
+            <th>
+              <p-columnFilter
+                type="text"
+                field="name"
+                placeholder="Search by name"
+                ariaLabel="Filter Name"
+              ></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter
+                type="text"
+                field="country.name"
+                placeholder="Search by country"
+                ariaLabel="Filter Country"
+              ></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter
+                field="representative"
+                matchMode="in"
+                [showMenu]="false"
+              >
+                <ng-template #filter let-value let-filter="filterCallback">
+                  <p-multiselect
+                    [(ngModel)]="value"
+                    [options]="representatives"
+                    placeholder="Any"
+                    (onChange)="filter($event.value)"
+                    optionLabel="name"
+                    style="min-width: 14rem"
+                    [panelStyle]="{ minWidth: '16rem' }"
+                  >
+                    <ng-template let-option #item>
+                      <div class="flex items-center gap-2">
+                        <img
+                          [alt]="option.label"
+                          src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{
+                            option.image
+                          }}"
+                          style="width: 32px"
+                        />
+                        <span>{{ option.name }}</span>
+                      </div>
+                    </ng-template>
+                  </p-multiselect>
+                </ng-template>
+              </p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter
+                field="status"
+                matchMode="equals"
+                [showMenu]="false"
+              >
+                <ng-template #filter let-value let-filter="filterCallback">
+                  <p-select
+                    [(ngModel)]="value"
+                    [options]="statuses"
+                    (onChange)="filter($event.value)"
+                    placeholder="Select One"
+                    [showClear]="true"
+                    style="min-width: 12rem"
+                  >
+                    <ng-template let-option #item>
+                      <p-tag
+                        [value]="option.value"
+                        [severity]="getSeverity(option.value)"
+                      />
+                    </ng-template>
+                  </p-select>
+                </ng-template>
+              </p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter type="boolean" field="verified"></p-columnFilter>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-customer>
+          <tr>
+            <td>
+              {{ customer.name }}
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <img
+                  src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                  [class]="'flag flag-' + customer.country.code"
+                  style="width: 20px"
+                />
+                <span>{{ customer.country.name }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <img
+                  [alt]="customer.representative.name"
+                  src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{
+                    customer.representative.image
+                  }}"
+                  width="32"
+                  style="vertical-align: middle"
+                />
+                <span>{{ customer.representative.name }}</span>
+              </div>
+            </td>
+            <td>
+              <p-tag
+                [value]="customer.status"
+                [severity]="getSeverity(customer.status)"
+              />
+            </td>
+            <td>
+              <i
+                class="pi"
+                [ngClass]="{
+                  'text-green-500 pi-check-circle': customer.verified,
+                  'text-red-500 pi-times-circle': !customer.verified
+                }"
+              ></i>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="5">No customers found.</td>
+          </tr>
+        </ng-template>
+      </p-table> -->
 
       <!-- PrimeNG Table Section -->
       <div class="card">
@@ -96,58 +290,150 @@
           <h5>Variables List</h5>
         </div>
         <div class="card-body">
-          <p-table 
-            [value]="variables" 
+          <p-table
+            [value]="variable"
             [loading]="loading"
-            [paginator]="true" 
+            [paginator]="true"
             [rows]="10"
-            [rowsPerPageOptions]="[5, 10, 20]"
-            [totalRecords]="variables.length"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [loading]="loading"
+            [globalFilterFields]="[
+              'variable.user',
+              'variable.name',
+              'variable.code',
+              'variable.value'
+            ]"
+            [tableStyle]="{ 'min-width': '75rem' }"
+            [totalRecords]="pagination.totalItems"
             [showCurrentPageReport]="true"
+            [lazy]="true"
+            (onLazyLoad)="pageChanged($event)"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            styleClass="p-datatable-striped">
-            
+            styleClass="p-datatable-striped"
+          >
+            <ng-template pTemplate="caption">
+              <div
+                class="d-flex align-items-center justify-content-between flex-wrap gap-2"
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="openModalForm(null, modalForm)"
+                  *ngIf="!isEditing"
+                >
+                  Add
+                </button>
+                <div class="d-flex align-items-center gap-2">
+                  <label for="globalSearch" class="mb-0 fw-semibold"
+                    >Search</label
+                  >
+                  <p-iconfield iconPosition="left">
+                    <p-inputicon>
+                      <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input
+                      id="globalSearch"
+                      pInputText
+                      type="text"
+                      (input)="
+                        dt2.filterGlobal($event.target.value, 'contains')
+                      "
+                      placeholder="Search keyword"
+                    />
+                  </p-iconfield>
+                </div>
+              </div>
+            </ng-template>
+
+            <!-- <ng-template pTemplate="header"> -->
             <ng-template pTemplate="header">
               <tr>
-                <th>Variable ID</th>
-                <th>User</th>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Value</th>
-                <th>Created Time</th>
-                <th>Actions</th>
+                <th style="width: 22%">User</th>
+                <th style="width: 22%">Name</th>
+                <th style="width: 22%">Code</th>
+                <th style="width: 22%">Value</th>
+                <th style="width: 12%">Actions</th>
+              </tr>
+
+              <tr>
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="user"
+                    placeholder="Search by user"
+                    ariaLabel="Filter user"
+                  ></p-columnFilter>
+                </th>
+
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="name"
+                    placeholder="Search by name"
+                    ariaLabel="Filter Name"
+                  ></p-columnFilter>
+                </th>
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="code"
+                    placeholder="Search by code"
+                    ariaLabel="Filter Code"
+                  ></p-columnFilter>
+                </th>
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="value"
+                    placeholder="Search by value"
+                    ariaLabel="Filter value"
+                  ></p-columnFilter>
+                </th>
+
+                <th></th>
               </tr>
             </ng-template>
-            
+
             <ng-template pTemplate="body" let-variable>
               <tr>
-                <td>{{ variable.variableId }}</td>
+                <!-- <td>{{ variable.variableId }}</td> -->
                 <td>{{ variable.user }}</td>
                 <td>{{ variable.name }}</td>
                 <td>{{ variable.code }}</td>
                 <td>{{ variable.value }}</td>
-                <td>{{ variable.cretedTime | date:'short' }}</td>
                 <td>
-                  <button 
+                  <button
                     type="button"
                     class="btn btn-sm btn-outline-primary me-2"
-                    (click)="editVariable(variable)">
-                    <i class="fas fa-edit"></i> Edit
+                    (click)="editVariable(variable)"
+                  >
+                    <i class="fa fa-edit"></i> Edit
                   </button>
-                  <button 
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success me-2"
+                    (click)="
+                      openModalForm(null, modalForm); editVariable(variable)
+                    "
+                  >
+                    <i class="fa fa-edit"></i> With Modal
+                  </button>
+                  <button
                     type="button"
                     class="btn btn-sm btn-outline-danger"
-                    (click)="deleteVariable(variable.variableId!)">
-                    <i class="fas fa-trash"></i> Delete
+                    (click)="deleteVariable(variable.variableId!)"
+                  >
+                    <i class="fa fa-trash"></i> Delete
                   </button>
                 </td>
               </tr>
             </ng-template>
-            
+
             <ng-template pTemplate="emptymessage">
               <tr>
                 <td colspan="7" class="text-center">
-                  No variables found. Create your first variable using the form above.
+                  No variables found. Create your first variable using the form
+                  above.
                 </td>
               </tr>
             </ng-template>
@@ -158,5 +444,112 @@
   </div>
 </div>
 
-<!-- Confirmation Dialog -->
-<p-confirmDialog></p-confirmDialog>
+<ng-template #modalForm>
+  <div class="modal-header">
+    <h5 class="modal-title pull-left">
+      {{ isEditing ? "Edit" : "Add New" }} Variable
+    </h5>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="modalRef.hide()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <form [formGroup]="variableForm" (submit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="user" class="form-label">User </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="user"
+                    formControlName="user"
+                    readonly
+                    [class.is-invalid]="
+                      variableForm.get('user')?.invalid &&
+                      variableForm.get('user')?.touched
+                    "
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    readonly
+                    [class.is-invalid]="
+                      variableForm.get('name')?.invalid &&
+                      variableForm.get('name')?.touched
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="code" class="form-label">Code *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="code"
+                    formControlName="code"
+                    [class.is-invalid]="
+                      variableForm.get('code')?.invalid &&
+                      variableForm.get('code')?.touched
+                    "
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="value" class="form-label">Value</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="value"
+                    formControlName="value"
+                    [class.is-invalid]="
+                      variableForm.get('value')?.invalid &&
+                      variableForm.get('value')?.touched
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="variableForm.invalid"
+              >
+                {{ isEditing ? "Update" : "Create" }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                *ngIf="isEditing"
+                (click)="cancelEditModal()"
+              >
+                Clear
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Create/Edit modal -->

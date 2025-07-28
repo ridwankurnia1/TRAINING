@@ -263,12 +263,12 @@ export class WarehouseComponent implements OnInit {
         } else {
           this.warehouse.createGroup(this.formGroup.value).subscribe(
             () => {
+              console.log(this.formGroup.value)
               this.isSubmitting = false;
 
               this.modalRef?.hide();
               this.formGroup.reset();
               this.getAllGroup();
-
               this.message.add({
                 severity: 'success',
                 summary: 'Data created!',

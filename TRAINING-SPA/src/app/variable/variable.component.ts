@@ -1,140 +1,378 @@
 // variable.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { VariableService } from '../_service/variable.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TableModule } from "primeng/table";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { VariableItem, CreateVariableItem, UpdateVariableItem } from '../_model/Variable';
+import {
+  FormGroup,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { VariableItem } from '../_model/Variable';
 import { CommonModule } from '@angular/common';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ToastModule } from 'primeng/toast';
+import { ToastrService } from 'ngx-toastr';
+import { UIService } from '../_service/ui.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { PaginatedResult, Pagination } from '../_model/Pagination';
 
 @Component({
   selector: 'app-variable',
   templateUrl: './variable.component.html',
   styleUrls: ['./variable.component.css'],
-  standalone:true,
+  standalone: true,
   imports: [
     TableModule,
     ConfirmDialogModule,
     CommonModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    ConfirmDialogModule,
+    ToastModule,
+  ],
 })
 export class VariableComponent implements OnInit {
-  variables:VariableItem[] = []
+  variableForm: FormGroup;
+  variable: VariableItem[] = [];
   rowsPerPageOptions: any;
+  formItem: UntypedFormGroup;
   pageSize: any;
-  itemForm: FormGroup;
   loading = false;
   isEditing = false;
-  editingId: number | null = null
+  editingId: number | null = null;
+  statusDropdown = 'Inactive';
+  process = false;
+  
+  // Modalpurpose
+  modalRef?: BsModalRef;
+  showModal = false;
+  showDeleteModal = false;
+  modalMode: 'create' | 'edit' = 'create';
+  modalGroup: UntypedFormGroup;
 
-  pageChanged($event: any) {
-  throw new Error('Method not implemented.');
-}
-constructor(
-  private variableService: VariableService,
-  private fb:FormBuilder
-) {
-  this.itemForm = this.fb.group({
-    user: ['', [Validators.required, Validators.minLength(2)]],
-    name: ['', [Validators.required, Validators.minLength(5)]],
-    code: ['', [Validators.required, Validators.minLength(5)]],
-    value: ['', [Validators.required, Validators.minLength(5)]],
-  });
-}
-
-ngOnInit(): void {
-  this.loadVariable();
-}
-
-loadVariable():void {
-  this.loading = true;
-  this.variableService.getVariables().subscribe({
-    next:(data) => {
-      this.variables = data
-      this.loading = false
-    },
-    error: (error) => {
-      console.error('Error loading data:', error)
-      this.loading = false;
-    }
-  })
-}
-
-createVariable(): void{
-  const newItem: CreateVariableItem = this.itemForm.value;
-  this.variableService.create(newItem).subscribe({
-    next: (item) => {
-      this.variables.push(item);
-      this.resetForm()
-    }
-  })
-}
-onSubmit(): void {
-  if (this.itemForm.valid) {
-    if (this.isEditing) {
-      this.updateVariable();
-    } else {
-      this.createVariable();
-    }
+  // lazy loading
+  pagination : Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+  };
+  params;
+  
+  constructor(
+    private variableService: VariableService,
+    private fb: UntypedFormBuilder,
+    private ui: UIService,
+    private message: MessageService,
+    private modal: BsModalService,
+    private toastr: ToastrService,
+    private confirm: ConfirmationService
+  ) {
+    this.variableForm = this.fb.group({
+      variableId: [0],
+      user: ['AMG'],
+      name: ['CKP'],
+      code: ['', [Validators.required, Validators.minLength(2)]],
+      value: [''],
+    });
+    // this.initForm
   }
-}
+  
+  ngOnInit(): void {
+    this.params = {};
+    this.loadVariable();
+    this.pagination;
+    // this.pagination = {
+    //   currentPage: 1,
+    //   itemsPerPage: 10,
+    //   totalItems: 0,
+    //   totalPages: 0,
+    // };
+  }
+  
+  // loadVariable(): void {
+  //   this.loading = true;
+  //   this.variableForm = this.fb.group({
+  //     variableId: [0],
+  //     user: ['AMG'],
+  //     name: ['CKP'],
+  //     code: ['', [Validators.required, Validators.minLength(2)]],
+  //     value: [''],
+  //   });
+  //   this.variableService.getVariables().subscribe({
+  //     next: (data) => {
+  //       this.variable = data;
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       this.toastr.error('Data failed to load');
+  //       console.error('Error loading data:', error);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
 
-  deleteVariable(id: number): void {
-  if (confirm('Are you sure you want to delete this item?')) {
-    this.variableService.delete(id).subscribe({
-      next: () => {
-        this.variables = this.variables.filter(variable => variable.variableId !== id);
-      },
-      error: (error) => {
-        console.error('Error deleting item:', error);
-      }
+  editVariable(variable: VariableItem): void {
+    this.isEditing = true;
+    this.editingId = variable.variableId;
+    this.variableForm.patchValue({
+      variableId: variable.variableId,
+      user: variable.user,
+      name: variable.name,
+      code: variable.code,
+      value: variable.value,
     });
   }
-}
+
+  onSubmit(): void {
+    if (this.variableForm.invalid) {
+      this.ui.validateFormEntry(this.variableForm);
+      console.log('Variable form is invalid');
+      return;
+    }
+
+    this.process = true;
+    const data: VariableItem = this.variableForm.getRawValue();
+
+    if (this.isEditing) {
+      if (!data.variableId) {
+        console.error('Missing variableId for update operation', data);
+        this.process = false;
+        return;
+      }
+
+      this.variableService.update(data).subscribe({
+        next: () => {
+          console.log(data);
+          this.toastr.success('Variable has been updated successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to update variable');
+          console.error('Update error:', error);
+          console.log('Data sent for update:', data);
+        },
+        complete: () => (this.process = false),
+      });
+    } else {
+      const createData: Omit<VariableItem, 'variableId'> = {
+        user: data.user,
+        name: data.name,
+        code: data.code,
+        value: data.value,
+      };
+
+      this.variableService.create(createData).subscribe({
+        next: () => {
+          this.toastr.success('Variable has been created successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to create. Variable Should be Unique');
+          console.error('Create error:', error);
+          console.log('Data sent for creation:', createData);
+        },
+        complete: () => (this.process = false),
+      });
+    }
+  }
+
+  onSubmitModal(): void {
+    console.log(this.variableForm);
+
+    if (this.variableForm.invalid) {
+      this.ui.validateFormEntry(this.variableForm);
+      console.log('Variable form is invalid');
+      return;
+    }
+
+    this.process = true;
+    const data: VariableItem = this.variableForm.getRawValue();
+    console.log('onsubmit is', data);
+    if (this.isEditing) {
+      if (!data.variableId) {
+        console.error('Missing variableId for update operation', data);
+        this.process = false;
+        return;
+      }
+
+      this.variableService.update(data).subscribe({
+        next: () => {
+          console.log(data);
+          this.toastr.success('Variable has been updated successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to update variable');
+          console.error('Update error:', error);
+          console.log('Data sent for update:', data);
+        },
+        complete: () => (this.process = false),
+      });
+    } else {
+      const createData: Omit<VariableItem, 'variableId'> = {
+        user: data.user,
+        name: data.name,
+        code: data.code,
+        value: data.value,
+      };
+
+      this.variableService.create(createData).subscribe({
+        next: () => {
+          this.toastr.success('Variable has been created successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to create. Variable Should be Unique');
+          console.error('Create error:', error);
+          console.log('Data sent for creation:', createData);
+        },
+        complete: () => (this.process = false),
+      });
+    }
+  }
 
   updateVariable(): void {
     if (this.editingId) {
-      const updatedItem: UpdateVariableItem = {
+      const updatedVariable: VariableItem = {
         variableId: this.editingId,
-        ...this.itemForm.value
+        ...this.variableForm.value,
       };
-      
-      this.variableService.update(updatedItem).subscribe({
-        next: (item) => {
-          const index = this.variables.findIndex(i => i.variableId === item.variableId);
+
+      this.variableService.update(updatedVariable).subscribe({
+        next: (variable) => {
+          const index = this.variable.findIndex(
+            (i) => i.variableId === variable.variableId
+          );
           if (index !== -1) {
-            this.variables[index] = item;
+            this.variable[index] = variable;
           }
           this.resetForm();
         },
         error: (error) => {
           console.error('Error updating item:', error);
-        }
+        },
       });
     }
   }
 
-  editVariable(item: VariableItem): void {
-    this.isEditing = true;
-    this.editingId = item.variableId;
-    this.itemForm.patchValue({
-      user: item.user,
-      name: item.name,
-      code: item.code,
-      value: item.value
-    });
+  cancelEditReguler(): void {
+    this.resetForm();
   }
-  
-
-  cancelEdit(): void {
-  this.resetForm();
+  cancelEditModal(): void {
+    this.loadVariable();
   }
 
   resetForm(): void {
-    this.itemForm.reset();
-    this.itemForm.patchValue({ isActive: true });
+    this.variableForm.reset();
+    this.variableForm.patchValue({ isActive: true });
     this.isEditing = false;
     this.editingId = null;
+    this.initForm();
+    // this.variableForm = this.fb.group({
+    //   variableId: [0],
+    //   user: ['AMG'],
+    //   name: ['CKP'],
+    //   code: ['', [Validators.required, Validators.minLength(2)]],
+    //   value: [''],
+    // });
+  }
+
+  // // Modal Section
+  //   openCreateModal(): void {
+  //     this.modalMode = 'create';
+  //     this.currentVariable = this.getEmptyVariable();
+  //     this.showModal = true;
+  // }
+
+  openModalForm(id?: number, element?: TemplateRef<any>): void {
+    this.modalMode = 'create';
+    // this.variableForm = this.fb.group({
+    //   variableId: [0],
+    //   user: ['AMG'],
+    //   name: ['CKP'],
+    //   code: ['', [Validators.required, Validators.minLength(2)]],
+    //   value: [''],
+    // });
+    this.initForm();
+    this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
+  }
+
+  deleteVariable(variableId: number): void {
+    if (!variableId || variableId <= 0) {
+      this.toastr.error('Invalid variable ID');
+      return;
+    }
+
+    this.confirm.confirm({
+      message: `Are you sure you want to delete variable ${variableId}?`,
+      accept: () => {
+        this.variableService.delete(variableId).subscribe({
+          next: () => {
+            this.loadVariable();
+            this.toastr.success(`Variable deleted successfully `);
+
+            this.message.add({
+              severity: 'success',
+              summary: 'Variable deleted successfully',
+            });
+          },
+          error: (err) => {
+            console.error('Delete error:', err);
+            const errorMessage =
+              err.error?.message || err.message || 'Unknown error occurred';
+            this.toastr.error(`Failed to delete variable: ${errorMessage}`);
+          },
+        });
+      },
+    });
+  }
+
+  pageChanged(event): void {
+    if (!event || event.rows == null || event.first == null) return;
+
+    this.pagination.currentPage = event.first / event.rows + 1;
+    this.pagination.itemsPerPage = event.rows;
+    // this.params = {
+    //   filter: event.globalFilter,
+    // };
+    this.loadVariable();
+  }
+
+  initForm() {
+    this.variableForm = this.fb.group({
+      variableId: [0],
+      user: ['AMG'],
+      name: ['CKP'],
+      code: ['', [Validators.required, Validators.minLength(2)]],
+      value: [''],
+    });
+  }
+
+  loadVariable(): void {
+    this.loading = true;
+    this.variableService
+      .getVariablePaging(
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage,
+        this.params
+      )
+      .subscribe({
+        next: (data: PaginatedResult<VariableItem[]>) => {
+          this.initForm();
+          // console.log('Page Changed 1:', this.pagination);
+          this.variable = data.result;
+          this.pagination = data.pagination;
+          this.loading = false;
+          // console.log('Page Changed 2:', this.pagination);
+        },
+        error: (error) => {
+          this.toastr.error('Data failed to load');
+          console.error('Error loading data:', error);
+          this.loading = false;
+        },
+      });
   }
 }

@@ -22,11 +22,15 @@ using System.Data.Common;
 using TRAINING.API.GraphQL;
 using TRAINING.API.Schema.Queries;
 using TRAINING.API.Schema.Mutation;
+using TRAINING.API.Repositories;
+using System.Text.Json;
 
 namespace TRAINING.API
 {
+    
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,7 +41,12 @@ namespace TRAINING.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
             /* .AddJsonOptions(o =>
             {
                 // ignore null field when serialized
@@ -55,7 +64,7 @@ namespace TRAINING.API
                 .AddType<PartNumberType>()
                 .AddTypeExtension<PartNumberQuery>()
                 .AddFiltering();
-
+            
             // services.AddDbContext<APRISEContext>(x => x.UseOracle(Configuration.GetConnectionString("APRISEConnection")));            
             // services.AddDbContext<ORDSContext>(x => x.UseDb2(Configuration.GetConnectionString("ORDSConnection"), 
             //     action => {
@@ -74,10 +83,10 @@ namespace TRAINING.API
             services.AddScoped<IProductionRepository, ProductionRepository>();
             services.AddScoped<IProductionRepository2, ProductionRepository2>();
             services.AddScoped<IDefectMappingRepository, DefectMappingRepository>();
-            
             services.AddScoped<IPalletTypeRepository, PalletTypeRepository>();
             services.AddScoped<IProductionRepository, ProductionRepository>();
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+            services.AddScoped<IVariableRepository, VariableRepository>();
 
             // services.AddScoped<IORDSRepository, ORDSRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -1,7 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 namespace TRAINING.API.Model
 {
     public class ZVAR
     {
+        // [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ZRRCID { get; set; }
         public string ZRCONO { get; set; }
         public string ZRBRNO { get; set; }
         public string ZRVANO { get; set; }

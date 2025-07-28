@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './_guards/auth.guard';
+import { VariableComponent } from './variable/variable.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +25,7 @@ export const routes: Routes = [
   },
   {
     path: 'warehouse',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     loadComponent: () =>
       import('./master/warehouse/warehouse.component').then(
         (c) => c.WarehouseComponent
@@ -159,7 +160,6 @@ export const routes: Routes = [
         (c) => c.SimplecrudComponent
       ),
   },
-
   {
     path: 'variable',
     // runGuardsAndResolvers: 'always',

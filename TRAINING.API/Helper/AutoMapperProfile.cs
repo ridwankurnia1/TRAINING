@@ -381,9 +381,31 @@ namespace TRAINING.API.Helper
             .ForMember(des => des.Name, opt => opt.MapFrom(src => src.ZRVANA))
             .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVAVL));
 
+            
             CreateMap<DefinitionVarDto, ZVAR>()
             .ForMember(des => des.ZRVANA, opt => opt.MapFrom(src => src.Name))
             .ForMember(des => des.ZRVAVL, opt => opt.MapFrom(src => src.Value));
+
+            // ZVAR TO VariableDto
+            CreateMap<ZVAR, VariableDto>()
+            .ForMember(des => des.VariableId, opt => opt.MapFrom(src => src.ZRRCID))
+            .ForMember(des => des.User, opt => opt.MapFrom(src => src.ZRCONO))
+            .ForMember(des => des.Name, opt => opt.MapFrom(src => src.ZRBRNO))
+            .ForMember(des => des.Code, opt => opt.MapFrom(src => src.ZRVANO))
+            .ForMember(des => des.Value, opt => opt.MapFrom(src => src.ZRVANA));
+//   variableId?: number;
+//   user?: string;
+//   name?: string;
+//   code?: string;
+//   value?: string;
+
+            // VaribleDto to ZVAR
+            CreateMap<VariableDto, ZVAR>()
+            .ForMember(des => des.ZRRCID, opt => opt.MapFrom(src => src.VariableId))
+            .ForMember(des => des.ZRCONO, opt => opt.MapFrom(src => src.User))
+            .ForMember(des => des.ZRBRNO, opt => opt.MapFrom(src => src.Name))
+            .ForMember(des => des.ZRVANO, opt => opt.MapFrom(src => src.Code))
+            .ForMember(des => des.ZRVANA, opt => opt.MapFrom(src => src.Value));
 
             CreateMap<GCT2, GlobalCommonText2>()
             .ForMember(des => des.Name, opt => opt.MapFrom(src => src.CBKYNA))
@@ -598,6 +620,11 @@ namespace TRAINING.API.Helper
                 .ForMember(des => des.TBCHUS, opt => opt.MapFrom(src => src.UpdatedBy))
 
                 .ForMember(des => des.TBRCST, opt => opt.MapFrom(src => 1));
+        }
+
+        private void ForMember(Func<object, object> value1, Func<object, object> value2)
+        {
+            throw new NotImplementedException();
         }
 
         public class PhotoResolver : IMemberValueResolver<object, object, string, string>

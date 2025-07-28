@@ -1,0 +1,89 @@
+create a backend  that connect to angular that can do simple crud. create the Helper, Controller VariableController.cs and IVariableRepository.cs
+
+//Variable.ts
+export interface VariableItem {
+  variableId?: number;
+  user: string;
+  name: string;
+  code: string;
+  value: string;
+  cretedTime: Date;
+}
+export interface CreateVariableItem {
+  user: string;
+  name: string;
+  code: string;
+  value: string;
+}
+export interface UpdateVariableItem {
+  variableId?: number;
+  user: string;
+  name: string;
+  code: string;
+  value: string;
+}
+
+// variable.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { VariableItem, CreateVariableItem, UpdateVariableItem } from '../_model/Variable';
+import { environment } from 'src/environments/environment';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class VariableService {
+  baseUrl = environment.apiUrl + 'Variable/';
+
+  constructor(private http: HttpClient) {}
+
+  getVariables(): Observable<VariableItem[]> {
+    return this.http.get<VariableItem[]>(this.baseUrl);
+  }
+
+  getById(variableId: number): Observable<VariableItem | undefined> {
+    return this.http.get<VariableItem>(`${this.baseUrl}/${variableId}`);
+  }
+
+  create(item: CreateVariableItem): Observable<VariableItem> {
+    return this.http.post<VariableItem>(this.baseUrl, item);
+  }
+
+  update(variable: UpdateVariableItem): Observable<VariableItem> {
+    return this.http.put<VariableItem>(`${this.baseUrl}/${variable.variableId}`, variable);
+  }
+
+  delete(variableId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${variableId}`);
+  }
+}
+
+//viewmodel VariableDto.cs 
+using System;
+
+namespace TRAINING.API.ViewModel
+{
+    public class VariableDto
+    {
+        public string User { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Value { get; set; }
+        public DateTime  CreatedTime { get; set; }
+    }
+}
+
+//model
+namespace TRAINING.API.Model
+{
+    public class ZVAR
+    {
+        public string ZRCONO { get; set; }
+        public string ZRBRNO { get; set; }
+        public string ZRVANO { get; set; }
+        public string ZRVANA { get; set; }
+    }
+}

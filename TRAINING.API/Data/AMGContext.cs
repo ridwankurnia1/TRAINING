@@ -50,7 +50,8 @@ namespace TRAINING.API.Data
             builder.Entity<GCT2>().HasKey(k => new { k.CBCONO, k.CBBRNO, k.CBTBNO, k.CBKYNO });
             builder.Entity<GCUR>().HasKey(k => new { k.GGCYNO });
             builder.Entity<IUOM>().HasKey(k => new { k.HUUMNO });
-            builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
+            // builder.Entity<ZVAR>().HasKey(k => new { k.ZRVANA });
+            builder.Entity<ZVAR>().HasKey(k => k.ZRRCID);
             builder.Entity<IWGR>().HasKey(k => new { k.HVWHGR });
             builder.Entity<IWHS>().HasKey(k => new { k.HWWHNO });
 

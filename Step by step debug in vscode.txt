@@ -1,0 +1,7 @@
+Step by step debug in vscode
+
+Ctrl + C to terminate .net console
+Clear the network on the website
+Add the pointer to specific code/function that probably cause the error
+run the website
+hit the run debug tool and press f10 if want to jump into next pointer

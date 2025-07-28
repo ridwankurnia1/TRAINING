@@ -7,12 +7,12 @@ import { LebaranQuiz } from 'src/app/_model/LebaranQuiz';
 import { ChecksheetService } from 'src/app/_service/checksheet.service';
 import { UIService } from 'src/app/_service/ui.service';
 import { environment } from 'src/environments/environment';
-import Quiz from '../../../assets/lebaran2021.json';
+//import Quiz from '../../../assets/lebaran2021.json';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TableModule } from 'primeng/table';
-import { EmployeeRoutes } from 'src/app/master/employee/employee.routing';
+//import { EmployeeRoutes } from 'src/app/master/employee/employee.routing';
 
 @Component({
   selector: 'app-clinic',
@@ -23,7 +23,6 @@ import { EmployeeRoutes } from 'src/app/master/employee/employee.routing';
     CommonModule,
     FormsModule,
     RadioButtonModule,
-    EmployeeRoutes,
     TableModule,
     ReactiveFormsModule
   ]
@@ -38,6 +37,7 @@ export class ClinicComponent implements OnInit {
   readOnly = true;
   bsConfig: Partial<BsDatepickerConfig>;
   defaultImages = environment.imgEmpUrl + 'NoImage.png';
+  
   constructor(
     private ui: UIService,
     private csservice: ChecksheetService,
@@ -45,7 +45,8 @@ export class ClinicComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.questions = Quiz.question;
+    //this.questions = Quiz.question;
+    
     this.bsConfig = {
       dateInputFormat: 'DD-MM-YYYY'
     };
