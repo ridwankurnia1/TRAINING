@@ -1,5 +1,5 @@
 // variable.component.ts
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { VariableService } from '../_service/variable.service';
 import {
   FormGroup,
@@ -18,7 +18,6 @@ import { ToastrService } from 'ngx-toastr';
 import { UIService } from '../_service/ui.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PaginatedResult, Pagination } from '../_model/Pagination';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-variable',
@@ -43,7 +42,6 @@ export class VariableComponent implements OnInit {
   loading = false;
   isEditing = false;
   editingId: number | null = null;
-  statusDropdown = 'Inactive';
   process = false;
 
   // Modalpurpose
@@ -118,100 +116,47 @@ export class VariableComponent implements OnInit {
     }
 
     this.process = true;
-    const data: VariableItem = this.variableForm.getRawValue();
+    const variable: VariableItem = this.variableForm.getRawValue();
 
     if (this.isEditing) {
-      if (!data.variableId) {
-        console.error('Missing variableId for update operation', data);
+      if (!variable.variableId) {
+        console.error('Missing variableId for update operation', variable);
         this.process = false;
         return;
       }
 
-      this.variableService.update(data).subscribe({
+      this.variableService.update(variable).subscribe({
         next: () => {
-          console.log(data);
+          console.log(variable);
           this.toastr.success('Variable has been updated successfully');
+          this.closeModalAndReset();
           this.loadVariable();
         },
         error: (error) => {
           this.toastr.error('Failed to update variable');
           console.error('Update error:', error);
-          console.log('Data sent for update:', data);
+          console.log('Variable sent for update:', variable);
         },
         complete: () => (this.process = false),
       });
     } else {
-      const createData: Omit<VariableItem, 'variableId'> = {
-        user: data.user,
-        name: data.name,
-        code: data.code,
-        value: data.value,
+      const createVariable: Omit<VariableItem, 'variableId'> = {
+        user: variable.user,
+        name: variable.name,
+        code: variable.code,
+        value: variable.value,
       };
 
-      this.variableService.create(createData).subscribe({
+      this.variableService.create(createVariable).subscribe({
         next: () => {
           this.toastr.success('Variable has been created successfully');
+          this.closeModalAndReset();
           this.loadVariable();
         },
         error: (error) => {
           this.toastr.error('Failed to create. Variable Should be Unique');
           console.error('Create error:', error);
-          console.log('Data sent for creation:', createData);
-        },
-        complete: () => (this.process = false),
-      });
-    }
-  }
-
-  onSubmitModal(): void {
-    console.log("onsubmit modal")
-
-    if (this.variableForm.invalid) {
-      this.ui.validateFormEntry(this.variableForm);
-      console.log('Variable form is invalid');
-      return;
-    }
-
-    this.process = true;
-    const data: VariableItem = this.variableForm.getRawValue();
-    console.log('onsubmit is', data);
-    if (this.isEditing) {
-      if (!data.variableId) {
-        console.error('Missing variableId for update operation', data);
-        this.process = false;
-        return;
-      }
-
-      this.variableService.update(data).subscribe({
-        next: () => {
-          // console.log(data);
-          this.toastr.success('Variable has been updated successfully');
-          this.loadVariable();
-        },
-        error: (error) => {
-          this.toastr.error('Failed to update variable');
-          console.error('Update error:', error);
-          // console.log('Data sent for update:', data);
-        },
-        complete: () => (this.process = false),
-      });
-    } else {
-      const createData: Omit<VariableItem, 'variableId'> = {
-        user: data.user,
-        name: data.name,
-        code: data.code,
-        value: data.value,
-      };
-
-      this.variableService.create(createData).subscribe({
-        next: () => {
-          this.toastr.success('Variable has been created successfully');
-          this.loadVariable();
-        },
-        error: (error) => {
-          this.toastr.error('Failed to create. Variable Should be Unique');
-          console.error('Create error:', error);
-          // console.log('Data sent for creation:', createData);
+          console.log('Variable sent for creation:', createVariable);
         },
         complete: () => (this.process = false),
       });
@@ -255,12 +200,6 @@ export class VariableComponent implements OnInit {
     this.isEditing = false;
     this.editingId = null;
     this.initForm();
-  } 
-  
-  openModalForm(id?: number, element?: TemplateRef<any>): void {
-    this.modalMode = 'create';
-    this.initForm();
-    this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
   }
 
   deleteVariable(variableId: number): void {
@@ -314,7 +253,7 @@ export class VariableComponent implements OnInit {
     this.variableForm = this.fb.group({
       variableId: [0],
       user: ['AMG'],
-      status: ['CKP'],
+      name: ['CKP'],
       code: ['', [Validators.required, Validators.minLength(2)]],
       value: [''],
     });
@@ -341,13 +280,82 @@ export class VariableComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+  onSubmitModal(): void {
+    // console.log("onsubmit modal")
 
+    if (this.variableForm.invalid) {
+      this.ui.validateFormEntry(this.variableForm);
+      console.log('Variable form is invalid');
+      return;
     }
+
+    this.process = true;
+    const data: VariableItem = this.variableForm.getRawValue();
+    console.log('onsubmit is', data);
+    if (this.isEditing) {
+      if (!data.variableId) {
+        console.error('Missing variableId for update operation', data);
+        this.process = false;
+        return;
+      }
+
+      this.variableService.update(data).subscribe({
+        next: () => {
+          // console.log(data);
+          this.toastr.success('Variable has been updated successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to update variable');
+          console.error('Update error:', error);
+          // console.log('Data sent for update:', data);
+        },
+        complete: () => (this.process = false),
+      });
+    } else {
+      const createData: Omit<VariableItem, 'variableId'> = {
+        user: data.user,
+        name: data.name,
+        code: data.code,
+        value: data.value,
+      };
+
+      this.variableService.create(createData).subscribe({
+        next: () => {
+          this.toastr.success('Variable has been created successfully');
+          this.loadVariable();
+        },
+        error: (error) => {
+          this.toastr.error('Failed to create. Variable Should be Unique');
+          console.error('Create error:', error);
+          // console.log('Data sent for creation:', createData);
+        },
+        complete: () => (this.process = false),
+      });
+    }
+  }
+
+  openModalForm(id?: number, element?: TemplateRef<any>): void {
+    this.modalMode = 'create';
+    this.initForm();
+    this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
+  }
+  // closeModal(): void {
+  //   if (this.modalRef) {
+  //     this.modalRef.hide();
+  //   }
+  // }
+  closeModalAndReset(): void {
+    this.process = false;
+    this.modalRef?.hide();
+    this.variableForm.reset();
+    this.isEditing = false;
+  }
   // filtersection
   onGlobalSearch(event: any): void {
-    
     this.globalSearch = event.target.value;
-    clearTimeout(this.searchTimeout)
+    clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.params = {
         ...this.params,
