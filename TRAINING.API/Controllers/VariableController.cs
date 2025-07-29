@@ -62,9 +62,6 @@ namespace TRAINING.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVariable([FromQuery] VariableParams prm)
         {
-            // prm.Page = prm.Page == 0 ? 10 : prm.Page;
-            // prm.PageSize = prm.PageSize == 0 ? 20 : prm.PageSize;
-
             var variable = await _repository.GetListVariable(prm);
             var result = _mapper.Map<IEnumerable<VariableDto>>(variable);
             Response.AddPagination(variable.CurrentPage, variable.PageSize, variable.TotalCount, variable.TotalPages);

@@ -1,5 +1,5 @@
 // variable.component.ts
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { VariableService } from '../_service/variable.service';
 import {
   FormGroup,
@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UIService } from '../_service/ui.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PaginatedResult, Pagination } from '../_model/Pagination';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-variable',
@@ -44,7 +45,7 @@ export class VariableComponent implements OnInit {
   editingId: number | null = null;
   statusDropdown = 'Inactive';
   process = false;
-  
+
   // Modalpurpose
   modalRef?: BsModalRef;
   showModal = false;
@@ -53,14 +54,24 @@ export class VariableComponent implements OnInit {
   modalGroup: UntypedFormGroup;
 
   // lazy loading
-  pagination : Pagination = {
+  pagination: Pagination = {
     currentPage: 1,
     itemsPerPage: 10,
     totalItems: 0,
     totalPages: 0,
   };
-  params;
-  
+
+  // filter
+  globalSearch: string = '';
+  searchTimeout: any = null;
+  params: {
+    name?: string;
+    user?: string;
+    code?: string;
+    value?: string;
+    search?: string;
+  };
+
   constructor(
     private variableService: VariableService,
     private fb: UntypedFormBuilder,
@@ -79,40 +90,13 @@ export class VariableComponent implements OnInit {
     });
     // this.initForm
   }
-  
+
   ngOnInit(): void {
     this.params = {};
     this.loadVariable();
     this.pagination;
-    // this.pagination = {
-    //   currentPage: 1,
-    //   itemsPerPage: 10,
-    //   totalItems: 0,
-    //   totalPages: 0,
-    // };
+    this.initFilter();
   }
-  
-  // loadVariable(): void {
-  //   this.loading = true;
-  //   this.variableForm = this.fb.group({
-  //     variableId: [0],
-  //     user: ['AMG'],
-  //     name: ['CKP'],
-  //     code: ['', [Validators.required, Validators.minLength(2)]],
-  //     value: [''],
-  //   });
-  //   this.variableService.getVariables().subscribe({
-  //     next: (data) => {
-  //       this.variable = data;
-  //       this.loading = false;
-  //     },
-  //     error: (error) => {
-  //       this.toastr.error('Data failed to load');
-  //       console.error('Error loading data:', error);
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
 
   editVariable(variable: VariableItem): void {
     this.isEditing = true;
@@ -180,7 +164,7 @@ export class VariableComponent implements OnInit {
   }
 
   onSubmitModal(): void {
-    console.log(this.variableForm);
+    console.log("onsubmit modal")
 
     if (this.variableForm.invalid) {
       this.ui.validateFormEntry(this.variableForm);
@@ -200,14 +184,14 @@ export class VariableComponent implements OnInit {
 
       this.variableService.update(data).subscribe({
         next: () => {
-          console.log(data);
+          // console.log(data);
           this.toastr.success('Variable has been updated successfully');
           this.loadVariable();
         },
         error: (error) => {
           this.toastr.error('Failed to update variable');
           console.error('Update error:', error);
-          console.log('Data sent for update:', data);
+          // console.log('Data sent for update:', data);
         },
         complete: () => (this.process = false),
       });
@@ -227,7 +211,7 @@ export class VariableComponent implements OnInit {
         error: (error) => {
           this.toastr.error('Failed to create. Variable Should be Unique');
           console.error('Create error:', error);
-          console.log('Data sent for creation:', createData);
+          // console.log('Data sent for creation:', createData);
         },
         complete: () => (this.process = false),
       });
@@ -271,31 +255,10 @@ export class VariableComponent implements OnInit {
     this.isEditing = false;
     this.editingId = null;
     this.initForm();
-    // this.variableForm = this.fb.group({
-    //   variableId: [0],
-    //   user: ['AMG'],
-    //   name: ['CKP'],
-    //   code: ['', [Validators.required, Validators.minLength(2)]],
-    //   value: [''],
-    // });
-  }
-
-  // // Modal Section
-  //   openCreateModal(): void {
-  //     this.modalMode = 'create';
-  //     this.currentVariable = this.getEmptyVariable();
-  //     this.showModal = true;
-  // }
-
+  } 
+  
   openModalForm(id?: number, element?: TemplateRef<any>): void {
     this.modalMode = 'create';
-    // this.variableForm = this.fb.group({
-    //   variableId: [0],
-    //   user: ['AMG'],
-    //   name: ['CKP'],
-    //   code: ['', [Validators.required, Validators.minLength(2)]],
-    //   value: [''],
-    // });
     this.initForm();
     this.modalRef = this.modal.show(element, { ignoreBackdropClick: true });
   }
@@ -330,14 +293,20 @@ export class VariableComponent implements OnInit {
     });
   }
 
-  pageChanged(event): void {
-    if (!event || event.rows == null || event.first == null) return;
-
+  pageChanged(event: any): void {
     this.pagination.currentPage = event.first / event.rows + 1;
     this.pagination.itemsPerPage = event.rows;
-    // this.params = {
-    //   filter: event.globalFilter,
-    // };
+
+    const filters = event.filters;
+
+    this.params = {
+      user: filters?.user?.value ?? '',
+      name: filters?.name?.value ?? '',
+      code: filters?.code?.value ?? '',
+      value: filters?.value?.value ?? '',
+      search: this.globalSearch || '',
+    };
+    // console.log("PageChange Search", this.params)
     this.loadVariable();
   }
 
@@ -345,7 +314,7 @@ export class VariableComponent implements OnInit {
     this.variableForm = this.fb.group({
       variableId: [0],
       user: ['AMG'],
-      name: ['CKP'],
+      status: ['CKP'],
       code: ['', [Validators.required, Validators.minLength(2)]],
       value: [''],
     });
@@ -362,11 +331,9 @@ export class VariableComponent implements OnInit {
       .subscribe({
         next: (data: PaginatedResult<VariableItem[]>) => {
           this.initForm();
-          // console.log('Page Changed 1:', this.pagination);
           this.variable = data.result;
           this.pagination = data.pagination;
           this.loading = false;
-          // console.log('Page Changed 2:', this.pagination);
         },
         error: (error) => {
           this.toastr.error('Data failed to load');
@@ -374,5 +341,24 @@ export class VariableComponent implements OnInit {
           this.loading = false;
         },
       });
+
+    }
+  // filtersection
+  onGlobalSearch(event: any): void {
+    
+    this.globalSearch = event.target.value;
+    clearTimeout(this.searchTimeout)
+    this.searchTimeout = setTimeout(() => {
+      this.params = {
+        ...this.params,
+        search: this.globalSearch,
+      };
+      this.pagination.currentPage = 1;
+      this.loadVariable();
+    }, 500);
+  }
+
+  initFilter() {
+    this.globalSearch = '';
   }
 }

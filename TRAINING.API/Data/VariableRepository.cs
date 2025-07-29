@@ -25,12 +25,13 @@ namespace TRAINING.API.Repositories
         {
             var query = _context.ZVAR.AsQueryable();
 
-            if (!string.IsNullOrEmpty(variableParams?.Search))
+            if (!string.IsNullOrEmpty(variableParams?.search))
             {
-                query = query.Where(v => 
-                    v.ZRVANA.Contains(variableParams.Search) || 
-                    v.ZRVANO.Contains(variableParams.Search) ||
-                    v.ZRBRNO.Contains(variableParams.Search));
+                query = query.Where(v =>
+                    v.ZRVANA.Contains(variableParams.search) ||
+                    v.ZRVANO.Contains(variableParams.search) ||
+                    v.ZRCONO.Contains(variableParams.search) ||
+                    v.ZRBRNO.Contains(variableParams.search));
             }
 
             return await query.OrderByDescending(v => v.ZRRCID).ToListAsync();
@@ -77,35 +78,36 @@ namespace TRAINING.API.Repositories
         {
             var query = _context.ZVAR.OrderByDescending(x => x.ZRRCID).AsQueryable();
 
-            if (!string.IsNullOrEmpty(prm.code))
+            if (!string.IsNullOrEmpty(prm.user))
             {
-                query = query.Where(x => x.ZRVANO.Contains(prm.code));
+                query = query.Where(x => x.ZRCONO.Contains(prm.user));
             }
             if (!string.IsNullOrEmpty(prm.name))
             {
                 query = query.Where(x => x.ZRBRNO.Contains(prm.name));
             }
-            // if (!string.IsNullOrEmpty(prm.name))
-            // {
-            //     query = query.Where(x => x.ZRBRNO.Contains(prm.name));
-            // }
-            // if (!string.IsNullOrEmpty(prm.name))
-            // {
-            //     query = query.Where(x => x.ZRBRNO.Contains(prm.name));
-            // }
-            // if (!string.IsNullOrEmpty(prm.status))
-            // {
-            //     query = query.Where(x => x.ZRRCST == Convert.ToDecimal(prm.status));
-            // }
-            
+            if (!string.IsNullOrEmpty(prm.code))
+            {
+                query = query.Where(x => x.ZRVANO.Contains(prm.code));
+            }
+            if (!string.IsNullOrEmpty(prm.value))
+            {
+                query = query.Where(x => x.ZRVANA.Contains(prm.value));
+            }
+            if (!string.IsNullOrEmpty(prm.search))
+            {
+                query = query.Where(x =>
+                    x.ZRCONO.Contains(prm.search) ||
+                    x.ZRBRNO.Contains(prm.search) ||
+                    x.ZRVANO.Contains(prm.search) ||
+                    x.ZRVANA.Contains(prm.search)
+                );
+            }
+
+
+
 
             return await PagedList<ZVAR>.CreateAsync(query, prm.PageNumber, prm.PageSize);
         }
     }
 }
-            // if (!string.IsNullOrEmpty(prm.filter))
-            // {
-            //     query = query.Where(x => x.EMEMNO.Contains(prm.filter) ||
-            //             x.EMEMNA.Contains(prm.filter) ||
-            //             x.GOG1.GOOGNA.Contains(prm.filter));
-            // }

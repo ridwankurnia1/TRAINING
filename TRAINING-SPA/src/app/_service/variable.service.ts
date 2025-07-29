@@ -33,15 +33,23 @@ export class VariableService {
       params = params.append('PageSize', itemPerPage);
     }
     if (prm) {
+      if (prm.user) {
+        params = params.append('user', prm.user);
+      }
       if (prm.name) {
         params = params.append('name', prm.name);
       }
-      // if (prm.filter) {
-      //   params = params.append('filter', prm.filter);
-      // }
-      // if (prm.sortString) {
-      //   params = params.append('srt', prm.sortString);
-      // }
+      if (prm.code) {
+        params = params.append('code', prm.code);
+        console.log('service prm code = ', prm.code)
+      }
+      if (prm.value) {
+        params = params.append('value', prm.value);
+      }
+      if (prm.search) {
+        console.log('service prm srch = ', prm.search)
+        params = params.append('search', prm.search);
+      }
     }
 
     return this.http

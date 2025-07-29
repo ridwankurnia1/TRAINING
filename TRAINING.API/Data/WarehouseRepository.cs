@@ -129,9 +129,11 @@ namespace TRAINING.API.Data
                         break;
                     default:
                         // string search
-                        query = query.Where(c => c.HVWHGR.Contains(warehouseParams.gs) ||
-                            c.HVGRNA.Contains(warehouseParams.gs) || c.HVREMA.Contains(warehouseParams.gs)
-                         );
+                        query = query.Where(c =>
+                        c.HVWHGR.Contains(warehouseParams.gs) ||
+                        c.HVGRNA.Contains(warehouseParams.gs) ||
+                        c.HVREMA.Contains(warehouseParams.gs)
+                    );
                         break;
                 }
             }

@@ -174,7 +174,7 @@ export class WarehouseComponent implements OnInit {
     this.pageMetadata = {
       searchGlobal: this.warehouseSearch,
     };
-
+    
     this.getAll();
   }
 
